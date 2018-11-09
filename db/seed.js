@@ -49,7 +49,6 @@ mysql_connect(function(db) {
             }
 
             const salt = crypto.randomBytes(5).toString('hex');
-            console.log(salt.length);
             const pass = sha256(i.toString() + salt);
 
             const fname = `user${i}`;

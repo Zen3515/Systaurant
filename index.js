@@ -64,6 +64,12 @@ const adminAPI = express();
 
 adminAPI.use(login.checkManager);
 
+// parse application/x-www-form-urlencoded
+adminAPI.use(bodyParser.urlencoded({ extended: true }));
+
+// parse application/json
+adminAPI.use(bodyParser.json());
+
 adminAPI.post('/promo/create'	, promo.create);
 adminAPI.post('/promo/update'	, promo.update);
 adminAPI.post('/promo/delete'	, promo.remove);
