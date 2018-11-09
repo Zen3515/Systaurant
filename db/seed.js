@@ -5,10 +5,15 @@ const mysql_connect = require("./connectDB.js");
 
 const DB = "Systaurant";
 
-const numAccount = 10;
-const numMember = 5;
-const numEmployee = 5;
-const TableSize = [2, 3, 4, 5, 6, 7];
+const numAccount 		= 10;
+const numMember 		= 5;
+const numEmployee 		= 5;
+const TableSize 		= [2, 3, 4, 5, 6, 7];
+const numTable			= TableSize.length;
+const numMenu 			= 5;
+const numThumbnail		= 10;
+const numPromo 			= 5;
+const numSale 			= 5;
 
 const tables = [
     "ACCOUNT", "EMPLOYEE", "EMPLOYEE_WAITER", "EMPLOYEE_CHEF", "EMPLOYEE_MANAGER",
@@ -21,7 +26,7 @@ const terminate = () => { process.exit(0); };
 
 mysql_connect(function(db) {
 
-    function useDB(callback) {
+    function selectDB(callback) {
         db.query("USE " + DB, () => callback());
     }
 
@@ -39,7 +44,7 @@ mysql_connect(function(db) {
         }
     };
 
-    // GENERATE ACCOUNT
+    // Generate ACCOUNT
     const seedAccount = (callback) => {
         const num = numAccount;
         function iterate(i) {
@@ -68,7 +73,7 @@ mysql_connect(function(db) {
         iterate(0);
     };
 
-    // GENERATE EMPLOYEE
+    // Generate EMPLOYEE
     const seedEmployee = (callback) => {
         const num = numEmployee;
         function iterate(i) {
@@ -91,7 +96,7 @@ mysql_connect(function(db) {
         iterate(0);
     };
 
-    // GENERATE EMPLOYEE_WAITER
+    // Generate EMPLOYEE_WAITER
     const seedEmployeeWaiter = (callback) => {
         const num = ~~( (numEmployee + 2) / 3 );
         const idx = 0;
@@ -110,7 +115,7 @@ mysql_connect(function(db) {
         iterate(idx);
     };
 
-    // GENERATE EMPLOYEE_CHEF
+    // Generate EMPLOYEE_CHEF
     const seedEmployeeChef = (callback) => {
         const num = ~~( (numEmployee + 1) / 3 );
         const idx = ~~( (numEmployee + 2) / 3 );
@@ -128,7 +133,7 @@ mysql_connect(function(db) {
         iterate(idx);
     };
 
-    // GENERATE EMPLOYEE_MANAGER
+    // Generate EMPLOYEE_MANAGER
     const seedEmployeeManager = (callback) => {
         const num = ~~( numEmployee / 3 );
         const idx = numEmployee - num;
@@ -146,7 +151,7 @@ mysql_connect(function(db) {
         iterate(idx);
     };
 
-    // GENERATE Member
+    // Generate Member
     const seedMember = (callback) => {
         const num = numMember;
         const idx = numEmployee;
@@ -166,8 +171,9 @@ mysql_connect(function(db) {
         iterate(idx);
     };
 
+	// Generate Table
     const seedTable = (callback) => {
-        const num = TableSize.length;
+        const num = numTable;
         const idx = 0;
         function iterate(i) {
             if (i === idx + num) {
@@ -181,6 +187,91 @@ mysql_connect(function(db) {
                 "(`status`, `number_of_seats`) " +
                 " VALUES " +
                 `(${status}, \"${seat_num}\")`, () => iterate(i+1));
+        }
+        iterate(idx);
+    };
+	
+	// Generate Menu
+    const seedMenu = (callback) => {
+        const num = numMenu;
+        const idx = 0;
+        function iterate(i) {
+            if (i === idx + num) {
+                callback();
+                return;
+            }
+            db.query("INSERT INTO `MENU` " +
+                "(`menu_name`, `menu_description`, `price`)" +
+                " VALUES " +
+                `(\"menu${i}\", \"menu description: this menu sucks\", ${234.23 + 502 * i})`, () => iterate(i+1));
+        }
+        iterate(idx);
+    };
+
+    // Generate Thumbnail
+    const seedThumbnail = (callback) => {
+        const num = numThumbnail;
+        const idx = 0;
+        function iterate(i) {
+            if (i === idx + num) {
+                callback();
+                return;
+            }
+            db.query("INSERT INTO `MENU_THUMBNAIL` " +
+                "(`menu_ID`, `menu_thumbnail`)" +
+                " VALUES " +
+                `(${i%numMenu+1}, \"imgs/img${i}.jpg\"})`, () => iterate(i+1));
+        }
+        iterate(idx);
+    };
+
+	// Generate Promotion
+    const seedPromo = (callback) => {
+        const num = numPromo;
+        const idx = 0;
+        function iterate(i) {
+            if (i === idx + num) {
+                callback();
+                return;
+            }
+            db.query("INSERT INTO `PROMOTION` " +
+                "(`employee_ID`, `pro_start_date`, `pro_expire_date`, `criteria`, `discount_percent`)" +
+                " VALUES " +
+                `(1, \"2012-${i+1}-${i+7}\", \"2012-${12-i}-${i+2}\", \"CRITERIA${i}\", ${10.23 + 5 * i})`, () => iterate(i+1));
+        }
+        iterate(idx);
+    };
+
+	// Generate Sale
+    const seedSale = (callback) => {
+        const num = numSale;
+        const idx = 0;
+        function iterate(i) {
+            if (i === idx + num) {
+                callback();
+                return;
+            }
+            db.query("INSERT INTO `SALE` " +
+                "(`sale_start_date`, `sale_start_date`, `employee_ID`, `discount`)" +
+                " VALUES " +
+                `(1, \"2002-${i+3}-${i+10}\", \"2032-${11-i}-${30-i}\", \"CRITERIA${i}\", ${43.34 + 6 * i})`, () => iterate(i+1));
+        }
+        iterate(idx);
+    };
+
+	// Generate Order
+    const seedOrder = (callback) => {
+        const num = numSale;
+        const idx = 0;
+        function iterate(i) {
+            if (i === idx + num) {
+                callback();
+                return;
+            }
+            db.query("INSERT INTO `ORDER` " +
+                "(`menu_ID`, `table_ID`, `order_time`, `status`)" +
+                " VALUES " +
+                `(\"${i%numMenu+1}\", \"${(i*i)%numTable+1}\", \"2031-${10-i}-${23-i}\", 0)`, () => iterate(i+1));
         }
         iterate(idx);
     };
@@ -213,7 +304,7 @@ mysql_connect(function(db) {
 
     // List of executing functions in order
     executeAsync([
-        useDB,
+        selectDB,
         function resetDB (callback) { purgeTable(tables, callback) },
         seedAccount,
         seedEmployee,
@@ -222,6 +313,11 @@ mysql_connect(function(db) {
         seedEmployeeManager,
         seedMember,
         seedTable,
+        seedMenu,
+        seedThumbnail,
+        seedPromo,
+        seedSale,
+        seedOrder,
         // checkMember,
         // checkTable,
         terminate,
