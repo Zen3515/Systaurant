@@ -19,7 +19,7 @@ const tables = [
 const ignore = (err, _) => { if (err) console.log(err); };
 const terminate = () => { process.exit(0); };
 
-mysql_connect(true, function(db) {
+mysql_connect(function(db) {
 
     function useDB(callback) {
         db.query("USE " + DB, () => callback());
@@ -48,7 +48,8 @@ mysql_connect(true, function(db) {
                 return;
             }
 
-            const salt = crypto.randomBytes(10).toString('hex');
+            const salt = crypto.randomBytes(5).toString('hex');
+            console.log(salt.length);
             const pass = sha256(i.toString() + salt);
 
             const fname = `user${i}`;

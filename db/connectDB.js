@@ -1,17 +1,14 @@
 const mysql = require("mysql");
 
-module.exports = function (withDatabase, callback) {
+const config = {
+    host: "localhost",
+    user: "root",
+    password: "root",
+    database: "Systaurant"
+};
 
-    let config = {
-        host: "localhost",
-        user: "root",
-        password: "root",
-    };
 
-    if (withDatabase) {
-        config.database = "Systaurant";
-    }
-
+module.exports = function (callback) {
     const db_con = mysql.createConnection(config);
     db_con.connect((err) => {
         if (err) {
