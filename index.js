@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const session = require("express-session");
 
 // set app port
 const port = 3000;
@@ -15,9 +16,20 @@ const reserve  	= require("./app/reserve.js");
 const sale 		= require("./app/sale.js");
 const sql 		= require("./app/sql.js");
 
+// create session
+const sess = session({
+	  secret: 'asfasfasdfasdfsaf',
+	  resave: false,
+	  saveUninitialized: true,
+	  cookie: { secure: true }
+});
+
 // list of all available views
 
 const app = express();
+
+// add session
+app.use(sess);
 
 app.get('/'			, main.ui);
 app.get('/admin'	, login.checkManager, admin.ui);
