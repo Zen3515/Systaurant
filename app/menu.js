@@ -3,6 +3,7 @@
  * use for managing everything releated to menu
  */
 
+const login = require("./login.js");
 const mysql_connect = require("../db/connectDB.js");
 
 //////// API //////
@@ -38,27 +39,34 @@ const issue_command = (res, command) => {
  */
 const create = (req, res) => {
 
-	const name = req.body.name;
-	const description = req.body.description;
-	const price = req.body.price;
+	login.checkManager(req, res, () => {
+		const name         = req.body.name;
+		const description  = req.body.description;
+		const price        = req.body.price;
 
-	if (name === undefined || description === undefined || price === undefined) {
-		res.status(400).send(JSON.stringify({
-			message: "information is missing [name, description, price]",
-		}));
-		return;
-	}
+		if (name === undefined || description === undefined || price === undefined) {
+			res.status(400).send(JSON.stringify({
+				message: "information is missing [name, description, price]",
+			}));
+			return;
+		}
 
-	const command = "INSERT INTO `MENU` (`menu_name`, `menu_description`, `price`) VALUES (\"" + name + "\",\"" + description + "\"," + price + ")";
+		const command = "INSERT INTO `MENU` "
+			+ "(`menu_name`, `menu_description`, `price`) "
+			+ "VALUES "
+			+ "(\"" + name        + "\""
+			+ ",\"" + description + "\""
+			+ ","   + price       + ")";
 
-	issue_command(res, command);
+		issue_command(res, command);		
+	});
 };
 
 /*
  * update a menu
  * Request
  * {
- * 		id: 			// menu id (required)
+ * 		menu_ID: 		// menu id
  * 		name: 			// menu name (optional)
  * 		description: 	// menu description (optional)
  * 		price: 			// menu price (optional)
@@ -70,39 +78,42 @@ const create = (req, res) => {
  */
 const update = (req, res) => {
 
-	const id = req.body.id;
-	const name = req.body.name;
-	const description = req.body.description;
-	const price = req.body.price;
+	login.checkManager(req, res, () => {
 
-	if (id === undefined) {
-		res.status(400).send(JSON.stringify({
-			message: "no menu id"
-		}));
-		return;
-	}
+		const id = req.body.menu_ID;
+		const name = req.body.name;
+		const description = req.body.description;
+		const price = req.body.price;
 
-	if (name === undefined && description === undefined && price === undefined) {
-		res.status(400).send(JSON.stringify({
-			message: "no new informationk [name, description, price]",
-		}));
-		return;
-	}
+		if (id === undefined) {
+			res.status(400).send(JSON.stringify({
+				message: "no menu_ID"
+			}));
+			return;
+		}
 
-	const command = "UPDATE `MENU` SET "
-		+ (name 		? "`menu_name` = \"" + name + "\"" : "")
-		+ (description 	? (name ? ", " : " ") + "`menu_description` = \"" + description + "\"" : "")
-		+ (price 		? (name || description ? ", " : " ") + "`price` = " + price : "")
-		+ " WHERE `menu_ID` = " + id;
+		if (name === undefined && description === undefined && price === undefined) {
+			res.status(400).send(JSON.stringify({
+				message: "no new information [name, description, price]",
+			}));
+			return;
+		}
 
-	issue_command(res, command);
+		const command = "UPDATE `MENU` SET "
+			+ (name 		?                                      "`menu_name` = \""        + name        + "\"" : "")
+			+ (description 	? (name ? ", " : " ")                + "`menu_description` = \"" + description + "\"" : "")
+			+ (price 		? (name || description ? ", " : " ") + "`price` = "              + price              : "")
+			+ " WHERE `menu_ID` = " + menu_ID;
+
+		issue_command(res, command);
+	});
 };
 
 /*
  * remove a menu
  * Request
  * {
- * 		id: 			// menu id
+ * 		menu_ID: 		// menu id
  * }
  * Response
  * {
@@ -110,18 +121,21 @@ const update = (req, res) => {
  * }
  */
 const remove = (req, res) => {
-	const id = req.body.id;
 
-	if (id === undefined) {
-		res.status(400).send(JSON.stringify({
-			message: "no menu id",
-		}));
-		return;
-	}
+	login.checkManager(req, res, () => {
+		const menu_ID = req.body.menu_ID;
 
-	const command = "DELETE FROM `MENU` WHERE `menu_ID` = " + id;
+		if (menu_ID === undefined) {
+			res.status(400).send(JSON.stringify({
+				message: "no menu_ID",
+			}));
+			return;
+		}
 
-	issue_command(res, command);
+		const command = "DELETE FROM `MENU` WHERE `menu_ID` = " + menu_ID;
+
+		issue_command(res, command);
+	});
 };
 
 //////// UI ///////

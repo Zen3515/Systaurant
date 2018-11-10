@@ -3,6 +3,7 @@
  * use for managing everything releated to promotion
  */
 
+const login = require("./login.js");
 const mysql_connect = require("../db/connectDB.js");
 
 //////// API //////
@@ -38,38 +39,45 @@ const issue_command = (res, command) => {
  */
 const create = (req, res) => {
 
-	if (req.session.user == null) {
-		res.status(403).send(JSON.stringify({
-			message: "Unauthorized",
-		}));
-		return;
-	}
+	login.checkManager(req, res, () => {
+		if (req.session.user == null) {
+			res.status(403).send(JSON.stringify({
+				message: "Unauthorized",
+			}));
+			return;
+		}
 
-	const empID 	= req.session.user.id;
-	const start 	= req.body.start_date;
-	const expire 	= req.body.expire_date;
-	const criteria 	= req.body.criteria;
-	const percent 	= req.body.percent;
+		const emp_ID 	= req.session.user.id;
+		const start 	= req.body.start_date;
+		const expire 	= req.body.expire_date;
+		const criteria 	= req.body.criteria;
+		const percent 	= req.body.percent;
 
-	if (start === undefined || expire === undefined || criteria === undefined || percent === undefined) {
-		res.status(400).send(JSON.stringify({
-			message: "information is missing [start_date, expire_date, criteria, percent]",
-		}));
-		return;
-	}
+		if (start === undefined || expire === undefined || criteria === undefined || percent === undefined) {
+			res.status(400).send(JSON.stringify({
+				message: "information is missing [start_date, expire_date, criteria, percent]",
+			}));
+			return;
+		}
 
-	const command = "INSERT INTO `PROMOTION` "
-		+ "(`employee_ID`, `promo_start_date`, `promo_expire_date`, `criteria`, `percent`)"
-		+ "VALUES (" + empID + ", \"" + start + "\", \"" + expire + "\",\"" + criteria + "\", " + percent + ")";
+		const command = "INSERT INTO `PROMOTION` "
+			+ "(`employee_ID`, `promo_start_date`, `promo_expire_date`, `criteria`, `percent`)"
+			+ "VALUES "
+			+ "("    + emp_ID 
+			+ ", \"" + start    + "\""
+			+ ", \"" + expire   + "\""
+			+ ", \"" + criteria + "\""
+			+ ", "   + percent  + ")";
 
-	issue_command(res, command);
+		issue_command(res, command);
+	});
 };
 
 /*
  * update a promo
  * Request
  * {
- * 		id: 			// promo id (required)
+ * 		promo_ID: 		// promo id (required)
  * 		start_date: 	// promo start date (optional)
  * 		expire_date: 	// promo expire date (optional)
  *		criteria: 		// promo description (optional)
@@ -82,50 +90,46 @@ const create = (req, res) => {
  */
 const update = (req, res) => {
 
-	if (req.session.user == null) {
-		res.status(403).send(JSON.stringify({
-			message: "Unauthorized",
-		}));
-		return;
-	}
+	login.checkManager(req, res, () => {
 
-	const id 		= req.body.id;
-	const empID 	= req.session.user.id;
-	const start 	= req.body.start_date;
-	const expire 	= req.body.expire_date;
-	const criteria 	= req.body.criteria;
-	const percent 	= req.body.percent;
+		const promo_ID 	    = req.body.promo_ID;
+		const employee_ID 	= req.session.user.id;
+		const start 	    = req.body.start_date;
+		const expire 	    = req.body.expire_date;
+		const criteria 	    = req.body.criteria;
+		const percent 	    = req.body.percent;
 
-	if (id === undefined) {
-		res.status(400).send(JSON.stringify({
-			message: "no promo id"
-		}));
-		return;
-	}
+		if (promo_ID === undefined) {
+			res.status(400).send(JSON.stringify({
+				message: "no promo_ID"
+			}));
+			return;
+		}
 
-	if (start === undefined && expire === undefined && criteria === undefined && percent === undefined) {
-		res.status(400).send(JSON.stringify({
-			message: "no new information [start_date, expire_date, criteria, percent]",
-		}));
-		return;
-	}
+		if (start === undefined && expire === undefined && criteria === undefined && percent === undefined) {
+			res.status(400).send(JSON.stringify({
+				message: "no new information [start_date, expire_date, criteria, percent]",
+			}));
+			return;
+		}
 
-	const command = "UPDATE `PROMOTION` SET "
-		+ "`employee_ID` = " + empID
-		+ (start 		? ", " + "`promo_start_date` = " + start : "")
-		+ (expire		? ", " + "`promo_expire_date` = " + expire : "")
-		+ (criteria		? ", " + "`criteria` = " + criteria : "")
-		+ (percent		? ", " + "`percent` = " + percent : "")
-		+ " WHERE `promo_ID` = " + id;
+		const command = "UPDATE `PROMOTION` SET "
+			+                        "`employee_ID` = "        + employee_ID
+			+ (start 		? ", " + "`promo_start_date` = "   + start        : "")
+			+ (expire		? ", " + "`promo_expire_date` = "  + expire       : "")
+			+ (criteria		? ", " + "`criteria` = "           + criteria     : "")
+			+ (percent		? ", " + "`percent` = "            + percent      : "")
+			+ " WHERE `promo_ID` = " + promo_ID;
 
-	issue_command(res, command);
+		issue_command(res, command);
+	});
 };
 
 /*
  * remove a promo
  * Request
  * {
- * 		id: 		// promo id
+ * 		promo_ID: 	// promo id
  * }
  * Response
  * {
@@ -133,18 +137,21 @@ const update = (req, res) => {
  * }
  */
 const remove = (req, res) => {
-	const id = req.body.id;
 
-	if (id === undefined) {
-		res.status(400).send(JSON.stringify({
-			message: "no promotion id",
-		}));
-		return;
-	}
+	login.checkManager(req, res, () => {
+		const promo_ID = req.body.promo_ID;
 
-	const command = "DELETE FROM `promotion` WHERE `promo_ID` = " + id;
+		if (id === undefined) {
+			res.status(400).send(JSON.stringify({
+				message: "no promo_ID",
+			}));
+			return;
+		}
 
-	issue_command(res, command);
+		const command = "DELETE FROM `PROMOTION` WHERE `promo_ID` = " + promo_ID;
+
+		issue_command(res, command);
+	});
 };
 
 //////// UI ///////

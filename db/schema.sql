@@ -100,18 +100,25 @@ CREATE TABLE `TABLE` (
 );
 
 CREATE TABLE `RESERVE` (
-	`member_ID`             INTEGER     NOT NULL,
+	`reserve_ID`			INTEGER		NOT NULL  AUTO_INCREMENT,
+	`member_ID`             INTEGER     NOT NULL  UNIQUE,
 	`table_ID`              INTEGER     NOT NULL,
 
 	`reserve_time`          DATETIME    NOT NULL,
 	`number_of_reserved`    TINYINT     NOT NULL,
 	`create_time`           DATETIME    NOT NULL,
 
-	PRIMARY KEY `reserve_pk` (`member_ID`, `table_ID`),
+	PRIMARY KEY `reserve_pk` (`reserve_ID`),
 	
-	FOREIGN KEY `reverse_fk` (`table_ID`) REFERENCES `TABLE` (`table_ID`)
+	FOREIGN KEY `reserve_fk_member` (`member_ID`) REFERENCES `MEMBER` (`member_ID`)
 		ON DELETE CASCADE
-		ON UPDATE CASCADE
+		ON UPDATE CASCADE,
+	FOREIGN KEY `reverse_fk_table` (`table_ID`) REFERENCES `TABLE` (`table_ID`)
+		ON DELETE CASCADE
+		ON UPDATE CASCADE,
+
+	INDEX `member_ID_index` (`member_ID`),
+	INDEX `table_ID_index`  (`table_ID`)
 );
 
 CREATE TABLE `MENU` (
@@ -148,17 +155,24 @@ CREATE TABLE `SALE` (
 		ON DELETE CASCADE
 		ON UPDATE CASCADE,
 
-	INDEX `sale_start_date_index` (`sale_start_date`),
-	INDEX `sale_end_date_index`   (`sale_expire_date`)
+	INDEX `sale_sale_start_date_index` (`sale_start_date`),
+	INDEX `sale_sale_end_date_index`   (`sale_expire_date`)
 );
 
 CREATE TABLE `RECEIPT` (
 	`receipt_ID`      INTEGER       NOT NULL  AUTO_INCREMENT,
-	`total_price`     INTEGER       NOT NULL,
+	`table_ID`        INTEGER		NOT NULL, 
+	`total_price`     FLOAT(8, 2)   NOT NULL,
 	`issue_date`      DATETIME      ,
 	`payment`         TINYINT       ,
 
-	PRIMARY KEY `receipt_pk` (`receipt_ID`)
+	PRIMARY KEY `receipt_pk` (`receipt_ID`),
+
+	FOREIGN KEY `receipt_fk_table` (table_ID) REFERENCES `TABLE` (table_ID)
+		ON DELETE CASCADE
+		ON UPDATE CASCADE,
+
+	INDEX `receipt_table_ID_index` (`table_ID`)	
 );
 
 CREATE TABLE `RECOMMENDATION` (
@@ -237,5 +251,6 @@ CREATE TABLE `ORDER` (
 		ON DELETE CASCADE
 		ON UPDATE CASCADE,
 
+	INDEX `order_order_time_index` (`order_time`),
 	INDEX `order_status_index` (`status`)
 );

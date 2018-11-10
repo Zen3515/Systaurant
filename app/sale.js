@@ -27,9 +27,10 @@ const issue_command = (res, command) => {
  * create a sale
  * Request
  * {
- * 		name: // sale name	
- * 		description: // sale description
- * 		price: // sale price
+ *		menu_ID: 	  // menu id
+ * 		start_date:   // start date
+ *		expire_date:  // expire date (optional)
+ * 		discount:     // sale discount percentage
  * }
  * Response
  * {
@@ -38,37 +39,39 @@ const issue_command = (res, command) => {
  */
 const create = (req, res) => {
 
-	if (req.session.user == null) {
-		res.status(403).send(JSON.stringify({
-			message: "Unauthorized",
-		}));
-		return;
-	}
+	login.checkManager(req, res, () => {
+		
+		const menu_ID  		= req.body.menu_ID;
+		const start_date 	= req.body.start_date;
+		const expire_date 	= req.body.expire_date;
+		const empID 		= req.session.user.id;
+		const discount 		= req.body.discount;
 
-	const empID 	= req.session.user.id;
-	const start 	= req.body.start_date;
-	const expire 	= req.body.expire_date;
-	const discount 	= req.body.discount;
+		if (empID === undefined || start === undefined || expire === undefined || discount === undefined) {
+			res.status(400).send(JSON.stringify({
+				message: "information is missing [menu_ID, start_date, expire_date, discount]",
+			}));
+			return;
+		}
 
-	if (empID === undefined || start === undefined || expire === undefined || discount === undefined) {
-		res.status(400).send(JSON.stringify({
-			message: "information is missing [start, expire, criteria, percent]",
-		}));
-		return;
-	}
+		const command = "INSERT INTO `SALE` "
+			+ "(`menu_ID`, `sale_start_date`, `sale_expire_date`, `employee_ID`, `discount`)"
+			+ "VALUES (" 
+			+ "("    + menu_ID
+			+ ", "   + start_date
+			+ ", \"" + expire_date   + "\""
+			+ ", \"" + empID         + "\""
+			+ ", "   + discount      + ")";
 
-	const command = "INSERT INTO `SALE` "
-		+ "(`sale_start_date`, `sale_expire_date`, `employee_ID`, `discount`)"
-		+ "VALUES (" + start + ", \"" + expire + "\", \"" + empID + "\", " + discount + ")";
-
-	issue_command(res, command);
+		issue_command(res, command);
+	});
 };
 
 /*
  * update a sale
  * Request
  * {
- * 		id: 			// sale id (required)
+ * 		sale_ID: 		// sale id
  * 		start_date: 	// sale start date (optional)
  * 		expire_date: 	// sale expire date (optional)
  *		criteria: 		// sale description (optional)
@@ -81,42 +84,45 @@ const create = (req, res) => {
  */
 const update = (req, res) => {
 
-	if (req.session.user == null) {
-		res.status(403).send(JSON.stringify({
-			message: "Unauthorized",
-		}));
-		return;
-	}
+	login.checkManager(req, res, () => {
+		if (req.session.user == null) {
+			res.status(403).send(JSON.stringify({
+				message: "Unauthorized",
+			}));
+			return;
+		}
 
-	const id 		= req.body.id;
-	const empID 	= req.session.user.id;
-	const start 	= req.body.start_date;
-	const expire 	= req.body.expire_date;
-	const discount 	= req.body.discount;
+		const sale_ID 	    = req.body.sale_ID;
+		const employee_ID 	= req.session.user.id;
+		const start_date 	= req.body.start_date;
+		const expire_date 	= req.body.expire_date;
+		const criteria      = req.body.criteria;
+		const discount 	    = req.body.discount;
 
-	if (id === undefined) {
-		res.status(400).send(JSON.stringify({
-			message: "no sale id"
-		}));
-		return;
-	}
+		if (id === undefined) {
+			res.status(400).send(JSON.stringify({
+				message: "no sale_ID"
+			}));
+			return;
+		}
 
-	if (start === undefined && expire === undefined && discount === undefined) {
-		res.status(400).send(JSON.stringify({
-			message: "no new informationk [start_date, expire_date, criteria, percent]",
-		}));
-		return;
-	}
+		if (start === undefined && expire === undefined && discount === undefined) {
+			res.status(400).send(JSON.stringify({
+				message: "no new informationk [start_date, expire_date, criteria, percent]",
+			}));
+			return;
+		}
 
-	const command = "UPDATE `SALE` SET "
-		+ "`employee_ID` = " + empID
-		+ (start 		? ", " + "`sale_start_date` = " + start : "")
-		+ (expire		? ", " + "`sale_expire_date` = " + expire : "")
-		+ (criteria		? ", " + "`criteria` = " + criteria : "")
-		+ (percent		? ", " + "`percent` = " + percent : "")
-		+ " WHERE `sale_ID` = " + id;
+		const command = "UPDATE `SALE` SET "
+			+ (                   "`employee_ID` = "        + employee_ID      )
+			+ (start     ? ", " + "`sale_start_date` = "    + start_date   : "")
+			+ (expire    ? ", " + "`sale_expire_date` = "   + expire_date  : "")
+			+ (criteria	 ? ", " + "`criteria` = "           + criteria     : "")
+			+ (percent	 ? ", " + "`percent` = "            + percent      : "")
+			+ " WHERE `sale_ID` = " + sale_ID;
 
-	issue_command(res, command);
+		issue_command(res, command);
+	});
 };
 
 /*
@@ -131,16 +137,16 @@ const update = (req, res) => {
  * }
  */
 const remove = (req, res) => {
-	const id = req.body.id;
+	const sale_ID = req.body.id;
 
-	if (id === undefined) {
+	if (sale_ID === undefined) {
 		res.status(400).send(JSON.stringify({
 			message: "no sale id",
 		}));
 		return;
 	}
 
-	const command = "DELETE FROM `SALE` WHERE `sale_ID` = " + id;
+	const command = "DELETE FROM `SALE` WHERE `sale_ID` = " + sale_ID;
 
 	issue_command(res, command);
 };

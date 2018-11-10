@@ -39,7 +39,7 @@ const create = (req, res) => {
 
 	login.checkTable(req, res, () => {
 
-		const menuID 		= req.body.menu_ID;
+		const menu_ID 		= req.body.menu_ID;
 		const table_ID 		= req.session.user.table;
 
 		const date 			= new Date();
@@ -65,7 +65,7 @@ const create = (req, res) => {
  * can be done by only employee if and only if the employee_ID is NULL
  * Request
  * {
- * 		id: 		// order id
+ * 		order_ID: 	// order id
  * }
  * Response
  * {
@@ -76,10 +76,10 @@ const accept = (req, res) => {
 
 	login.checkEmployee(req, res, () => {
 
-		const orderID = req.body.id;
-		const empID = req.session.user.id;
+		const order_ID     = req.body.order_ID;
+		const employee_ID  = req.session.user.id;
 
-		if (empID === undefined) {
+		if (order_ID === undefined) {
 			res.status(400).send(JSON.stringify({
 				message: "information is missing [order_ID]",
 			}));
@@ -87,8 +87,8 @@ const accept = (req, res) => {
 		}
 
 		const command = "UPDATE `ORDER` SET "
-			+ "employee_ID = " + empID + " "
-			+ "WHERE order_ID = " + orderID;
+			+ "employee_ID = " + employee_ID + " "
+			+ "WHERE order_ID = " + order_ID;
 
 		issue_command(res, command);
 	});
@@ -99,7 +99,7 @@ const accept = (req, res) => {
  * can be done if and only if the employee_ID is NULL
  * Request
  * {
- * 		id: 		// order id
+ * 		order_ID: 	// order id
  * }
  * Response
  * {
@@ -108,21 +108,21 @@ const accept = (req, res) => {
  */
 const cancel = (req, res) => {
 
-	login.checkTable(() => {
+	login.checkTable(req, res, () => {
 
-		const id = req.body.id;
-		const tableID = req.session.user.table;
+		const order_ID = req.body.order_ID;
+		const table_ID = req.session.user.table;
 
 		if (id === undefined) {
 			res.status(400).send(JSON.stringify({
-				message: "no order id",
+				message: "no order_ID",
 			}));
 			return;
 		}
 
 		const command = "DELETE FROM `ORDER` "
-			+ " WHERE `order_ID` = " + id
-			+ " AND `table_ID` = " + tableID 
+			+ " WHERE `order_ID` = " + order_ID
+			+ " AND `table_ID` = "   + table_ID 
 			+ " AND `employee_ID` = NULL";
 
 		issue_command(res, command);
