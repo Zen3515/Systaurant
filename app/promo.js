@@ -53,7 +53,7 @@ const create = (req, res) => {
 
 	if (start === undefined || expire === undefined || criteria === undefined || percent === undefined) {
 		res.status(400).send(JSON.stringify({
-			message: "information is missing [start, expire, criteria, percent]",
+			message: "information is missing [start_date, expire_date, criteria, percent]",
 		}));
 		return;
 	}

@@ -49,15 +49,15 @@ api.use(bodyParser.urlencoded({ extended: true }));
 // parse application/json
 api.use(bodyParser.json());
 
-api.post('/login'	, login.login);
-api.post('/logout'	, login.logout);
+api.post('/login'			, login.login);
+api.post('/logout'			, login.logout);
 
-api.get('/reserve/create'	, login.checkMember		, reserve.create);
-api.get('/reserve/cancel'	, login.checkMember		, reserve.cancel);
+api.get('/reserve/create'	, reserve.create);
+api.get('/reserve/cancel'	, reserve.cancel);
 
-api.get('/order/create'		, login.checkAuthen		, order.create);
-api.get('/order/cancel'		, login.checkAuthen		, order.cancel);
-api.get('/order/accept'		, login.checkEmployee	, order.accept);
+api.get('/order/create'		, order.create);
+api.get('/order/cancel'		, order.cancel);
+api.get('/order/accept'		, order.accept);
 
 // admin API
 const adminAPI = express();

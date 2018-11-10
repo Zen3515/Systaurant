@@ -47,6 +47,16 @@ const checkManager = (req, res, next) => {
 	});
 };
 
+const checkTable = (req, res, next) => {
+	return checkAuthen(req, res, () => {
+		if (req.session.user.table) {
+			next();
+		} else {
+			res.status(403).send("Unauthorized");
+		}
+	});
+};
+
 //////// UI //////////////
 // TODO
 const ui = (req, res) => { res.send("login page"); };
@@ -156,15 +166,16 @@ const logout = (req, res) => {
 module.exports = {
 
 	// middleware
-	checkAuthen: (req, res, next) => next(),
-	checkMember: (req, res, next) => next(), 
-	checkEmployee: (req, res, next) => next(), 
-	checkManager: (req, res, next) => next(),
+	checkAuthen: 		checkAuthen,
+	checkMember: 		checkMember, 
+	checkEmployee: 		checkEmployee, 
+	checkManager: 		checkManager,
+	checkTable: 		checkTable,
 
 	// login JSON api
-	login: login,
-	logout: logout,
+	login: 				login,
+	logout: 			logout,
 
 	// login ui
-	ui: ui,
+	ui: 				ui,
 };
