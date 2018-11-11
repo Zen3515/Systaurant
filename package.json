@@ -5,6 +5,7 @@
   "main": "router/index.js",
   "scripts": {
     "migrate": "mysql -u root -p < db/schema.sql",
+    "trigger": "mysql -u root -p < db/trigger.sql",
     "seed": "node db/seed.js",
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"

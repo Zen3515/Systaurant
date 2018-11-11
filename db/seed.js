@@ -108,8 +108,8 @@ mysql_connect(function(db) {
             const salary            = 5000 + 1000 * i;
             const workday           = 63;
             const employee_type     =
-                (i >= (numEmployee + 2) / 3) +
-                (i >= (numEmployee + 2) / 3 + (numEmployee + 1) / 3);
+                (i >= Math.floor((numEmployee + 2) / 3)) +
+                (i >= Math.floor((numEmployee + 2) / 3) + Math.floor((numEmployee + 1) / 3));
 
             return (callback) => {
                 db.query("INSERT INTO `EMPLOYEE` " +
@@ -197,14 +197,13 @@ mysql_connect(function(db) {
     const seedTable = (callback) => {
 
         executeCommandSeq(db, numTable, (i) => {
-            const status        = 0;
             const seat_num      = TableSize[i];
 
             return (callback) => {
                 db.query("INSERT INTO `TABLE` " +
-                    "(`status`, `number_of_seats`) " +
+                    "(`number_of_seats`) " +
                     " VALUES " +
-                    `(${status}, \"${seat_num}\")`
+                    `(\"${seat_num}\")`
                     , createCallback(callback, true, false));
             };
         }, callback);
@@ -296,14 +295,12 @@ mysql_connect(function(db) {
 
             const menu_ID       = i % numMenu + 1;
             const table_ID      = (i * i) % numTable + 1;
-            const order_time    = `2031-${10 - i}-${23 - i}`;
-            const status        = 0;
 
             return (callback) => {
                 db.query("INSERT INTO `ORDER` " +
-                    "(`menu_ID`, `table_ID`, `order_time`, `status`)" +
+                    "(`menu_ID`, `table_ID`)" +
                     " VALUES " +
-                    `(\"${menu_ID}\", \"${table_ID}\", \"${order_time}\", ${status})`
+                    `(\"${menu_ID}\", \"${table_ID}\")`
                     , createCallback(callback, true, false));
             };
         }, callback);

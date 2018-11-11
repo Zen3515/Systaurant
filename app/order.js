@@ -42,9 +42,6 @@ const create = (req, res) => {
 		const menu_ID 		= req.body.menu_ID;
 		const table_ID 		= req.session.user.table;
 
-		const date 			= new Date();
-		const order_time 	= date.getTime();
-
 		if (menu_ID === undefined || table_ID === undefined) {
 			res.status(400).send(JSON.stringify({
 				message: "information is missing [menu_ID, table_ID]",
@@ -53,8 +50,8 @@ const create = (req, res) => {
 		}
 
 		const command = "INSERT INTO `ORDER` "
-			+ "(`menu_ID`, `table_ID`, `order_time`, `status`)"
-			+ "VALUES (" + menu_ID + ", " + table_ID + ", \"" + order_time + "\", 0)";
+			+ "(`menu_ID`, `table_ID`)"
+			+ "VALUES (" + menu_ID + ", " + table_ID + ")";
 
 		issue_command(res, command);
 	});

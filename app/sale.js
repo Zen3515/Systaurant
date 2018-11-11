@@ -99,7 +99,7 @@ const update = (req, res) => {
 		const criteria      = req.body.criteria;
 		const discount 	    = req.body.discount;
 
-		if (id === undefined) {
+		if (sale_ID === undefined) {
 			res.status(400).send(JSON.stringify({
 				message: "no sale_ID"
 			}));

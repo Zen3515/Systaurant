@@ -141,7 +141,7 @@ const remove = (req, res) => {
 	login.checkManager(req, res, () => {
 		const promo_ID = req.body.promo_ID;
 
-		if (id === undefined) {
+		if (promo_ID === undefined) {
 			res.status(400).send(JSON.stringify({
 				message: "no promo_ID",
 			}));

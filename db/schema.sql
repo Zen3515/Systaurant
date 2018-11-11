@@ -49,7 +49,7 @@ CREATE TABLE `EMPLOYEE` (
 
 CREATE TABLE `EMPLOYEE_WAITER` (
 	`employee_ID`   INTEGER   NOT NULL  UNIQUE, 
-	`status`        BOOLEAN   NOT NULL  ,
+	`status`        BOOLEAN   NOT NULL  DEFAULT 0,
 
 	PRIMARY KEY `employee_waiter_pk` (`employee_ID`),
 
@@ -93,7 +93,7 @@ CREATE TABLE `MEMBER` (
 
 CREATE TABLE `TABLE` (
 	`table_ID`          INTEGER     NOT NULL  AUTO_INCREMENT,
-	`status`            BOOLEAN     NOT NULL  ,
+	`status`            BOOLEAN     NOT NULL  DEFAULT 0,
 	`number_of_seats`   TINYINT     NOT NULL  ,
 
 	PRIMARY KEY `table_pk` (`table_ID`)
@@ -106,7 +106,7 @@ CREATE TABLE `RESERVE` (
 
 	`reserve_time`          DATETIME    NOT NULL,
 	`number_of_reserved`    TINYINT     NOT NULL,
-	`create_time`           DATETIME    NOT NULL,
+	`create_time`           DATETIME    NOT NULL  DEFAULT CURRENT_TIMESTAMP,
 
 	PRIMARY KEY `reserve_pk` (`reserve_ID`),
 	
@@ -163,7 +163,7 @@ CREATE TABLE `RECEIPT` (
 	`receipt_ID`      INTEGER       NOT NULL  AUTO_INCREMENT,
 	`table_ID`        INTEGER		NOT NULL, 
 	`total_price`     FLOAT(8, 2)   NOT NULL,
-	`issue_date`      DATETIME      ,
+	`issue_date`      DATETIME      NOT NULL  DEFAULT CURRENT_TIMESTAMP,
 	`payment`         TINYINT       ,
 
 	PRIMARY KEY `receipt_pk` (`receipt_ID`),
@@ -233,8 +233,8 @@ CREATE TABLE `ORDER` (
 	`menu_ID`       INTEGER     NOT NULL,
 	`table_ID`      INTEGER     NOT NULL,
 
-	`order_time`    DATETIME    NOT NULL,
-	`status`        TINYINT     NOT NULL,
+	`order_time`    DATETIME    NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+	`status`        TINYINT     NOT NULL  DEFAULT 0,
 
 	PRIMARY KEY `order_pk` (order_ID),
 
