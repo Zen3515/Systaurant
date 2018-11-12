@@ -92,7 +92,7 @@ mysql_connect(function(db) {
                 db.query("INSERT INTO `ACCOUNT` " +
                     "(`password`, `salt`, `firstname`, `lastname`, `address`, `phone_NO`, `gender`, `birthdate`, `email`) " +
                     " VALUES " +
-                    `(\"${pass}\", \"${salt}\", \"${fname}\", \"${lname}\", \"${addr}\", ${phoneNO}, ${gender}, \"${birthdate}\", \"${email}\")`
+                    `(\"${pass}\", \"${salt}\", \"${fname}\", \"${lname}\", \"${addr}\", \"${phoneNO}\", ${gender}, \"${birthdate}\", \"${email}\")`
                     , createCallback(callback, true, false));
             };
         }, callback);
