@@ -31,6 +31,9 @@ const app = express();
 // add session
 app.use(sess);
 
+// add public files
+app.use(express.static("view"));
+
 app.get('/'			, main.ui);
 app.get('/admin'	, login.checkManager, admin.ui);
 app.get('/login'	, login.ui);
