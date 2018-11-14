@@ -6,30 +6,32 @@ const session = require("express-session");
 const port = 3000;
 
 // import all required part
-const admin 	= require("./app/admin.js");
-const login 	= require("./app/login.js");
-const main		= require("./app/main.js");
-const menu		= require("./app/menu.js");
-const order 	= require("./app/order.js");
-const promo 	= require("./app/promo.js");
-const reserve  	= require("./app/reserve.js");
-const sale 		= require("./app/sale.js");
-const sql 		= require("./app/sql.js");
+const admin     = require("./app/admin.js");
+const login     = require("./app/login.js");
+const main      = require("./app/main.js");
+const menu      = require("./app/menu.js");
+const order     = require("./app/order.js");
+const promo     = require("./app/promo.js");
+const reserve   = require("./app/reserve.js");
+const sale      = require("./app/sale.js");
+const sql       = require("./app/sql.js");
 
-// create session
-const sess = session({
-	  secret: 'asfasfasdfasdfsaf',
-	  resave: false,
-	  saveUninitialized: true,
-	  cookie: { secure: true }
-});
+const jsonResponse = (req, res, next) => {
+    res.setHeader('Content-Type', 'application/json');
+    next();
+};
 
 // list of all available views
 
 const app = express();
 
 // add session
-app.use(sess);
+app.use(session({
+    secret: 'xaapIrr5gPHvHzWVry4jF14bfHA33cvI',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true }
+}));
 
 // add public files
 app.use(express.static("view"));
@@ -41,7 +43,6 @@ app.get('/menu'		, menu.ui);
 app.get('/order'	, order.ui);
 app.get('/reserve'	, reserve.ui);
 
-
 // list of all available APIs
 
 const api = express();
@@ -52,15 +53,15 @@ api.use(bodyParser.urlencoded({ extended: true }));
 // parse application/json
 api.use(bodyParser.json());
 
-api.post('/login'			, login.login);
-api.post('/logout'			, login.logout);
+api.post('/login'           , login.login);
+api.post('/logout'          , login.logout);
 
-api.get('/reserve/create'	, reserve.create);
-api.get('/reserve/cancel'	, reserve.cancel);
+api.get('/reserve/create'   , reserve.create);
+api.get('/reserve/cancel'   , reserve.cancel);
 
-api.get('/order/create'		, order.create);
-api.get('/order/cancel'		, order.cancel);
-api.get('/order/accept'		, order.accept);
+api.get('/order/create'     , order.create);
+api.get('/order/cancel'	    , order.cancel);
+api.get('/order/accept'     , order.accept);
 
 // admin API
 const adminAPI = express();
@@ -91,13 +92,7 @@ api.use('/admin'	, adminAPI);
 api.post('/sql'		, sql.api);
 
 // enable APIs using only JSON
-app.use(
-	'/api', 
-	(req, res, next) => {
-		res.setHeader('Content-Type', 'application/json');
-		next();
-	},
-	api);
+app.use('/api'		, jsonResponse, api);
 
 // start server 
 app.listen(

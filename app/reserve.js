@@ -30,9 +30,6 @@ const create = (req, res) => {
 		const reserve_time			= req.body.reserve;
 		const number_of_reserved	= req.body.number_of_reserved;
 
-		const date 					= new Date();
-		const order_time 			= date.getTime();
-
 		if (table_ID === undefined || reserve_time === undefined || number_of_reserved === undefined) {
 			res.status(400).send(JSON.stringify({
 				message: "information is missing [table_ID, reserve_time, number_of_reserved]",
@@ -41,13 +38,12 @@ const create = (req, res) => {
 		}
 
 		const command = "INSERT INTO `RESERVE` "
-			+ "(`member_ID`, `table_ID`, `reserve_time`, `number_of_reserved`, `create_time`)"
+			+ "(`member_ID`, `table_ID`, `reserve_time`, `number_of_reserved`)"
 			+ "VALUES "
 			+ "("    + member_ID 
 			+ ", "   + table_ID 
 			+ ", \"" + reserve_time        + "\""
-			+ ", "   + number_of_reserved  
-			+ ", "   + order_time          + "\")";
+			+ ", "   + number_of_reserved  + ")";
 
 		issue_command(res, command);
 	});
@@ -71,7 +67,7 @@ const cancel = (req, res) => {
 		const reserve_ID   = req.body.reserve_ID;
 		const member_ID    = req.session.user.id;
 
-		if (id === undefined) {
+		if (reserve_ID === undefined) {
 			res.status(400).send(JSON.stringify({
 				message: "no order id",
 			}));
@@ -82,7 +78,7 @@ const cancel = (req, res) => {
 			+ "WHERE `reserve_ID` = " + reserve_ID + " "
 			+ "AND `member_ID` = " + member_ID + " ";
 
-		const command2 = "DELETE FROM `RESERVE` WHERE `reserve_ID` = " + id;
+		const command2 = "DELETE FROM `RESERVE` WHERE `reserve_ID` = " + reserve_ID;
 
 		mysql_connect((db) => {
 			db.query(command1, (err, res) => {
