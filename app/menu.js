@@ -140,9 +140,9 @@ const remove = (req, res) => {
 
 //////// UI ///////
 // TODO
-const ui = (req, res) => {
-	res.send("menu page");
-};
+const ui = (req, res) => { res.sendFile("menu.html", {
+	root: __dirname  + '/../view'
+}); };
 
 module.exports = {
 
