@@ -59,7 +59,9 @@ const checkTable = (req, res, next) => {
 
 //////// UI //////////////
 // TODO
-const ui = (req, res) => { res.send("login page"); };
+const ui = (req, res) => { res.sendFile("login.html", {
+	root: __dirname  + '/../view'
+}); };
 
 //////// API /////////////
 /*
