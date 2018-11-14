@@ -110,9 +110,9 @@ const cancel = (req, res) => {
 
 //////// UI ///////
 // TODO
-const ui = (req, res) => {
-	res.send("reserve page");
-};
+const ui = (req, res) => { res.sendFile("reserve.html", {
+	root: __dirname  + '/../view'
+}); };
 
 module.exports = {
 
