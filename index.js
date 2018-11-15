@@ -41,6 +41,7 @@ app.use(express.static('public'));
 app.get('/', main.ui);
 app.get('/admin', login.checkManager, admin.ui);
 app.get('/login', login.ui);
+app.get('/login/table', login.table_ui)
 app.get('/menu', menu.ui);
 app.get('/order', order.ui);
 app.get('/reserve', reserve.ui);
