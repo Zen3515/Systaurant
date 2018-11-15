@@ -56,14 +56,15 @@
         e.preventDefault();
         axios
           .post('api/login', {
-            id: $('#username'),
-            password: $('#password')
+          	type: 'employee',
+            id: $('#username').val(),
+            password: $('#password').val()
           })
           .then(res => {
-            alert(res.message);
+          	alert(res.response.data.message);
           })
           .catch(res => {
-            alert(res.message);
+          	alert(res.response.data.message);
           });
       });
     </script>
