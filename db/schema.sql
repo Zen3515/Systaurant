@@ -82,7 +82,7 @@ CREATE TABLE `MEMBER` (
 	`member_ID`         INTEGER     NOT NULL  AUTO_INCREMENT,
 	`account_ID`        INTEGER     NOT NULL  UNIQUE,
 
-	`registered_date`   DATETIME    NOT NULL  ,
+	`registered_date`   DATETIME    NOT NULL  DEFAULT CURRENT_TIMESTAMP,
 
 	PRIMARY KEY `member_pk` (`member_ID`),
 
@@ -94,7 +94,7 @@ CREATE TABLE `MEMBER` (
 CREATE TABLE `TABLE` (
 	`table_ID`          INTEGER     NOT NULL  AUTO_INCREMENT,
 	`status`            BOOLEAN     NOT NULL  DEFAULT 0,
-	`number_of_seats`   TINYINT     NOT NULL  ,
+	`number_of_seats`   TINYINT     NOT NULL,
 
 	PRIMARY KEY `table_pk` (`table_ID`)
 );
@@ -172,7 +172,7 @@ CREATE TABLE `RECEIPT` (
 		ON DELETE CASCADE
 		ON UPDATE CASCADE,
 
-	INDEX `receipt_table_ID_index` (`table_ID`)	
+	INDEX `receipt_table_ID_index` (`table_ID`)
 );
 
 CREATE TABLE `RECOMMENDATION` (
