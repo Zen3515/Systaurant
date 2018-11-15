@@ -61,10 +61,11 @@
             password: $('#password').val()
           })
           .then(res => {
-          	alert(res.response.data.message);
+          	alert(res.data.message);
           })
           .catch(res => {
-          	alert(res.response.data.message);
+          	console.log(res);
+          	alert(res);
           });
       });
     </script>

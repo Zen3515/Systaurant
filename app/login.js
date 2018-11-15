@@ -63,6 +63,10 @@ const ui = (req, res) => { res.sendFile("login.html", {
 	root: __dirname  + '/../view'
 }); };
 
+const table_ui = (req, res) => { res.sendFile("login_table.html", {
+	root: __dirname  + '/../view'
+}); };
+
 //////// API /////////////
 /*
  * login
@@ -81,20 +85,7 @@ const ui = (req, res) => { res.sendFile("login.html", {
  * }
  */
 
-const initiateSession = (req) => {
-	req.session.user = {};
-	req.session.user.type = req.body.type;
-	req.session.user.id = req.body.id;
-};
-
 const login = (req, res) => {
-
-	if (req.body === undefined) {
-		res.status(400).send(JSON.stringify({
-			message: "JSON parsing failed",
-		}));
-		return;
-	}
 
 	const type = req.body.type;
 	const id = req.body.id;
@@ -139,8 +130,14 @@ const login = (req, res) => {
 			const correctPass = user.password;
 
 			if (sha256(pass + salt) === correctPass) {
+				
 				// data is valid create session
-				initiateSession(req, user);
+				req.session.user = {};
+				req.session.user.type = req.body.type;
+				req.session.user.id = req.body.id;
+				console.log(req.session);
+
+				req.session.save();
 				res.send(JSON.stringify({
 					message: "OK",
 				}));
@@ -149,6 +146,62 @@ const login = (req, res) => {
 					message: "Invalid credential",
 				}));
 			}
+		});
+	});
+};
+
+/*
+ * login_table
+ * check the validity of the authenticator
+ * Request
+ * {
+ *      api: // id of the table
+ * }
+ * Reponse
+ * {
+ * 		message: // status of the authentication 
+ * }
+ */
+
+const login_table = (req, res) => {
+
+	const api = req.body.api;
+
+	if (api === undefined) {
+		res.status(400).send(JSON.stringify({
+			message: "Some information is missing [api]",
+		}));
+		return;
+	}
+
+	const command = "SELECT table_ID FROM `TABLE` " 
+		+ `WHERE \`table_ID\` = ${api}`;
+
+	mysql_connect((db) => {
+		
+		db.query(command, (err, table_info) => {
+			if (err) {
+				res.status(400).send(JSON.stringify({
+					message: err,
+				}));
+				return;
+			}
+
+			if (table_info.length !== 1) {
+				res.status(400).send(JSON.stringify({
+					message: "Invalid table api key",
+				}));
+				return;
+			}
+
+			const id = table_info[0].table_ID;
+
+			// set table id
+			req.session.table = id;
+
+			res.send(JSON.stringify({
+				message: "OK",
+			}));
 		});
 	});
 };
@@ -180,4 +233,5 @@ module.exports = {
 
 	// login ui
 	ui: 				ui,
+	table_ui:			table_ui,
 };
