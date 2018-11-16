@@ -63,6 +63,10 @@ const ui = (req, res) => { res.sendFile("login.html", {
 	root: __dirname  + '/../view'
 }); };
 
+const table_ui = (req, res) => { res.sendFile("login_table.html", {
+	root: __dirname  + '/../view'
+}); };
+
 //////// API /////////////
 /*
  * login
@@ -129,7 +133,7 @@ const login = (req, res) => {
 
 			if (user_info.length !== 1) {
 				res.status(400).send(JSON.stringify({
-					message: "Invalid credentail",
+					message: "Invalid credential",
 				}));
 				return;
 			}
@@ -180,4 +184,5 @@ module.exports = {
 
 	// login ui
 	ui: 				ui,
+	table_ui:			table_ui,
 };
