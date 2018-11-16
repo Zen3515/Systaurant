@@ -18,12 +18,8 @@
                     </div>
                     <div class="row form-group">
                         <div class="col">
-                            <label for="username">Username: </label>
-                            <input
-                                class="form-control"
-                                type="text"
-                                id="username"
-                            />
+                            <label for="id">ID: </label>
+                            <input class="form-control" type="text" id="id" />
                         </div>
                     </div>
                     <div class="row form-group">
@@ -38,7 +34,11 @@
                     </div>
                     <div class="row form-group">
                         <div class="col text-center">
-                            <button class="btn btn-primary" type="submit">
+                            <button
+                                class="btn btn-primary"
+                                type="button"
+                                onclick="login()"
+                            >
                                 Login
                             </button>
                         </div>
@@ -47,5 +47,9 @@
                 <div class="col"></div>
             </div>
         </div>
+        <script src="../js/jquery-3.3.1.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+        <script src="../js/ajax.js"></script>
+        <script src="../js/login.js"></script>
     </body>
 </html>
