@@ -56,22 +56,19 @@
     <script type="text/javascript">
       $('#login_form').submit(function(e) {
         e.preventDefault();
-        let data = JSON.stringify({
+        axios
+          .post('api/login', {
             type: "employee",
             id: $('#id').val(),
             password: $('#password').val()
-        });
-        axios
-          .post('api/login', data, {
-            headers: {
-                'Content-Type': 'application/json',
-            }
           })
           .then(res => {
-            alert(res.message);
+            console.log(res.data.message);
+            alert(res.data.message);
           })
           .catch(res => {
-            alert(res);
+            console.log(res.message);
+            alert('Login failed.');
           });
       });
     </script>
