@@ -16,6 +16,18 @@ const reserve = require('./app/reserve.js');
 const sale = require('./app/sale.js');
 const sql = require('./app/sql.js');
 
+const jsonRequire = (req, res, next) => {
+  if (req.body === undefined) {
+    res.status(400).send(
+      JSON.stringify({
+        message: 'JSON parsing failed'
+      })
+    );
+    return;
+  }
+  next();
+};
+
 const jsonResponse = (req, res, next) => {
   res.setHeader('Content-Type', 'application/json');
   next();
@@ -30,8 +42,7 @@ app.use(
   session({
     secret: 'xaapIrr5gPHvHzWVry4jF14bfHA33cvI',
     resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true }
+    saveUninitialized: true
   })
 );
 
@@ -41,7 +52,7 @@ app.use(express.static('public'));
 app.get('/', main.ui);
 app.get('/admin', login.checkManager, admin.ui);
 app.get('/login', login.ui);
-app.get('/login/table', login.table_ui)
+app.get('/login/table', login.table_ui);
 app.get('/menu', menu.ui);
 app.get('/order', order.ui);
 app.get('/reserve', reserve.ui);
@@ -59,6 +70,7 @@ api.use(bodyParser.json());
 api.post('/login', login.login);
 api.post('/logout', login.logout);
 
+api.get('/menu', menu.read);
 api.get('/reserve/create', reserve.create);
 api.get('/reserve/cancel', reserve.cancel);
 
