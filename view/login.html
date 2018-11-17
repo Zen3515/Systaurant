@@ -16,40 +16,64 @@
                     <div class="text-center">
                         <a href="/" class="btn btn-link">Home</a>
                     </div>
-                    <div class="row form-group">
-                        <div class="col">
-                            <label for="id">ID: </label>
-                            <input class="form-control" type="text" id="id" />
+                    <form id="login_form">
+                        <div class="row form-group">
+                            <div class="col">
+                                <label for="id">ID: </label>
+                                <input class="form-control" type="text" id="id" required />
+                            </div>
                         </div>
-                    </div>
-                    <div class="row form-group">
-                        <div class="col">
-                            <label for="password">Password: </label>
-                            <input
-                                class="form-control"
-                                type="password"
-                                id="password"
-                            />
+                        <div class="row form-group">
+                            <div class="col">
+                                <label for="password">Password: </label>
+                                <input
+                                    class="form-control"
+                                    type="password"
+                                    id="password"
+                                    required
+                                />
+                            </div>
                         </div>
-                    </div>
-                    <div class="row form-group">
-                        <div class="col text-center">
-                            <button
-                                class="btn btn-primary"
-                                type="button"
-                                onclick="login()"
-                            >
-                                Login
-                            </button>
+                        <div class="row form-group">
+                            <div class="col text-center">
+                                <button
+                                    class="btn btn-primary"
+                                    type="submit"
+                                >
+                                    Login
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
                 <div class="col"></div>
             </div>
         </div>
-        <script src="../js/jquery-3.3.1.min.js"></script>
-        <script src="../js/bootstrap.min.js"></script>
-        <script src="../js/ajax.js"></script>
-        <script src="../js/login.js"></script>
-    </body>
+    </div>
+    <script src="../js/jquery-3.3.1.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="text/javascript">
+      $('#login_form').submit(function(e) {
+        e.preventDefault();
+        let data = JSON.stringify({
+            type: "employee",
+            id: $('#id').val(),
+            password: $('#password').val()
+        });
+        axios
+          .post('api/login', data, {
+            headers: {
+                'Content-Type': 'application/json',
+            }
+          })
+          .then(res => {
+            alert(res.message);
+          })
+          .catch(res => {
+            alert(res);
+          });
+      });
+    </script>
+  </body>
 </html>
