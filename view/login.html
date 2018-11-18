@@ -34,13 +34,19 @@
                                 />
                             </div>
                         </div>
-                        <div class="row form-group">
+                        <div class="row form-group pt-3">
                             <div class="col text-center">
                                 <button
+                                    id="member"
                                     class="btn btn-primary"
-                                    type="submit"
                                 >
-                                    Login
+                                	Member Login
+                                </button>
+                                <button
+                                	id="employee"
+                                    class="btn btn-success"
+                                >
+                                	Employee Login
                                 </button>
                             </div>
                         </div>
@@ -52,36 +58,33 @@
     </div>
     <script src="../js/jquery-3.3.1.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="../js/axios.min.js"></script>
+
     <script type="text/javascript">
-      $('#login_form').submit(function(e) {
-        e.preventDefault();
+      
+      $(document).on('click', '#login_form button', function() {
+	    $('#login_form button').removeClass('clicked');
+	    $(this).addClass('clicked');
+      });
+
+	  $("#login_form").submit(function(e) {
+
+		e.preventDefault();
         axios
-          .post('api/login', {
-<<<<<<< HEAD
-          	type: 'employee',
-            id: $('#username').val(),
-            password: $('#password').val()
-          })
-          .then(res => {
-          	alert(res.data.message);
-          })
-          .catch(res => {
-          	console.log(res);
-          	alert(res);
-=======
-            type: "employee",
+          .post('/api/login', {
+            type: $('#login_form button.clicked').prop('id'),
             id: $('#id').val(),
             password: $('#password').val()
           })
           .then(res => {
             console.log(res.data.message);
-            alert(res.data.message);
+            if (res.data.message == "OK") {
+              window.location = "/";
+            }
           })
           .catch(res => {
-            console.log(res.message);
+          	console.log(res);
             alert('Login failed.');
->>>>>>> add-ui
           });
       });
     </script>

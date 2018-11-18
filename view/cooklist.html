@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Systaurant</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <h1 class="text-center pt-5">Cooking List</h1>
+          <h5 class="text-center">A List of orders waiting to be cooked</h1>
+
+          <div class="text-center">
+            <a href="/" class="btn btn-link">Home</a>
+          </div>
+          <table class="table table-striped table-hover mt-3">
+            <thead>
+              <tr>
+              	<th>#</th>
+                <th>Table #</th>
+                <th>Menu</th>
+                <th class="text-center">Option</th>
+              </tr>
+            </thead>
+            <tbody id="yours-list">
+            </tbody>
+            <tr style="background-color: white;"> <td colspan="4"> <hr> </td> </tr>
+            <tbody id="untaken-list">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <script src="../js/jquery-3.3.1.min.js"></script>
+    <script src="../js/axios.min.js"></script>
+    <script type="text/javascript">
+      const getOrder = () => {
+      	$("#yours-list").text("");
+      	$("#untaken-list").text("");
+        axios
+          .post('/api/order/cooklist')
+          .then(res => {
+
+            const yours    = res.data.yours;
+            const untaken  = res.data.untaken;
+
+            yours.forEach(e => {
+              const row = `<tr>
+              	  <td>${e.order_ID}</td>
+              	  <td>${e.table_ID}</td>
+              	  <td>${e.menu_name}</td>
+                  <td class='text-center'>
+                  <button id='done${e.order_ID}' type='button' class='btn btn-success' onclick='done(${e.order_ID});'> Done </button>
+                  <button id='decline${e.order_ID}' type='button' class='btn btn-warning' onclick='untake(${e.order_ID});'> Decline </button>
+                  </td>
+              </tr>`;
+              $('#yours-list').append(row);
+            });
+
+            untaken.forEach(e => {
+              const row = `<tr>
+              	  <td>${e.order_ID}</td>
+              	  <td>${e.table_ID}</td>
+              	  <td>${e.menu_name}</td>
+                  <td class='text-center'>
+                  <button id='take${e.order_ID}' type='button' class='btn btn-primary' onclick='take(${e.order_ID});'>Take</button>
+                  </td>
+              </tr>`;
+              $('#untaken-list').append(row);
+            });
+          })
+          .catch(res => {
+            console.log(res);
+          });
+      };
+
+	  function take(id) {
+		  axios
+		  	  .post('/api/order/accept', {
+		  	  	  order_ID: id,
+		  	  })
+		  	  .then(res => {
+		  	  	  $("#take"+id).addClass("disabled");
+				  console.log(res);
+		  	  }).catch(res => {
+		  	  	  console.log(res);
+		  	  });
+	  }
+
+	  function untake(id) {
+
+	  	  if (confirm("decline order #" + id)) {
+	  	  	  axios
+		  	  	  .post('/api/order/decline', {
+		  	  	  	  order_ID: id,
+		  	  	  })
+		  	  	  .then(res => {
+		  	  	  	  $("#decline" + id).addClass("disabled");
+			  	  	  console.log(res);
+		  	  	  }).catch(res => {
+		  	  	  	  console.log(res);
+		  	  	  });
+		  }
+	  }
+
+	  function done(id) {
+
+	  	  if (confirm("finish the order #" + id)) {
+		  	  axios
+		  	  	  .post('/api/order/done', {
+		  	  	  	  order_ID: id,
+		  	  	  })
+		  	  	  .then(res => {
+		  	  	  	  $("#done"+id).addClass("disabled");
+				  	  console.log(res);
+		  	  	  }).catch(res => {
+		  	  	  	  console.log(res);
+		  	  	  });
+		  }
+	  }
+
+      $(document).ready(function() {
+        getOrder();
+      });
+    </script>
+  </body>
+</html>

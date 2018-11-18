@@ -11,22 +11,24 @@
     <div class="container">
       <div class="row">
         <div class="col">
-          <h1 class="text-center pt-5">Menu</h1>
+          <h1 class="text-center pt-5"> Waiting List </h1>
+          <h5 class="text-center"> List of finished food waiting to be served</h2>
           <div class="text-center">
             <a href="/" class="btn btn-link">Home</a>
-            <a href="/order" class="btn btn-link">Order</a>
           </div>
           <table class="table table-striped table-hover mt-3">
             <thead>
               <tr>
               	<th>#</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th class="text-right">Price (THB)</th>
+                <th>Table</th>
+                <th>Menu</th>
                 <th class="text-center">Option</th>
               </tr>
             </thead>
-            <tbody id="menu-list">
+            <tbody id="yours-list">
+            </tbody>
+            <tr style="background-color: white;"> <td colspan="4"> <hr> </td> </tr>
+            <tbody id="untaken-list">
             </tbody>
           </table>
         </div>
@@ -35,39 +37,42 @@
     <script src="../js/jquery-3.3.1.min.js"></script>
     <script src="../js/axios.min.js"></script>
     <script type="text/javascript">
-      const getMenu = () => {
-      	$("#menu-list").text("");
+      const getOrder = () => {
+      	$("#list").text("");
         axios
-          .post('/api/menu')
+          .post('/api/order/waitlist')
           .then(res => {
-            const menu = res.data.menu;
-            menu.forEach(e => {
+
+            const list    = res.data.list;
+
+            list.forEach(e => {
               const row = `<tr>
-              	  <td>${e.menu_ID}</td>
+              	  <td>${e.order_ID}</td>
+              	  <td>${e.table_ID}</td>
               	  <td>${e.menu_name}</td>
-              	  <td>${e.menu_description}</td>
-              	  <td class='text-right'>${e.price}</td>
                   <td class='text-center'>
-                  	<button type='button' class='btn btn-primary' onclick='order(${e.menu_ID});'>Order</button>
+                  <button id='receive${e.order_ID}' type='button' class='btn btn-success' onclick='receive(${e.order_ID});'> Done </button>
                   </td>
               </tr>`;
-              $('#menu-list').append(row);
+              $('#yours-list').append(row);
             });
+
           })
           .catch(res => {
             console.log(res);
           });
       };
 
-	  function order(id) {
-		  if (confirm("Order menu #" + id)) {
+	  function receive(id) {
+
+	  	  if (confirm("Already served the order #" + id + "?")) {
 		  	  axios
-		  	  	  .post('/api/order/create', {
-		  	  	  	  menu_ID: id,
+		  	  	  .post('/api/order/receive', {
+		  	  	  	  order_ID: id,
 		  	  	  })
 		  	  	  .then(res => {
-		  	  	  	  alert("Done");
-					  console.log(res);
+		  	  	  	  $("#receive"+id).addClass("disabled");
+				  	  console.log(res);
 		  	  	  }).catch(res => {
 		  	  	  	  console.log(res);
 		  	  	  });
@@ -75,8 +80,9 @@
 	  }
 
       $(document).ready(function() {
-        getMenu();
+        getOrder();
       });
+
     </script>
   </body>
 </html>

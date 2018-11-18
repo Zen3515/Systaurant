@@ -12,6 +12,7 @@
             <div class="row">
                 <div class="col"></div>
                 <div class="col-md-6">
+                	<form id="login_table">
                     <h1 class="text-center pt-5">Table Login</h1>
                     <div class="text-center">
                         <a href="/" class="btn btn-link">Home</a>
@@ -33,9 +34,30 @@
                             </button>
                         </div>
                     </div>
+                    </form>
                 </div>
                 <div class="col"></div>
             </div>
         </div>
     </body>
+    <script src="../js/jquery-3.3.1.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/axios.min.js"></script>
+    <script type="text/javascript">
+      $('#login_table').submit(function(e) {
+        e.preventDefault();
+        axios
+          .post('/api/login/table', {
+            api: $('#table').val(),
+          })
+          .then(res => {
+            console.log(res.data.message);
+            alert(res.data.message);
+          })
+          .catch(res => {
+            console.log(res.message);
+            alert('Login table failed.');
+          });
+      });
+    </script>
 </html>

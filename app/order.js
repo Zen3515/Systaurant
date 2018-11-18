@@ -25,6 +25,41 @@ const issue_command = (res, command) => {
 };
 
 /*
+ * return a list of orders
+ * Request { // none }
+ * Response
+ * {
+ * 		message: 		// status message
+ * 		order:           // list of orders
+ * }
+ */
+const read = (req, res) => {
+
+	const id = req.session.table;
+
+	const command = `SELECT 
+		ord.order_ID, ord.employee_ID, ord.status, menu.menu_name, menu.price
+		FROM \`ORDER\` ord, \`MENU\` menu
+		WHERE ord.table_ID = ${id} 
+		AND ord.menu_ID = menu.menu_ID`;
+
+	mysql_connect((db) => {
+		db.query(command, (err, result) => {
+			if (err) {
+				res.status(400).send(JSON.stringify({
+					message: err,
+				}));
+			} else {
+				res.send(JSON.stringify({
+					message: "OK",
+					order: result
+				}));
+			}
+		});
+	});
+}
+
+/*
  * create an order
  * Request
  * {
@@ -37,24 +72,21 @@ const issue_command = (res, command) => {
  */
 const create = (req, res) => {
 
-	login.checkTable(req, res, () => {
+	const menu_ID 		= req.body.menu_ID;
+	const table_ID 		= req.session.table;
 
-		const menu_ID 		= req.body.menu_ID;
-		const table_ID 		= req.session.user.table;
+	if (menu_ID === undefined || table_ID === undefined) {
+		res.status(400).send(JSON.stringify({
+			message: "information is missing [menu_ID, table_ID]",
+		}));
+		return;
+	}
 
-		if (menu_ID === undefined || table_ID === undefined) {
-			res.status(400).send(JSON.stringify({
-				message: "information is missing [menu_ID, table_ID]",
-			}));
-			return;
-		}
+	const command = "INSERT INTO `ORDER` "
+		+ "(`menu_ID`, `table_ID`)"
+		+ "VALUES (" + menu_ID + ", " + table_ID + ")";
 
-		const command = "INSERT INTO `ORDER` "
-			+ "(`menu_ID`, `table_ID`)"
-			+ "VALUES (" + menu_ID + ", " + table_ID + ")";
-
-		issue_command(res, command);
-	});
+	issue_command(res, command);
 };
 
 /*
@@ -71,24 +103,120 @@ const create = (req, res) => {
  */
 const accept = (req, res) => {
 
-	login.checkEmployee(req, res, () => {
+	const order_ID     = req.body.order_ID;
+	const employee_ID  = req.session.user.id;
 
-		const order_ID     = req.body.order_ID;
-		const employee_ID  = req.session.user.id;
+	if (order_ID === undefined) {
+		res.status(400).send(JSON.stringify({
+			message: "information is missing [order_ID]",
+		}));
+		return;
+	}
 
-		if (order_ID === undefined) {
-			res.status(400).send(JSON.stringify({
-				message: "information is missing [order_ID]",
-			}));
-			return;
-		}
+	const command = "UPDATE `ORDER`"
+		+ " SET employee_ID = " + employee_ID
+		+ " WHERE order_ID = " + order_ID 
+	    + " AND employee_ID IS NULL";
 
-		const command = "UPDATE `ORDER` SET "
-			+ "employee_ID = " + employee_ID + " "
-			+ "WHERE order_ID = " + order_ID;
+	issue_command(res, command);
+};
 
-		issue_command(res, command);
-	});
+/*
+ * decline an order
+ * can be done by only employee if and only if the employee_ID is NULL
+ * Request
+ * {
+ * 		order_ID: 	// order id
+ * }
+ * Response
+ * {
+ * 		message: 	// status message
+ * }
+ */
+const decline = (req, res) => {
+
+	const order_ID     = req.body.order_ID;
+	const employee_ID  = req.session.user.id;
+
+	if (order_ID === undefined) {
+		res.status(400).send(JSON.stringify({
+			message: "information is missing [order_ID]",
+		}));
+		return;
+	}
+
+	const command = "UPDATE `ORDER`"
+		+ " SET employee_ID = NULL"
+		+ " WHERE order_ID = " + order_ID
+		+ " AND employee_ID = " + employee_ID;
+
+	issue_command(res, command);
+};
+
+/*
+ * finish an order
+ * when the order is finished
+ * Request
+ * {
+ * 		order_ID: 	// order id
+ * }
+ * Response
+ * {
+ * 		message: 	// status message
+ * }
+ */
+const done = (req, res) => {
+
+	const order_ID     = req.body.order_ID;
+	const employee_ID  = req.session.user.id;
+
+	if (order_ID === undefined) {
+		res.status(400).send(JSON.stringify({
+			message: "information is missing [order_ID]",
+		}));
+		return;
+	}
+
+	const command = "UPDATE `ORDER`"
+		+ " SET status = 1"
+		+ " WHERE order_ID = " + order_ID
+		+ " AND employee_ID = " + employee_ID
+	    + " AND status = 0";
+
+	issue_command(res, command);
+};
+
+/*
+ * get an order
+ * when the order is served
+ * Request
+ * {
+ * 		order_ID: 	// order id
+ * }
+ * Response
+ * {
+ * 		message: 	// status message
+ * }
+ */
+const receive = (req, res) => {
+
+	const order_ID     = req.body.order_ID;
+	const employee_ID  = req.session.user.id;
+
+	if (order_ID === undefined) {
+		res.status(400).send(JSON.stringify({
+			message: "information is missing [order_ID]",
+		}));
+		return;
+	}
+
+	const command = "UPDATE `ORDER`"
+		+ " SET status = 2"
+		+ " WHERE order_ID = " + order_ID
+		+ " AND employee_ID = " + employee_ID
+	    + " AND status = 1";
+
+	issue_command(res, command);
 };
 
 /*
@@ -105,24 +233,96 @@ const accept = (req, res) => {
  */
 const cancel = (req, res) => {
 
-	login.checkTable(req, res, () => {
+	const order_ID = req.body.order_ID;
+	const table_ID = req.session.table;
 
-		const order_ID = req.body.order_ID;
-		const table_ID = req.session.user.table;
+	if (order_ID === undefined) {
+		res.status(400).send(JSON.stringify({
+			message: "no order_ID",
+		}));
+		return;
+	}
 
-		if (id === undefined) {
-			res.status(400).send(JSON.stringify({
-				message: "no order_ID",
-			}));
-			return;
-		}
+	const command = "DELETE FROM `ORDER` "
+		+ " WHERE `order_ID` = " + order_ID
+		+ " AND `table_ID` = "   + table_ID 
+		+ " AND `employee_ID` IS NULL";
 
-		const command = "DELETE FROM `ORDER` "
-			+ " WHERE `order_ID` = " + order_ID
-			+ " AND `table_ID` = "   + table_ID 
-			+ " AND `employee_ID` = NULL";
+	issue_command(res, command);
+};
 
-		issue_command(res, command);
+/*
+ * list all cooking orders
+ * Request {}
+ * Response
+ * {
+ *      message:    // status message
+ *      yours:      // list of the orders that are yours
+ * 		untaken: 	// list of the orders that are still untaken
+ * }
+ */
+const cooklist = (req, res) => {
+
+	const employee_ID = req.session.user.id;
+
+	const isYours = (rec) => { return rec.employee_ID == employee_ID; };
+	const isNull = (rec) => { return !isYours(rec); };
+
+	const command = "SELECT ord.order_ID, ord.employee_ID, ord.table_ID, menu.menu_name FROM `ORDER` ord, `MENU` menu "
+		+ " WHERE (ord.`employee_ID` IS NULL"
+		+ " OR ord.`employee_ID` = " + employee_ID + ")"
+		+ " AND menu.`menu_ID` = ord.`menu_ID`"
+		+ " AND ord.`status` = 0;";
+
+	mysql_connect(db => {
+		db.query(command, (err, result) => {
+			if (err) {
+				res.status(400).send(JSON.stringify({
+					message: err,
+					yours: {},
+					untaken: {},
+				}));
+			} else {
+				res.send(JSON.stringify({
+					message: "OK",
+					yours: result.filter(isYours),
+					untaken: result.filter(isNull),
+				}));
+			}
+		});
+	});
+};
+
+/*
+ * list all waiting orders
+ * Request {}
+ * Response
+ * {
+ *      message:    // status message
+ *      list:      // list of the orders that are yours
+ * }
+ */
+const waitlist = (req, res) => {
+
+	const command = "SELECT ord.order_ID, ord.employee_ID, ord.table_ID, menu.menu_name "
+	    + " FROM `ORDER` ord, `MENU` menu "
+		+ " WHERE menu.`menu_ID` = ord.`menu_ID`"
+		+ " AND ord.`status` = 1;";
+
+	mysql_connect(db => {
+		db.query(command, (err, result) => {
+			if (err) {
+				res.status(400).send(JSON.stringify({
+					message: err,
+					list: {},
+				}));
+			} else {
+				res.send(JSON.stringify({
+					message: "OK",
+					list: result, 
+				}));
+			}
+		});
 	});
 };
 
@@ -132,13 +332,31 @@ const ui = (req, res) => { res.sendFile("order.html", {
 	root: __dirname  + '/../view'
 }); };
 
+const cooklist_ui = (req, res) => { res.sendFile("cooklist.html", {
+	root: __dirname + '/../view'
+}); };
+
+const waitlist_ui = (req, res) => { res.sendFile("waitlist.html", {
+	root: __dirname + '/../view'
+}); };
+
+
 module.exports = {
 
 	// order JSON api
-	create: 	create,
-	cancel: 	cancel,
-	accept: 	accept,
+	read:         read,
+	create: 	  create,
+	cancel: 	  cancel,
+	accept: 	  accept,
+	decline:      decline,
+	done:         done,
+	receive:      receive,
+
+	cooklist:     cooklist,
+	waitlist:     waitlist,
 
 	// order ui
-	ui: 		ui,
+	ui: 		  ui,
+	cooklist_ui:  cooklist_ui,
+	waitlist_ui:  waitlist_ui,
 };

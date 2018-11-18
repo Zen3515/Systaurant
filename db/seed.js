@@ -6,12 +6,72 @@ const mysql_connect = require("./connectDB.js");
 const DB = "Systaurant";
 const LOG_LEVEL = 1;
 
-const numAccount 		= 10;
-const numMember 		= 5;
-const numEmployee 		= 5;
+const account = [
+	{
+		fname:     'Phirasit', 
+		lname:     'Charoenchitseriwong', 
+		addr:      '59/7 soi Kolit Phayathai Rd. Ratchatewi Bangkok 10400', 
+		phoneNO:   '0811781888', 
+		gender:    0, 
+		birthdate: '1998-02-12', 
+		email:     'phirasitsharp@gmail.com' 
+	}, {
+		fname:     'Phirasit', 
+		lname:     'Charoenchitseriwong', 
+		addr:      '59/7 soi Kolit Phayathai Rd. Ratchatewi Bangkok 10400', 
+		phoneNO:   '0811781888', 
+		gender:    0, 
+		birthdate: '1998-02-12', 
+		email:     'phirasitsharp@gmail.com' 
+	}, {
+		fname:     'Phirasit', 
+		lname:     'Charoenchitseriwong', 
+		addr:      '59/7 soi Kolit Phayathai Rd. Ratchatewi Bangkok 10400', 
+		phoneNO:   '0811781888', 
+		gender:    0, 
+		birthdate: '1998-02-12', 
+		email:     'phirasitsharp@gmail.com' 
+	}, {
+		fname:     'Phirasit', 
+		lname:     'Charoenchitseriwong', 
+		addr:      '59/7 soi Kolit Phayathai Rd. Ratchatewi Bangkok 10400', 
+		phoneNO:   '0811781888', 
+		gender:    0, 
+		birthdate: '1998-02-12', 
+		email:     'phirasitsharp@gmail.com' 
+	}, {
+		fname:     'Phirasit', 
+		lname:     'Charoenchitseriwong', 
+		addr:      '59/7 soi Kolit Phayathai Rd. Ratchatewi Bangkok 10400', 
+		phoneNO:   '0811781888', 
+		gender:    0, 
+		birthdate: '1998-02-12', 
+		email:     'phirasitsharp@gmail.com' 
+	}, {
+		fname:     'Phirasit', 
+		lname:     'Charoenchitseriwong', 
+		addr:      '59/7 soi Kolit Phayathai Rd. Ratchatewi Bangkok 10400', 
+		phoneNO:   '0811781888', 
+		gender:    0, 
+		birthdate: '1998-02-12', 
+		email:     'phirasitsharp@gmail.com' 
+	},
+];
+
+const numAccount 		= account.length;
+const numMember 		= 3;
+const numEmployee 		= 3;
 const TableSize 		= [2, 3, 4, 5, 6, 7];
 const numTable			= TableSize.length;
-const numMenu 			= 5;
+
+const menus = [
+	{ name: "Fried Chicken"        , desc: "Deep fried chicken wing"     , price: 270.00 },
+	{ name: "Beef Steak"           , desc: "Grounded beef pepper steak"  , price: 640.00 },
+	{ name: "Laab Tuna"            , desc: "Thai spicy tuna salad"       , price: 35.00  },
+	{ name: "Cabonara Spaghetti"   , desc: "Spaghetti with cabonara"     , price: 170.00 }
+];
+
+const numMenu 			= menus.length;
 const numThumbnail		= 10;
 const numPromo 			= 5;
 const numSale 			= 5;
@@ -77,16 +137,16 @@ mysql_connect(function(db) {
 
         executeCommandSeq(db, numAccount, (i) => {
 
-            const salt = crypto.randomBytes(5).toString('hex');
-            const pass = sha256(i.toString() + salt);
+            const fname         = account[i].fname;
+            const lname         = account[i].lname;
+            const addr          = account[i].addr;
+            const phoneNO       = account[i].phoneNO;
+            const gender        = account[i].gender;
+            const birthdate     = account[i].birthdate;
+            const email         = account[i].email;
 
-            const fname         = `user${i}`;
-            const lname         = `lastname${i}`;
-            const addr          = `Address ${i}: xx/xx Rd. กรุงเทพ`;
-            const phoneNO       = `08${i}${i}${i}99999`;
-            const gender        = i % 2;
-            const birthdate     = `2540-${i+1}-${i+1}`;
-            const email         = `email${i}@mail.com`;
+            const salt = crypto.randomBytes(5).toString('hex');
+            const pass = sha256("pass" + salt);
 
             return (callback) => {
                 db.query("INSERT INTO `ACCOUNT` " +
@@ -214,9 +274,9 @@ mysql_connect(function(db) {
 
         executeCommandSeq(db, numMenu, (i) => {
 
-            const menu_name         = `menu${i}`;
-            const menu_description  = `menu${i} is ${ i % 2 ? "suck" : "good"}`;
-            const price             = 234.23 + 502 * i;
+            const menu_name         = menus[i].name;
+            const menu_description  = menus[i].desc;
+            const price             = menus[i].price;
 
             return (callback) => {
                 db.query("INSERT INTO `MENU` " +

@@ -21,7 +21,7 @@ CREATE TABLE `ACCOUNT` (
 
 	`firstname`   VARCHAR(25)   NOT NULL,
 	`lastname`    VARCHAR(40)   NOT NULL,
-	`address`     VARCHAR(50)   ,
+	`address`     VARCHAR(200)  ,
 	`phone_NO`    VARCHAR(10)   ,
 	`gender`      TINYINT       ,
 	`birthdate`   DATE          ,

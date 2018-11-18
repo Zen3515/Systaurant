@@ -28,6 +28,15 @@ const issue_command = (res, command) => {
   });
 };
 
+/*
+ * return a list of menus
+ * Request { // none }
+ * Response
+ * {
+ * 		message: 		// status message
+ * 		menu:           // list of menus
+ * }
+ */
 const read = (req, res) => {
   const command = 'SELECT * FROM `MENU`';
   mysql_connect(db => {

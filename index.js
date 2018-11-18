@@ -49,13 +49,16 @@ app.use(
 // add public files
 app.use(express.static('public'));
 
-app.get('/', main.ui);
-app.get('/admin', login.checkManager, admin.ui);
-app.get('/login', login.ui);
-app.get('/login/table', login.table_ui);
-app.get('/menu', menu.ui);
-app.get('/order', order.ui);
-app.get('/reserve', reserve.ui);
+app.get('/'               , main.ui);
+app.get('/admin'          , login.checkManager   , admin.ui);
+app.get('/login'          , login.ui);
+app.get('/login/table'    , login.table_ui);
+app.get('/logout'         , login.logout);
+app.get('/menu'           , menu.ui);
+app.get('/order'          , login.checkTable     , order.ui);
+app.get('/order/cooklist' , login.checkEmployee  , order.cooklist_ui);
+app.get('/order/waitlist' , login.checkEmployee  , order.waitlist_ui);
+app.get('/reserve'        , login.checkMember    , reserve.ui);
 
 // list of all available APIs
 
@@ -71,15 +74,23 @@ api.use(jsonRequire);
 api.use(jsonResponse);
 
 api.post('/login', login.login);
-api.post('/logout', login.logout);
+api.post('/login/table', login.login_table);
+api.post('/status', login.stat);
 
-api.get('/menu', menu.read);
-api.get('/reserve/create', reserve.create);
-api.get('/reserve/cancel', reserve.cancel);
+api.post('/menu', menu.read);
 
-api.get('/order/create', order.create);
-api.get('/order/cancel', order.cancel);
-api.get('/order/accept', order.accept);
+api.post('/reserve/create', login.checkAuthen, reserve.create);
+api.post('/reserve/cancel', login.checkAuthen, reserve.cancel);
+
+api.post('/order'          , login.checkTable     , order.read);
+api.post('/order/cooklist' , login.checkEmployee  , order.cooklist);
+api.post('/order/waitlist' , login.checkEmployee  , order.waitlist);
+api.post('/order/create'   , login.checkTable     , order.create);
+api.post('/order/cancel'   , login.checkTable     , order.cancel);
+api.post('/order/accept'   , login.checkEmployee  , order.accept);
+api.post('/order/decline'  , login.checkEmployee  , order.decline);
+api.post('/order/done'     , login.checkEmployee  , order.done);
+api.post('/order/receive'  , login.checkTable     , order.receive);
 
 // admin API
 const adminAPI = express();

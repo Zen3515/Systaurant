@@ -48,13 +48,11 @@ const checkManager = (req, res, next) => {
 };
 
 const checkTable = (req, res, next) => {
-	return checkAuthen(req, res, () => {
-		if (req.session.user.table) {
-			next();
-		} else {
-			res.status(403).send("Unauthorized");
-		}
-	});
+	if (req.session !== undefined && req.session.table !== undefined) {
+		next();
+	} else {
+		res.status(403).send("Unauthorized");
+	}
 };
 
 //////// UI //////////////
@@ -135,7 +133,6 @@ const login = (req, res) => {
 				req.session.user = {};
 				req.session.user.type = req.body.type;
 				req.session.user.id = req.body.id;
-				console.log(req.session);
 
 				req.session.save();
 				res.send(JSON.stringify({
@@ -218,6 +215,37 @@ const logout = (req, res) => {
 	});
 };
 
+/*
+ * status
+ * return the session status
+ * Request: {}
+ * Response: {
+ *    table:    // table_ID if the session has one
+ *    employee: // true if the user is an employee
+ *    member:   // true if the user is a member
+ *    manager:  // true if the user is a manager
+ * }
+ */
+const stat =  (req, res) => {
+
+	if (req.session.user == undefined) {
+		res.send(JSON.stringify({
+			table: req.session.table,
+			employee: false, 
+			member: false,
+			manager: false,
+		}));
+	} else {
+		res.send(JSON.stringify({
+			table: req.session.table,
+			employee: (req.session.user.type == "employee"),
+			member: (req.session.user.type == "member"),
+			manager: (req.session.user.employee_type == "manager"),
+
+		}));
+	}
+};
+
 module.exports = {
 
 	// middleware
@@ -229,7 +257,9 @@ module.exports = {
 
 	// login JSON api
 	login: 				login,
+	login_table:        login_table,
 	logout: 			logout,
+	stat:               stat, 
 
 	// login ui
 	ui: 				ui,
