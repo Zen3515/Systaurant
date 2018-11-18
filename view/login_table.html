@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<<<<<<< HEAD
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -38,40 +37,10 @@
                     </form>
                 </div>
                 <div class="col"></div>
-=======
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Systaurant</title>
-    <link rel="stylesheet" href="../css/bootstrap.min.css" />
-  </head>
-  <body>
-    <form id="login_form">
-      <div class="container">
-        <div class="row">
-          <div class="col"></div>
-          <div class="col-md-6">
-            <h1 class="text-center pt-5">Table Login</h1>
-            <div class="text-center">
-              <a href="/" class="btn btn-link">Home</a>
->>>>>>> add-ui
-            </div>
-            <div class="row form-group">
-              <div class="col">
-                <label for="table">Table: </label>
-                <input class="form-control" type="text" id="table" />
-              </div>
-            </div>
-            <div class="row form-group">
-              <div class="col text-center">
-                <button class="btn btn-primary" type="submit">Login</button>
-              </div>
             </div>
           </div>
           <div class="col"></div>
         </div>
-<<<<<<< HEAD
     </body>
     <script src="../js/jquery-3.3.1.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
@@ -82,25 +51,10 @@
         axios
           .post('/api/login/table', {
             api: $('#table').val(),
-=======
-      </div>
-    </form>
-
-    <script src="../js/jquery-3.3.1.min.js"></script>
-    <script src="../js/bootstrap.min.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script type="text/javascript">
-      $('#login_form').submit(function(e) {
-        e.preventDefault();
-        axios
-          .post('/api/login/table', {
-            api: $('#table').val()
->>>>>>> add-ui
           })
           .then(res => {
             console.log(res.data.message);
             alert(res.data.message);
-<<<<<<< HEAD
           })
           .catch(res => {
             console.log(res.message);
@@ -108,15 +62,4 @@
           });
       });
     </script>
-=======
-            window.location.href = '/';
-          })
-          .catch(res => {
-            console.log(res.message);
-            alert('Login failed.');
-          });
-      });
-    </script>
-  </body>
->>>>>>> add-ui
 </html>
