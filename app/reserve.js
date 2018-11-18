@@ -8,6 +8,82 @@ const mysql_connect = require("../db/connectDB.js");
 
 //////// API //////
 
+const issue_command = (res, command) => {
+	mysql_connect((db) => {
+		db.query(command, (err, result) => {
+			if (err) {
+				res.status(400).send(JSON.stringify({
+					message: err,
+				}));
+			} else {
+				res.send(JSON.stringify({
+					message: "OK",
+				}));
+			}
+		});
+	});
+};
+
+const get_table_ID = (id, reserve_time, number_of_reserved) => {
+
+	const command = 
+		"SELECT `table_ID` FROM `RESERVE`"
+		+ " WHERE (`table_ID` NOT IN (SELECT DISTINCT(`table_ID`)"
+			+ " FROM `RESERVE`"
+			+ ` WHERE ABS(TIMESTAMPDIFF(MINUTE, ${reserve_time}, \`reserve_time\`)) < 30`
+			+ " AND `member_ID` = " + id + ")"
+	    + ` AND \`number_of_seats\` <= ${number_of_reserved})`
+	    + " ORDER BY `number_of_seats` ASC"
+	    + " LIMIT = 1";
+	
+	mysql_connect((db) => {
+		db.query(command, (err, result) => {
+			if (err || result.length == 0) {
+				return -1;
+			} else {
+				return result[0].table_ID;
+			}
+		});
+	});
+};
+/*
+ * get a list of all reservation
+ * Request
+ * {
+ * }
+ * Response
+ * {
+ * 		message: 		// status message
+ * 		list:           // list of all tables
+ * }
+ */
+const read = (req, res) => {
+
+	const id = req.session.user.id;
+
+	const command = "SELECT r.*, t.`number_of_seats`"
+		+ " FROM `RESERVE` r"
+		+ " , `TABLE` t"
+		+ " WHERE NOW() < r.`reserve_time`"
+		+ " AND r.`member_ID` = " + id
+	    + " AND r.`table_ID` = t.`table_ID`";
+	
+	mysql_connect((db) => {
+		db.query(command, (err, result) => {
+			if (err) {
+				res.status(400).send(JSON.stringify({
+					message: err,
+				}));
+			} else {
+				res.send(JSON.stringify({
+					message: "OK",
+					list:    result,
+				}));
+			}
+		});
+	});
+};
+
 /*
  * create a reservation
  * Request
@@ -23,30 +99,35 @@ const mysql_connect = require("../db/connectDB.js");
  */
 const create = (req, res) => {
 
-	login.checkMember(req, res, () => {
+	const member_ID 			= req.session.user.id;
+	const reserve_time			= req.body.reserve_time;
+	const number_of_reserved	= req.body.number_of_reserved;
 
-		const member_ID 			= req.session.user.id;
-		const table_ID 				= req.body.table;
-		const reserve_time			= req.body.reserve;
-		const number_of_reserved	= req.body.number_of_reserved;
+	const table_ID 				= req.body.table_ID ? req.body.table_ID : get_table_ID(member_ID, reserve_time, number_of_reserved);
 
-		if (table_ID === undefined || reserve_time === undefined || number_of_reserved === undefined) {
-			res.status(400).send(JSON.stringify({
-				message: "information is missing [table_ID, reserve_time, number_of_reserved]",
-			}));
-			return;
-		}
+	if (table_ID === undefined || reserve_time === undefined || number_of_reserved === undefined) {
+		res.status(400).send(JSON.stringify({
+			message: "information is missing [table_ID, reserve_time, number_of_reserved]",
+		}));
+		return;
+	}
 
-		const command = "INSERT INTO `RESERVE` "
-			+ "(`member_ID`, `table_ID`, `reserve_time`, `number_of_reserved`)"
-			+ "VALUES "
-			+ "("    + member_ID 
-			+ ", "   + table_ID 
-			+ ", \"" + reserve_time        + "\""
-			+ ", "   + number_of_reserved  + ")";
+	if (table_ID === -1) {
+		res.send(JSON.stringify({
+			message: "no table is available",
+		}));
+		return;
+	}
 
-		issue_command(res, command);
-	});
+	const command = "INSERT INTO `RESERVE` "
+		+ "(`member_ID`, `table_ID`, `reserve_time`, `number_of_reserved`)"
+		+ "VALUES "
+		+ "("    + member_ID 
+		+ ", "   + table_ID 
+		+ ", \"" + reserve_time        + "\""
+		+ ", "   + number_of_reserved  + ")";
+
+	issue_command(res, command);
 };
 
 /*
@@ -119,6 +200,9 @@ module.exports = {
 	// reserve JSON api
 	create: create,
 	cancel: cancel,
+
+	// getTable
+	read: read,
 
 	// reserve ui
 	ui: ui,

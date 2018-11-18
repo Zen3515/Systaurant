@@ -108,7 +108,8 @@ const login = (req, res) => {
 	}
 
 	const command = "SELECT a.salt, a.password, p.* FROM `" + type.toUpperCase()  + "` p, `ACCOUNT` a " 
-		+ `WHERE p.\`${type}_ID\` = ${id} AND p.\`account_ID\` = a.\`account_ID\``;
+		+ ` WHERE (p.${type}_ID = ${id} OR a.firstname = ${id})`
+	    + ` AND p.account_ID = a.account_ID`;
 
 	mysql_connect((db) => {
 		

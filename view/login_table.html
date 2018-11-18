@@ -55,6 +55,9 @@
           .then(res => {
             console.log(res.data.message);
             alert(res.data.message);
+            if (res.data.message == "OK") {
+            	window.location = "/";
+            }
           })
           .catch(res => {
             console.log(res.message);

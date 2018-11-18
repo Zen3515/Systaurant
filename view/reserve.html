@@ -15,76 +15,101 @@
                 <div class="text-center">
                     <a href="/" class="btn btn-link">Home</a>
                 </div>
+                <form id="reserve-form">
+                	Number of reserved seats: 
+                	<output id="seat_output">1</output>
+                	<input id="seat" type="range" min="1" max="10" value="1" oninput="seat_output.value = seat.value"> <br>
+                	Reserved date: <input id="reserve_date" type="date" required> <br>
+                	Reserved time: <input id="reserve_time" min="8:00" max="20:00" type="time" required> <br>
+                	<button type="submit" class="btn btn-primary">
+                		submit
+                	</button>
+                </form>
                 <table class="table table-striped table-hover mt-3">
                     <thead>
                         <tr>
-                            <th>Table</th>
-                            <th>Seat</th>
-                            <th class="text-center">Status</th>
+                            <th>#</th>
+                            <th>Table ID</th>
+                            <th class="text-center">Number of Reserved / Total seats available</th>
+                            <th class="text-center">Reserve Time</th>
                             <th class="text-center">Option</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                1
-                            </td>
-                            <td>
-                                6
-                            </td>
-                            <td class="text-center text-success">
-                                ready
-                            </td>
-                            <td class="text-center">
-                                <button type="button" class="btn btn-primary">Reserve</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                2
-                            </td>
-                            <td>
-                                6
-                            </td>
-                            <td class="text-center text-danger">
-                                reserved
-                            </td>
-                            <td class="text-center">
-                                <button disabled type="button" class="btn btn-primary">Reserve</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                3
-                            </td>
-                            <td>
-                                4
-                            </td>
-                            <td class="text-center text-danger">
-                                reserved
-                            </td>
-                            <td class="text-center">
-                                <button disabled type="button" class="btn btn-primary">Reserve</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                4
-                            </td>
-                            <td>
-                                2
-                            </td>
-                            <td class="text-center text-info">
-                                reserving
-                            </td>
-                            <td class="text-center">
-                                <button type="button" class="btn btn-danger">Cancel</button>
-                            </td>
-                        </tr>
+                    <tbody id="reserve-list">
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+    <script src="../js/jquery-3.3.1.min.js"></script>
+    <script src="../js/axios.min.js"></script>
+    <script type="text/javascript">
+      const getReserve = () => {
+      	$("#reserve-list").text("");
+        axios
+          .post('/api/reserve/read')
+          .then(res => {
+            const reserve = res.data.list;
+            reserve.forEach(e => {
+              const row = `<tr>
+              	  <td>${e.order_ID}</td>
+              	  <td>${e.table_ID}</td>
+              	  <td class='text-center'>
+              	    ${e.number_of_reserved} / ${e.number_of_seats}
+              	  </td>
+              	  <td class='text-center'>
+              	  	${e.reserve_time}
+              	  </td>
+
+                  <td class='text-center'>
+                  <button id="cancel${e.reserve_ID}" onclick='cancel(${e.reserve_ID})' class="btn btn-danger">
+                  	Cancel
+                  </button>
+                  </td>
+              </tr>`;
+              $('#reserve-list').append(row);
+            });
+          })
+          .catch(res => {
+            console.log(res);
+          });
+      };
+
+      $(document).ready(function() {
+        getReserve();
+      });
+
+	  $("#reserve-form").submit(function (e) {
+
+	  	  e.preventDefault();
+
+		  if (confirm("Create a reservation")) {
+	  	  	  axios.post('/api/reserve/create', {
+	  	  	  	  reserve_time: $("#reserve_date").val() + " " + $("#reserve_time").val(),
+	  	  	  	  number_of_reserved: $("#seat").val(),
+	  	  	  }).then(res => {
+	  	  	  	  console.log(res);
+	  	  	  	  window.reload();
+	  	  	  }).catch(res => {
+	  	  	  	  console.log(res);
+	  	  	  });
+	  	  }
+	  });
+
+	  function cancel(id) {
+	  	  if (confirm("Delete reservation #" + id)) {
+	  	  	  axios
+	  	  	  	  .post('/api/reserve/cancel', {
+	  	  	  	  	  reserve_ID: id,
+	  	  	  	  })
+	  	  	      .then(res => {
+	  	  	      	  $("#cancel" + id).addClass("disabled");
+	  	  	      	  console.log(res);
+	  	  	      }).catch(res => {
+	  	  	      	  console.log(res);
+	  	  	      });
+	  	  }
+	  }
+    </script>
 </body>
 </html>

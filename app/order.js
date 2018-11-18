@@ -39,7 +39,13 @@ const read = (req, res) => {
 
 	const command = `SELECT 
 		ord.order_ID, ord.employee_ID, ord.status, menu.menu_name, menu.price
-		FROM \`ORDER\` ord, \`MENU\` menu
+		FROM \`ORDER\` ord, 
+			(SELECT m.menu_ID, m.menu_name, m.menu_description,
+				ROUND(IFNULL(m.price * (100 - s.discount) / 100, m.price), 2) AS price
+				FROM MENU m
+				LEFT JOIN (SELECT menu_ID, MAX(discount) AS discount FROM SALE GROUP BY menu_ID) s
+				ON m.menu_ID = s.menu_ID
+			) menu
 		WHERE ord.table_ID = ${id} 
 		AND ord.menu_ID = menu.menu_ID`;
 

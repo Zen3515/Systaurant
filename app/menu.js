@@ -38,7 +38,14 @@ const issue_command = (res, command) => {
  * }
  */
 const read = (req, res) => {
-  const command = 'SELECT * FROM `MENU`';
+
+  const command = "SELECT m.`menu_ID`, m.`menu_name`, m.`menu_description`"
+  	+ ", ROUND(IFNULL(m.`price` * (100 - s.`discount`) / 100, m.`price`), 2) AS price"
+  	+ " FROM `MENU` m"
+    + " LEFT JOIN "
+    + "(SELECT `menu_ID`, MAX(`discount`) AS `discount` FROM `SALE` GROUP BY `menu_ID`) s"
+    + " ON m.`menu_ID` = s.`menu_ID` ";
+
   mysql_connect(db => {
     db.query(command, (err, result) => {
       if (err) {

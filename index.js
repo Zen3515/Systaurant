@@ -73,13 +73,14 @@ api.use(bodyParser.json());
 api.use(jsonRequire);
 api.use(jsonResponse);
 
-api.post('/login', login.login);
-api.post('/login/table', login.login_table);
-api.post('/status', login.stat);
+api.post('/login'          , login.login);
+api.post('/login/table'    , login.login_table);
+api.post('/status'         , login.stat);
 
-api.post('/menu', menu.read);
-api.post('/reserve/create', login.checkAuthen, reserve.create);
-api.post('/reserve/cancel', login.checkAuthen, reserve.cancel);
+api.post('/menu'           , menu.read);
+api.post('/reserve/read'   , login.checkAuthen    , reserve.read);
+api.post('/reserve/create' , login.checkAuthen    , reserve.create);
+api.post('/reserve/cancel' , login.checkAuthen    , reserve.cancel);
 
 api.post('/order'          , login.checkTable     , order.read);
 api.post('/order/cooklist' , login.checkEmployee  , order.cooklist);
