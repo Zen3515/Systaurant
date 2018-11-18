@@ -49,7 +49,7 @@ const checkManager = (req, res, next) => {
 
 const checkTable = (req, res, next) => {
   return checkAuthen(req, res, () => {
-    if (req.session.user.table) {
+    if (req.session.table) {
       next();
     } else {
       res.status(403).send('Unauthorized');

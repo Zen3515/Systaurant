@@ -78,7 +78,7 @@ api.get('/menu', menu.read);
 api.get('/reserve/create', reserve.create);
 api.get('/reserve/cancel', reserve.cancel);
 
-api.get('/order/create', order.create);
+api.post('/order/create', order.create);
 api.get('/order/cancel', order.cancel);
 api.get('/order/accept', order.accept);
 
