@@ -120,7 +120,7 @@ const login = (req, res) => {
 
 			if (user_info.length !== 1) {
 				res.status(400).send(JSON.stringify({
-					message: "Invalid credentail",
+					message: "Invalid credential",
 				}));
 				return;
 			}
