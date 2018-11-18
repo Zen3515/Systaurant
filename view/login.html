@@ -65,6 +65,7 @@
           .then(res => {
             console.log(res.data.message);
             alert(res.data.message);
+            window.location.href='/';
           })
           .catch(res => {
             console.log(res.message);

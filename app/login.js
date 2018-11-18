@@ -4,68 +4,72 @@
  *
  */
 
-const sha256 = require("sha256");
-const mysql_connect = require("../db/connectDB.js");
+const sha256 = require('sha256');
+const mysql_connect = require('../db/connectDB.js');
 
 //////// Middleware //////
 
 const checkAuthen = (req, res, next) => {
-	if (req.session !== undefined && req.session.user !== undefined) {
-		next();
-	} else {
-		res.status(403).send("Unauthorized");
-	}
+  if (req.session !== undefined && req.session.user !== undefined) {
+    next();
+  } else {
+    res.status(403).send('Unauthorized');
+  }
 };
 
 const checkMember = (req, res, next) => {
-	return checkAuthen(req, res, () => {
-		if (req.session.user.type === "member") {
-			next();
-		} else {
-			res.status(403).send("Unauthorized");
-		}
-	});
+  return checkAuthen(req, res, () => {
+    if (req.session.user.type === 'member') {
+      next();
+    } else {
+      res.status(403).send('Unauthorized');
+    }
+  });
 };
 
 const checkEmployee = (req, res, next) => {
-	return checkAuthen(req, res, () => {
-		if (req.session.user.type === "employee") {
-			next();
-		} else {
-			res.status(403).send("Unauthorized");
-		}
-	});
+  return checkAuthen(req, res, () => {
+    if (req.session.user.type === 'employee') {
+      next();
+    } else {
+      res.status(403).send('Unauthorized');
+    }
+  });
 };
 
 const checkManager = (req, res, next) => {
-	return checkEmployee(req, res, () => {
-		if (req.session.user.employee_type == "manager") {
-			next();
-		} else {
-			res.status(403).send("Unauthorized");
-		}
-	});
+  return checkEmployee(req, res, () => {
+    if (req.session.user.employee_type == 'manager') {
+      next();
+    } else {
+      res.status(403).send('Unauthorized');
+    }
+  });
 };
 
 const checkTable = (req, res, next) => {
-	return checkAuthen(req, res, () => {
-		if (req.session.user.table) {
-			next();
-		} else {
-			res.status(403).send("Unauthorized");
-		}
-	});
+  return checkAuthen(req, res, () => {
+    if (req.session.user.table) {
+      next();
+    } else {
+      res.status(403).send('Unauthorized');
+    }
+  });
 };
 
 //////// UI //////////////
 // TODO
-const ui = (req, res) => { res.sendFile("login.html", {
-	root: __dirname  + '/../view'
-}); };
+const ui = (req, res) => {
+  res.sendFile('login.html', {
+    root: __dirname + '/../view'
+  });
+};
 
-const table_ui = (req, res) => { res.sendFile("login_table.html", {
-	root: __dirname  + '/../view'
-}); };
+const table_ui = (req, res) => {
+  res.sendFile('login_table.html', {
+    root: __dirname + '/../view'
+  });
+};
 
 //////// API /////////////
 /*
@@ -79,75 +83,86 @@ const table_ui = (req, res) => { res.sendFile("login_table.html", {
  * }
  * Reponse
  * {
- * 		message: // status of the authentication 
+ * 		message: // status of the authentication
  * 			// if OK the session is created.
  *			// if not the error message is returned
  * }
  */
 
 const login = (req, res) => {
+  const type = req.body.type;
+  const id = req.body.id;
+  const pass = req.body.password;
 
-	const type = req.body.type;
-	const id = req.body.id;
-	const pass = req.body.password;
+  if (type === undefined || id === undefined || pass === undefined) {
+    res.status(400).send(
+      JSON.stringify({
+        message: 'Some information is missing [type, id, password]'
+      })
+    );
+    return;
+  }
 
-	if (type === undefined || id === undefined || pass === undefined) {
-		res.status(400).send(JSON.stringify({
-			message: "Some information is missing [type, id, password]",
-		}));
-		return;
-	}
+  if (['member', 'employee'].indexOf(type) == -1) {
+    res.status(400).send(
+      JSON.stringify({
+        message: 'Invalid account type'
+      })
+    );
+    return;
+  }
 
-	if (["member", "employee"].indexOf(type) == -1) {
-		res.status(400).send(JSON.stringify({
-			message: "Invalid account type",
-		}));
-		return;
-	}
+  const command =
+    'SELECT a.salt, a.password, p.* FROM `' +
+    type.toUpperCase() +
+    '` p, `ACCOUNT` a ' +
+    `WHERE p.\`${type}_ID\` = ${id} AND p.\`account_ID\` = a.\`account_ID\``;
 
-	const command = "SELECT a.salt, a.password, p.* FROM `" + type.toUpperCase()  + "` p, `ACCOUNT` a " 
-		+ `WHERE p.\`${type}_ID\` = ${id} AND p.\`account_ID\` = a.\`account_ID\``;
+  mysql_connect(db => {
+    db.query(command, (err, user_info) => {
+      if (err) {
+        res.status(400).send(
+          JSON.stringify({
+            message: err
+          })
+        );
+        return;
+      }
 
-	mysql_connect((db) => {
-		
-		db.query(command, (err, user_info) => {
-			if (err) {
-				res.status(400).send(JSON.stringify({
-					message: err,
-				}));
-				return;
-			}
+      if (user_info.length !== 1) {
+        res.status(400).send(
+          JSON.stringify({
+            message: 'Invalid credential'
+          })
+        );
+        return;
+      }
 
-			if (user_info.length !== 1) {
-				res.status(400).send(JSON.stringify({
-					message: "Invalid credential",
-				}));
-				return;
-			}
+      const user = user_info[0];
+      const salt = user.salt;
+      const correctPass = user.password;
 
-			const user = user_info[0];
-			const salt = user.salt;
-			const correctPass = user.password;
+      if (sha256(pass + salt) === correctPass) {
+        // data is valid create session
+        req.session.user = {};
+        req.session.user.type = req.body.type;
+        req.session.user.id = req.body.id;
 
-			if (sha256(pass + salt) === correctPass) {
-				
-				// data is valid create session
-				req.session.user = {};
-				req.session.user.type = req.body.type;
-				req.session.user.id = req.body.id;
-				console.log(req.session);
-
-				req.session.save();
-				res.send(JSON.stringify({
-					message: "OK",
-				}));
-			} else {
-				res.status(400).send(JSON.stringify({
-					message: "Invalid credential",
-				}));
-			}
-		});
-	});
+        req.session.save();
+        res.send(
+          JSON.stringify({
+            message: 'OK'
+          })
+        );
+      } else {
+        res.status(400).send(
+          JSON.stringify({
+            message: 'Invalid credential'
+          })
+        );
+      }
+    });
+  });
 };
 
 /*
@@ -159,79 +174,85 @@ const login = (req, res) => {
  * }
  * Reponse
  * {
- * 		message: // status of the authentication 
+ * 		message: // status of the authentication
  * }
  */
 
 const login_table = (req, res) => {
+  const api = req.body.api;
 
-	const api = req.body.api;
+  if (api === undefined) {
+    res.status(400).send(
+      JSON.stringify({
+        message: 'Some information is missing [api]'
+      })
+    );
+    return;
+  }
 
-	if (api === undefined) {
-		res.status(400).send(JSON.stringify({
-			message: "Some information is missing [api]",
-		}));
-		return;
-	}
+  const command =
+    'SELECT table_ID FROM `TABLE` ' + `WHERE \`table_ID\` = ${api}`;
 
-	const command = "SELECT table_ID FROM `TABLE` " 
-		+ `WHERE \`table_ID\` = ${api}`;
+  mysql_connect(db => {
+    db.query(command, (err, table_info) => {
+      if (err) {
+        res.status(400).send(
+          JSON.stringify({
+            message: err
+          })
+        );
+        return;
+      }
 
-	mysql_connect((db) => {
-		
-		db.query(command, (err, table_info) => {
-			if (err) {
-				res.status(400).send(JSON.stringify({
-					message: err,
-				}));
-				return;
-			}
+      if (table_info.length !== 1) {
+        res.status(400).send(
+          JSON.stringify({
+            message: 'Invalid table api key'
+          })
+        );
+        return;
+      }
 
-			if (table_info.length !== 1) {
-				res.status(400).send(JSON.stringify({
-					message: "Invalid table api key",
-				}));
-				return;
-			}
+      const id = table_info[0].table_ID;
 
-			const id = table_info[0].table_ID;
+      // set table id
+      req.session.table = id;
 
-			// set table id
-			req.session.table = id;
-
-			res.send(JSON.stringify({
-				message: "OK",
-			}));
-		});
-	});
+      res.send(
+        JSON.stringify({
+          message: 'OK'
+        })
+      );
+    });
+  });
 };
 
 /*
- * logout 
+ * logout
  * remove all sessions and cookies
  * Request: {}
  * Response: {} with redirection to '/'
  */
 const logout = (req, res) => {
-	req.session.destroy((err) => {
-		res.redirect("/");
-	});
+  req.session.destroy(err => {
+    res.redirect('/');
+  });
 };
 
 module.exports = {
+  // middleware
+  checkAuthen: checkAuthen,
+  checkMember: checkMember,
+  checkEmployee: checkEmployee,
+  checkManager: checkManager,
+  checkTable: checkTable,
 
-	// middleware
-	checkAuthen: 		checkAuthen,
-	checkMember: 		checkMember, 
-	checkEmployee: 		checkEmployee, 
-	checkManager: 		checkManager,
-	checkTable: 		checkTable,
+  // login JSON api
+  login: login,
+  login_table: login_table,
+  logout: logout,
 
-	// login JSON api
-	login: 				login,
-	logout: 			logout,
-
-	// login ui
-	ui: 				ui,
-	table_ui:			table_ui,
+  // login ui
+  ui: ui,
+  table_ui: table_ui
 };

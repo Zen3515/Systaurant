@@ -71,6 +71,7 @@ api.use(jsonRequire);
 api.use(jsonResponse);
 
 api.post('/login', login.login);
+api.post('/login/table', login.login_table);
 api.post('/logout', login.logout);
 
 api.get('/menu', menu.read);
