@@ -23,6 +23,34 @@ const issue_command = (res, command) => {
 	});
 };
 
+/* read all sales
+ * Request {}
+ * Response 
+ * {
+ *      message:        // status message
+ *      list:           // data
+ * }
+ */
+const read = (req, res) => {
+
+	const command = "SELECT * FROM `SALE`";
+
+	mysql_connect((db) => {
+		db.query(command, (err, result) => {
+			if (err) {
+				res.status(400).send(JSON.stringify({
+					message: err,
+				}));
+			} else {
+				res.send(JSON.stringify({
+					message: "OK",
+					list: result,
+				}));
+			}
+		});
+	});
+};
+
 /*
  * create a sale
  * Request

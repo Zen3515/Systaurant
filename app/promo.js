@@ -24,6 +24,34 @@ const issue_command = (res, command) => {
 	});
 };
 
+/* read all promos
+ * Request {}
+ * Response 
+ * {
+ *      message:        // status message
+ *      list:           // data
+ * }
+ */
+const read = (req, res) => {
+
+	const command = "SELECT * FROM `PROMOTION`";
+
+	mysql_connect((db) => {
+		db.query(command, (err, result) => {
+			if (err) {
+				res.status(400).send(JSON.stringify({
+					message: err,
+				}));
+			} else {
+				res.send(JSON.stringify({
+					message: "OK",
+					list: result,
+				}));
+			}
+		});
+	});
+};
+
 /*
  * create a promo
  * Request
@@ -163,6 +191,7 @@ const ui = (req, res) => {
 module.exports = {
 
 	// promo JSON api
+	read:   read,
 	create: create,
 	update: update,
 	remove: remove,

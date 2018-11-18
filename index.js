@@ -103,14 +103,17 @@ adminAPI.use(bodyParser.urlencoded({ extended: true }));
 // parse application/json
 adminAPI.use(bodyParser.json());
 
+adminAPI.post('/promo/read'  , promo.read);
 adminAPI.post('/promo/create', promo.create);
 adminAPI.post('/promo/update', promo.update);
 adminAPI.post('/promo/delete', promo.remove);
 
+adminAPI.post('/sale/read'  , promo.read);
 adminAPI.post('/sale/create', sale.create);
 adminAPI.post('/sale/update', sale.update);
 adminAPI.post('/sale/delete', sale.remove);
 
+adminAPI.post('/menu/read'  , menu.read);
 adminAPI.post('/menu/create', menu.create);
 adminAPI.post('/menu/update', menu.update);
 adminAPI.post('/menu/delete', menu.remove);

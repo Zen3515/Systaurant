@@ -39,7 +39,7 @@ const checkEmployee = (req, res, next) => {
 
 const checkManager = (req, res, next) => {
 	return checkEmployee(req, res, () => {
-		if (req.session.user.employee_type == "manager") {
+		if (req.session.user.employee_type == 2) {
 			next();
 		} else {
 			res.status(403).send("Unauthorized");
@@ -130,7 +130,7 @@ const login = (req, res) => {
 			if (sha256(pass + salt) === correctPass) {
 				
 				// data is valid create session
-				req.session.user = {};
+				req.session.user = user;
 				req.session.user.type = req.body.type;
 				req.session.user.id = req.body.id;
 
@@ -240,7 +240,7 @@ const stat =  (req, res) => {
 			table: req.session.table,
 			employee: (req.session.user.type == "employee"),
 			member: (req.session.user.type == "member"),
-			manager: (req.session.user.employee_type == "manager"),
+			manager: (req.session.user.employee_type == 2),
 
 		}));
 	}
