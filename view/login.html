@@ -78,9 +78,8 @@
           })
           .then(res => {
             console.log(res.data.message);
-            if (res.data.message == "OK") {
-              window.location = "/";
-            }
+            alert(res.data.message);
+            window.location.href='/';
           })
           .catch(res => {
           	console.log(res);

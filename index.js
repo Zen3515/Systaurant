@@ -29,8 +29,8 @@ const jsonRequire = (req, res, next) => {
 };
 
 const jsonResponse = (req, res, next) => {
-  	res.setHeader('Content-Type', 'application/json');
-  	next();
+  res.setHeader('Content-Type', 'application/json');
+  next();
 };
 
 // list of all available views
@@ -78,7 +78,6 @@ api.post('/login/table', login.login_table);
 api.post('/status', login.stat);
 
 api.post('/menu', menu.read);
-
 api.post('/reserve/create', login.checkAuthen, reserve.create);
 api.post('/reserve/cancel', login.checkAuthen, reserve.cancel);
 

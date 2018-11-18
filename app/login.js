@@ -4,37 +4,37 @@
  *
  */
 
-const sha256 = require("sha256");
-const mysql_connect = require("../db/connectDB.js");
+const sha256 = require('sha256');
+const mysql_connect = require('../db/connectDB.js');
 
 //////// Middleware //////
 
 const checkAuthen = (req, res, next) => {
-	if (req.session !== undefined && req.session.user !== undefined) {
-		next();
-	} else {
-		res.status(403).send("Unauthorized");
-	}
+  if (req.session !== undefined && req.session.user !== undefined) {
+    next();
+  } else {
+    res.status(403).send('Unauthorized');
+  }
 };
 
 const checkMember = (req, res, next) => {
-	return checkAuthen(req, res, () => {
-		if (req.session.user.type === "member") {
-			next();
-		} else {
-			res.status(403).send("Unauthorized");
-		}
-	});
+  return checkAuthen(req, res, () => {
+    if (req.session.user.type === 'member') {
+      next();
+    } else {
+      res.status(403).send('Unauthorized');
+    }
+  });
 };
 
 const checkEmployee = (req, res, next) => {
-	return checkAuthen(req, res, () => {
-		if (req.session.user.type === "employee") {
-			next();
-		} else {
-			res.status(403).send("Unauthorized");
-		}
-	});
+  return checkAuthen(req, res, () => {
+    if (req.session.user.type === 'employee') {
+      next();
+    } else {
+      res.status(403).send('Unauthorized');
+    }
+  });
 };
 
 const checkManager = (req, res, next) => {
@@ -57,13 +57,17 @@ const checkTable = (req, res, next) => {
 
 //////// UI //////////////
 // TODO
-const ui = (req, res) => { res.sendFile("login.html", {
-	root: __dirname  + '/../view'
-}); };
+const ui = (req, res) => {
+  res.sendFile('login.html', {
+    root: __dirname + '/../view'
+  });
+};
 
-const table_ui = (req, res) => { res.sendFile("login_table.html", {
-	root: __dirname  + '/../view'
-}); };
+const table_ui = (req, res) => {
+  res.sendFile('login_table.html', {
+    root: __dirname + '/../view'
+  });
+};
 
 //////// API /////////////
 /*
@@ -77,7 +81,7 @@ const table_ui = (req, res) => { res.sendFile("login_table.html", {
  * }
  * Reponse
  * {
- * 		message: // status of the authentication 
+ * 		message: // status of the authentication
  * 			// if OK the session is created.
  *			// if not the error message is returned
  * }
@@ -156,63 +160,69 @@ const login = (req, res) => {
  * }
  * Reponse
  * {
- * 		message: // status of the authentication 
+ * 		message: // status of the authentication
  * }
  */
 
 const login_table = (req, res) => {
+  const api = req.body.api;
 
-	const api = req.body.api;
+  if (api === undefined) {
+    res.status(400).send(
+      JSON.stringify({
+        message: 'Some information is missing [api]'
+      })
+    );
+    return;
+  }
 
-	if (api === undefined) {
-		res.status(400).send(JSON.stringify({
-			message: "Some information is missing [api]",
-		}));
-		return;
-	}
+  const command =
+    'SELECT table_ID FROM `TABLE` ' + `WHERE \`table_ID\` = ${api}`;
 
-	const command = "SELECT table_ID FROM `TABLE` " 
-		+ `WHERE \`table_ID\` = ${api}`;
+  mysql_connect(db => {
+    db.query(command, (err, table_info) => {
+      if (err) {
+        res.status(400).send(
+          JSON.stringify({
+            message: err
+          })
+        );
+        return;
+      }
 
-	mysql_connect((db) => {
-		
-		db.query(command, (err, table_info) => {
-			if (err) {
-				res.status(400).send(JSON.stringify({
-					message: err,
-				}));
-				return;
-			}
+      if (table_info.length !== 1) {
+        res.status(400).send(
+          JSON.stringify({
+            message: 'Invalid table api key'
+          })
+        );
+        return;
+      }
 
-			if (table_info.length !== 1) {
-				res.status(400).send(JSON.stringify({
-					message: "Invalid table api key",
-				}));
-				return;
-			}
+      const id = table_info[0].table_ID;
 
-			const id = table_info[0].table_ID;
+      // set table id
+      req.session.table = id;
 
-			// set table id
-			req.session.table = id;
-
-			res.send(JSON.stringify({
-				message: "OK",
-			}));
-		});
-	});
+      res.send(
+        JSON.stringify({
+          message: 'OK'
+        })
+      );
+    });
+  });
 };
 
 /*
- * logout 
+ * logout
  * remove all sessions and cookies
  * Request: {}
  * Response: {} with redirection to '/'
  */
 const logout = (req, res) => {
-	req.session.destroy((err) => {
-		res.redirect("/");
-	});
+  req.session.destroy(err => {
+    res.redirect('/');
+  });
 };
 
 /*

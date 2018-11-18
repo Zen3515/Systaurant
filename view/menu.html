@@ -26,8 +26,7 @@
                 <th class="text-center">Option</th>
               </tr>
             </thead>
-            <tbody id="menu-list">
-            </tbody>
+            <tbody id="menu-list"></tbody>
           </table>
         </div>
       </div>
@@ -35,6 +34,18 @@
     <script src="../js/jquery-3.3.1.min.js"></script>
     <script src="../js/axios.min.js"></script>
     <script type="text/javascript">
+      const order = id => {
+        axios
+          .post('/api/order/create', {
+            menu_ID: id
+          })
+          .then(res => {
+            console.log(res);
+          })
+          .catch(res => {
+            console.log(res);
+          });
+      };
       const getMenu = () => {
       	$("#menu-list").text("");
         axios
