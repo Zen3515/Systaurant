@@ -67,6 +67,9 @@ api.use(bodyParser.urlencoded({ extended: true }));
 // parse application/json
 api.use(bodyParser.json());
 
+api.use(jsonRequire);
+api.use(jsonResponse);
+
 api.post('/login', login.login);
 api.post('/logout', login.logout);
 
@@ -107,7 +110,7 @@ api.use('/admin', adminAPI);
 api.post('/sql', sql.api);
 
 // enable APIs using only JSON
-app.use('/api', jsonResponse, api);
+app.use('/api', api);
 
 // start server
 app.listen(port, () => console.log(`Systaurant is running on port ${port}!`));
