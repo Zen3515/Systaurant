@@ -10,11 +10,11 @@ const account = [
 	{
 		fname:     'Phirasit', 
 		lname:     'Charoenchitseriwong', 
-		addr:      '59/7 soi Kolit Phayathai Rd. Ratchatewi Bangkok 10400', 
-		phoneNO:   '0811781888', 
+		addr:      '59/7 ************ Ratchatewi Bangkok 10400', 
+		phoneNO:   '0832894321', 
 		gender:    0, 
-		birthdate: '1998-02-12', 
-		email:     'phirasitsharp@gmail.com' 
+		birthdate: '1998-05-16', 
+		email:     'p********@gmail.com' 
 	}, {
 		fname:     'Troy', 
 		lname:     'Kshlerin', 
@@ -92,6 +92,7 @@ const employee  = [
 		employee_type: 0 
     }
 ];
+const member = [2,4,7];  //not employees
 const TableSize 		= [2, 3, 4, 5, 6, 7];
 const menus = [
     { name: "Fried Chicken"        , desc: "Deep fried chicken wing"     , price: 270.00 },
@@ -101,8 +102,8 @@ const menus = [
 ];
 
 const numAccount 		= account.length;
-const numMember 		= 3;
-const numEmployee 		= employee.length; //3
+const numMember 		= member.length;
+const numEmployee 		= employee.length;
 const numTable			= TableSize.length;
 const numMenu 			= menus.length;
 const numThumbnail		= 10;
@@ -196,13 +197,11 @@ mysql_connect(function(db) {
 
         executeCommandSeq(db, numEmployee, (i) => {
 
-            const account_id        = i + 1;
-            const ssn               = `2334223424${i+1}${i}${i+1}`;
-            const salary            = 5000 + 1000 * i;
-            const workday           = 63;
-            const employee_type     =
-                (i >= Math.floor((numEmployee + 2) / 3)) +
-                (i >= Math.floor((numEmployee + 2) / 3) + Math.floor((numEmployee + 1) / 3));
+            const account_id        = employee[i].account_id;
+            const ssn               = employee[i].ssn;
+            const salary            = employee[i].salary;
+            const workday           = employee[i].workday;
+            const employee_type     = employee[i].employee_type;
 
             return (callback) => {
                 db.query("INSERT INTO `EMPLOYEE` " +
@@ -216,65 +215,67 @@ mysql_connect(function(db) {
 
     // Generate EMPLOYEE_WAITER
     const seedEmployeeWaiter = (callback) => {
-        executeCommandSeq(db, numEmployee, (i) => {
-            if(employee[i].employee_type == 0){
-                const employee_id       = i;
-                const status            = i % 2;
+        let employees = [];
+        for (let i = 0; i < numEmployee; ++i) {
+            if(employee[i].employee_type==0)  employees.push(i);
+        }
+        executeCommandSeq(db, employees.length, (i) => {
+            const employee_id       = employees[i];
+            const status            = employee_id % 2;
 
-                return (callback) => {
-                    db.query("INSERT INTO `EMPLOYEE_WAITER` " +
-                        "(`employee_ID`, `status`) " +
-                        " VALUES " +
-                        `(${employee_id}, \"${status}\")`
-                        , createCallback(callback, true, false));
-                };
-            }
+            return (callback) => {
+                db.query("INSERT INTO `EMPLOYEE_WAITER` " +
+                    "(`employee_ID`, `status`) " +
+                    " VALUES " +
+                    `(${employee_id}, \"${status}\")`
+                    , createCallback(callback, true, false));
+            };
         }, callback);
     };
 
     // Generate EMPLOYEE_CHEF
     const seedEmployeeChef = (callback) => {
-
-        executeCommandSeq(db, numEmployee, (i) => {
-            if(employee[i].employee_type == 1){
-                const employee_id       = i;
+        let employees = [];
+        for (let i = 0; i < numEmployee; ++i) {
+            if(employee[i].employee_type==1)  employees.push(i);
+        }
+        executeCommandSeq(db, employees.length, (i) => {
+            const employee_id       = employees[i];
                 
-                return (callback) => {
-                    db.query("INSERT INTO `EMPLOYEE_CHEF` " +
-                        "(`employee_ID`) " +
-                        " VALUES " +
-                        `(${employee_id})`
-                        , createCallback(callback, true, false));
-                };
-            }
+            return (callback) => {
+                db.query("INSERT INTO `EMPLOYEE_CHEF` " +
+                    "(`employee_ID`) " +
+                    " VALUES " +
+                    `(${employee_id})`
+                    , createCallback(callback, true, false));
+            };
         }, callback);
     };
 
     // Generate EMPLOYEE_MANAGER
     const seedEmployeeManager = (callback) => {
-
-        executeCommandSeq(db, numEmployee, (i) => {
-            if(employee[i].employee_type == 2){
-                const employee_id       = i;
+        let employees = [];
+        for (let i = 0; i < numEmployee; ++i) {
+            if(employee[i].employee_type==2)  employees.push(i);
+        }
+        executeCommandSeq(db, employees.length, (i) => {
+            const employee_id       = employees[i];
                 
-                return (callback) => {
-                    db.query("INSERT INTO `EMPLOYEE_MANAGER` " +
-                        "(`employee_ID`) " +
-                        " VALUES " +
-                        `(${employee_id})`
-                        , createCallback(callback, true, false));
-                };
-            }
+            return (callback) => {
+                db.query("INSERT INTO `EMPLOYEE_MANAGER` " +
+                    "(`employee_ID`) " +
+                    " VALUES " +
+                    `(${employee_id})`
+                    , createCallback(callback, true, false));
+            };
         }, callback);
     };
 
     // Generate Member
     const seedMember = (callback) => {
-
+        
         executeCommandSeq(db, numMember, (i) => {
-
-            i += numEmployee;
-            const account_id        = i + 1;
+            const account_id        = member[i];
             const registered_date   = `2012-03-${i+1} 0:${i+3}:0`;
 
             return (callback) => {
