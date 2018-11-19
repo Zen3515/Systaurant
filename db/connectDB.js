@@ -1,6 +1,5 @@
 const mysql = require('mysql');
-
-import config from './config';
+const config = require('./config');
 
 module.exports = function(callback) {
   const db_con = mysql.createConnection(config);
