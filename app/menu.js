@@ -30,7 +30,9 @@ const issue_command = (res, command) => {
 
 /*
  * return a list of menus
- * Request { // none }
+ * Request { 
+ * 	    disable_sale:           // apply sale 
+ * }
  * Response
  * {
  * 		message: 		// status message
@@ -39,12 +41,15 @@ const issue_command = (res, command) => {
  */
 const read = (req, res) => {
 
-  const command = "SELECT m.`menu_ID`, m.`menu_name`, m.`menu_description`"
+  const command = !req.body.disable_sale ?
+  	  "SELECT m.`menu_ID`, m.`menu_name`, m.`menu_description`"
   	+ ", ROUND(IFNULL(m.`price` * (100 - s.`discount`) / 100, m.`price`), 2) AS price"
   	+ " FROM `MENU` m"
     + " LEFT JOIN "
     + "(SELECT `menu_ID`, MAX(`discount`) AS `discount` FROM `SALE` GROUP BY `menu_ID`) s"
-    + " ON m.`menu_ID` = s.`menu_ID` ";
+    + " ON m.`menu_ID` = s.`menu_ID` "
+    : "SELECT m.`menu_ID`, m.`menu_name`, m.`menu_description`, m.`price`"
+  	+ " FROM `MENU` m";
 
   mysql_connect(db => {
     db.query(command, (err, result) => {
@@ -76,40 +81,28 @@ const read = (req, res) => {
  * }
  */
 const create = (req, res) => {
-  login.checkManager(req, res, () => {
     const name = req.body.name;
     const description = req.body.description;
     const price = req.body.price;
 
     if (
-      name === undefined ||
-      description === undefined ||
-      price === undefined
+      	name === undefined ||
+      	description === undefined ||
+      	price === undefined
     ) {
-      res.status(400).send(
-        JSON.stringify({
-          message: 'information is missing [name, description, price]'
-        })
-      );
-      return;
+      	res.status(400).send(
+        	JSON.stringify({
+          		message: 'information is missing [name, description, price]'
+        	})
+      	);
+      	return;
     }
 
-    const command =
-      'INSERT INTO `MENU` ' +
-      '(`menu_name`, `menu_description`, `price`) ' +
-      'VALUES ' +
-      '("' +
-      name +
-      '"' +
-      ',"' +
-      description +
-      '"' +
-      ',' +
-      price +
-      ')';
+    const command = 'INSERT INTO `MENU` ' 
+      	+ '(`menu_name`, `menu_description`, `price`) '
+      	+ 'VALUES (\"' + name + "\",\"" + description + "\"," + price + ")"; 
 
     issue_command(res, command);
-  });
 };
 
 /*
@@ -127,46 +120,43 @@ const create = (req, res) => {
  * }
  */
 const update = (req, res) => {
-  login.checkManager(req, res, () => {
-    const id = req.body.menu_ID;
+
+    const menu_ID = req.body.menu_ID;
     const name = req.body.name;
     const description = req.body.description;
     const price = req.body.price;
 
-    if (id === undefined) {
-      res.status(400).send(
-        JSON.stringify({
-          message: 'no menu_ID'
-        })
-      );
-      return;
+    if (menu_ID === undefined) {
+      	res.status(400).send(
+        	JSON.stringify({
+          		message: 'no menu_ID'
+        	})
+      	);
+      	return;
     }
 
     if (
-      name === undefined &&
-      description === undefined &&
-      price === undefined
+      	name === undefined &&
+      	description === undefined &&
+      	price === undefined
     ) {
-      res.status(400).send(
-        JSON.stringify({
-          message: 'no new information [name, description, price]'
-        })
-      );
-      return;
+      	res.status(400).send(
+        	JSON.stringify({
+          		message: 'no new information [name, description, price]'
+        	})
+      	);
+      	return;
     }
 
-    const command =
-      'UPDATE `MENU` SET ' +
-      (name ? '`menu_name` = "' + name + '"' : '') +
-      (description
-        ? (name ? ', ' : ' ') + '`menu_description` = "' + description + '"'
-        : '') +
-      (price ? (name || description ? ', ' : ' ') + '`price` = ' + price : '') +
-      ' WHERE `menu_ID` = ' +
-      menu_ID;
+    const command = 'UPDATE `MENU` SET '
+      	+ (name ? '`menu_name` = "' + name + '"' : '') 
+      	+ (description
+        	? (name ? ', ' : ' ') + '`menu_description` = "' + description + '"'
+        	: '') 
+      	+ (price ? (name || description ? ', ' : ' ') + '`price` = ' + price : '')
+      	+ ' WHERE `menu_ID` = ' + menu_ID;
 
     issue_command(res, command);
-  });
 };
 
 /*

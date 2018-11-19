@@ -51,6 +51,9 @@ app.use(express.static('public'));
 
 app.get('/'               , main.ui);
 app.get('/admin'          , login.checkManager   , admin.ui);
+app.get('/admin/menu'     , login.checkManager   , admin.menu_ui);
+app.get('/admin/sale'     , login.checkManager   , admin.sale_ui);
+app.get('/admin/promo'    , login.checkManager   , admin.promo_ui);
 app.get('/login'          , login.ui);
 app.get('/login/table'    , login.table_ui);
 app.get('/logout'         , login.logout);
@@ -108,7 +111,7 @@ adminAPI.post('/promo/create', promo.create);
 adminAPI.post('/promo/update', promo.update);
 adminAPI.post('/promo/delete', promo.remove);
 
-adminAPI.post('/sale/read'  , promo.read);
+adminAPI.post('/sale/read'  , sale.read);
 adminAPI.post('/sale/create', sale.create);
 adminAPI.post('/sale/update', sale.update);
 adminAPI.post('/sale/delete', sale.remove);

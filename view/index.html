@@ -25,6 +25,7 @@
                     <a class="btn btn-link" id='reserve'>Reserve</a>
                     <a class="btn btn-link" id='cooking'>Cooking List</a>
                     <a class="btn btn-link" id='waiting'>Waiting List</a>
+                    <a class="btn btn-link" id='admin'>Admin</a>
                 </div>
             </div>
         </div>
@@ -68,6 +69,11 @@
 		  	  	  		$("#waiting").removeAttr("href").addClass('disabled');
 					}
 
+		  	  		if (stat.manager) {
+		  	  	  		$("#admin").attr("href", "/admin").removeClass('disabled');
+		  	  	  	} else {
+		  	  	  		$("#admin").removeAttr("href").addClass('disabled');
+					}
 		  		}).catch(res => {
 		  			console.log(res);
 		  		});

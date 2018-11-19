@@ -311,7 +311,7 @@ mysql_connect(function(db) {
 
         executeCommandSeq(db, numPromo, (i) => {
 
-            const employee_ID           = 1;
+            const employee_ID           = 3;
             const pro_start_date        = `2012-${i+1}-${i+7}`;
             const pro_expire_date       = `2012-${12-i}-${i+2}`;
             const criteria              = `You have to pay full before using promo ${i}`;
@@ -335,7 +335,7 @@ mysql_connect(function(db) {
             const menu_ID               = (i * i) % numMenu + 1;
             const sale_start_date       = `2002-${i+3}-${i+10}`;
             const sale_expire_date      = `2032-${11-i}-${30-i}`;
-            const employee_ID           = 1;
+            const employee_ID           = 3;
             const discount              = 20 + i * 5.23;
 
             return (callback) => {

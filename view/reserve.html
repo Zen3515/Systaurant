@@ -52,7 +52,7 @@
             const reserve = res.data.list;
             reserve.forEach(e => {
               const row = `<tr>
-              	  <td>${e.order_ID}</td>
+              	  <td>${e.reserve_ID}</td>
               	  <td>${e.table_ID}</td>
               	  <td class='text-center'>
               	    ${e.number_of_reserved} / ${e.number_of_seats}
@@ -83,13 +83,13 @@
 
 	  	  e.preventDefault();
 
-		  if (confirm("Create a reservation")) {
+		  if (confirm("Create a reservation?")) {
 	  	  	  axios.post('/api/reserve/create', {
 	  	  	  	  reserve_time: $("#reserve_date").val() + " " + $("#reserve_time").val(),
 	  	  	  	  number_of_reserved: $("#seat").val(),
 	  	  	  }).then(res => {
 	  	  	  	  console.log(res);
-	  	  	  	  window.reload();
+	  	  	  	  location.reload();
 	  	  	  }).catch(res => {
 	  	  	  	  console.log(res);
 	  	  	  });

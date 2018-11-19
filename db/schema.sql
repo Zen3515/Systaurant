@@ -101,7 +101,7 @@ CREATE TABLE `TABLE` (
 
 CREATE TABLE `RESERVE` (
 	`reserve_ID`			INTEGER		NOT NULL  AUTO_INCREMENT,
-	`member_ID`             INTEGER     NOT NULL  UNIQUE,
+	`member_ID`             INTEGER     NOT NULL,
 	`table_ID`              INTEGER     NOT NULL,
 
 	`reserve_time`          DATETIME    NOT NULL,
@@ -143,18 +143,20 @@ CREATE TABLE `MENU_THUMBNAIL` (
 );
 
 CREATE TABLE `SALE` (
+	`sale_ID`             INTEGER       NOT NULL  AUTO_INCREMENT,
 	`menu_ID`             INTEGER       NOT NULL,
 	`sale_start_date`     DATETIME      NOT NULL,
 	`sale_expire_date`    DATETIME      NOT NULL,
 	`employee_ID`         INTEGER       NOT NULL,
 	`discount`            FLOAT(4, 2)   NOT NULL,
 
-	PRIMARY KEY `sale_pk` (`menu_ID`, `sale_start_date`),
+	PRIMARY KEY `sale_pk` (`sale_ID`),
 
 	FOREIGN KEY `sale_fk_menu` (`menu_ID`) REFERENCES `MENU` (`menu_ID`)
 		ON DELETE CASCADE
 		ON UPDATE CASCADE,
 
+	INDEX `sale_menu_ID_index` (`menu_ID`),
 	INDEX `sale_sale_start_date_index` (`sale_start_date`),
 	INDEX `sale_sale_end_date_index`   (`sale_expire_date`)
 );

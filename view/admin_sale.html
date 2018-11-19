@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Systaurant</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <h1 class="text-center pt-5">Admin Sale</h1>
+          <div class="text-center">
+            <a href="/" class="btn btn-link">Home</a>
+            <a href="/admin/menu" class="btn btn-link">Menu</a>
+            <a href="/admin/sale" class="btn btn-link">Sale</a>
+            <a href="/admin/promo" class="btn btn-link">Promo</a>
+          </div>
+          <table class="table table-striped table-hover mt-3">
+            <thead>
+              <tr>
+              	<th>#</th>
+              	<th>Menu #</th>
+              	<th>Menu Name</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th class="text-right">discount</th>
+                <th class="text-center">Option</th>
+              </tr>
+            </thead>
+            <tbody id="sale-list"></tbody>
+            <tbody>
+            	<form id="sale_form">
+            	<td></td>
+            	<td><input id="sale_menu_ID" class="form-control" placeholder="menu ID" required></td>
+            	<td></td>
+            	<td><input type="date" id="sale_start_date" class="form-control" value="" required><input type="time" id="sale_start_time" class="form-control" value="00:00" required> </td>
+            	<td><input type="date" id="sale_end_date" class="form-control" value="" required><input type="time" id="sale_end_time" class="form-control" value="23:59" required> </td>
+            	<td class="text-right"><input id="sale_discount" placeholder="discount" style="text-align: right;" value="" required></td>
+            	<td class="text-center">
+            		<button type="submit" class="btn btn-success">
+            			+ Create
+            		</button>
+            	</td>
+            	</form>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <script src="../js/jquery-3.3.1.min.js"></script>
+    <script src="../js/axios.min.js"></script>
+    <script type="text/javascript">
+      const getSale = () => {
+      	$("#sale-list").text("");
+        axios
+          .post('/api/admin/sale/read')
+          .then(res => {
+            const sale = res.data.sale;
+            console.log(sale);
+            sale.forEach(e => {
+              const row = `<tr>
+              	  <td>${e.sale_ID}</td>
+              	  <td><input id="sale_ID${e.sale_ID}" type="text" class="form-control" value="${e.sale_ID}"></td>
+              	  <td>${e.menu_name}</td>
+              	  <td><input id="sale_start${e.sale_ID}" class="form-control" value="${e.sale_start_date}"></td>
+              	  <td><input id="sale_end${e.sale_ID}" class="form-control" value="${e.sale_expire_date}"></td>
+              	  <td class='text-right'>
+              	  <input id="sale_price${e.sale_ID}" class="form-control" type="text" value="${e.discount}" style="text-align: right">
+              	  </td>
+                  <td class='text-center'>
+                  <button id='sale_update${e.sale_ID}' class='btn btn-primary' onclick='sale_update(${e.sale_ID});'>Update</button>
+                  <button id='sale_delete${e.sale_ID}' class='btn btn-danger' onclick='sale_delete(${e.sale_ID});'>Delete</button>
+                  </td>
+              </tr>`;
+              $('#sale-list').append(row);
+            });
+          })
+          .catch(res => {
+            console.log(res);
+          });
+      };
+
+      function sale_update(id) {
+
+	  	  const name = $("#sale_name" + id).val();
+	  	  const desc = $("#sale_desc" + id).val();
+	  	  const price = $("#sale_price" + id).val();
+
+		  if (confirm("Update sale #" + id)) {
+		  	  axios
+		  	  	  .post('/api/admin/sale/update', {
+		  	  	  	  sale_ID: id,
+		  	  	  	  name: name,
+		  	  	  	  description: desc,
+		  	  	  	  price: price
+		  	  	  })
+		  	  	  .then(res => {
+					  console.log(res);
+					  $("#menu_update" + id).addClass("disabled");
+		  	  	  }).catch(res => {
+		  	  	  	  console.log(res);
+		  	  	  });
+		  }
+
+      }
+
+      function sale_delete(id) {
+
+		  if (confirm("Delete sale #" + id)) {
+		  	  axios
+		  	  	  .post('/api/admin/sale/delete', {
+		  	  	  	  sale_ID: id,
+		  	  	  })
+		  	  	  .then(res => {
+					  console.log(res);
+					  $("#sale_delete" + id).addClass("disabled");
+		  	  	  }).catch(res => {
+		  	  	  	  console.log(res);
+		  	  	  });
+		  }
+
+      }
+
+	  $("#sale_form").submit(function (e) {
+		  
+          e.preventDefault();
+
+		  const menu_ID = $("#sale_menu_ID").val();
+	  	  const start = $("#sale_start").val();
+	  	  const end = $("#sale_end").val();
+	  	  const price = $("#sale_discount").val();
+
+		  if (confirm("Create a new sale?")) {
+		  	  axios
+		  	  	  .post('/api/admin/menu/create', {
+		  	  	  	  menu_ID: menu_ID,
+		  	  	  	  sale_start_date: start,
+		  	  	  	  sale_expire_date: end,
+		  	  	  	  discount: discount,
+		  	  	  })
+		  	  	  .then(res => {
+					  console.log(res);
+		  	  	  	  alert("Done");
+		  	  	  	  location.reload();
+		  	  	  }).catch(res => {
+					  console.log(res.response.data.message);
+		  	  	  	  console.log(res);
+		  	  	  });
+		  }
+	  });
+
+      $(document).ready(function() {
+        getSale();
+      });
+    </script>
+  </body>
+</html>

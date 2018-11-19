@@ -28,23 +28,27 @@ const issue_command = (res, command) => {
  * Response 
  * {
  *      message:        // status message
- *      list:           // data
+ *      sale:           // data
  * }
  */
 const read = (req, res) => {
 
-	const command = "SELECT * FROM `SALE`";
+	const id = req.session.user.id;
+	const command = "SELECT s.*, m.menu_name FROM `SALE` s, `MENU` m "
+		+ " WHERE s.`employee_ID` = " + id
+		+ " AND m.`menu_ID` = s.`menu_ID`";
 
 	mysql_connect((db) => {
 		db.query(command, (err, result) => {
 			if (err) {
 				res.status(400).send(JSON.stringify({
 					message: err,
+					sale: [],
 				}));
 			} else {
 				res.send(JSON.stringify({
 					message: "OK",
-					list: result,
+					sale: result,
 				}));
 			}
 		});
@@ -191,6 +195,7 @@ module.exports = {
 	create: create,
 	update: update,
 	remove: remove,
+	read: read,
 
 	// sale ui
 	ui: ui

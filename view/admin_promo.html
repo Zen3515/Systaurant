@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Systaurant</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <h1 class="text-center pt-5">Admin Promotion</h1>
+          <div class="text-center">
+            <a href="/" class="btn btn-link">Home</a>
+            <a href="/admin/menu" class="btn btn-link">Menu</a>
+            <a href="/admin/sale" class="btn btn-link">Sale</a>
+            <a href="/admin/promo" class="btn btn-link">Promo</a>
+          </div>
+          <table class="table table-striped table-hover mt-3">
+            <thead>
+              <tr>
+              	<th>#</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th class="text-right">Price (THB)</th>
+                <th class="text-center">Option</th>
+              </tr>
+            </thead>
+            <tbody id="menu-list"></tbody>
+            <tbody>
+            	<form id="menu_form">
+            	<td></td>
+            	<td><input id="menu_name" class="form-control" placeholder="Menu Name" value="" required></td>
+            	<td><textarea id="menu_desc" class="form-control" placeholder="Description"></textarea></td>
+            	<td class="text-right"><input id="menu_price" placeholder="Price" style="text-align: right;" value="" required></td>
+            	<td class="text-center">
+            		<button type="submit" class="btn btn-success">
+            			+ Create
+            		</button>
+            	</td>
+            	</form>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <script src="../js/jquery-3.3.1.min.js"></script>
+    <script src="../js/axios.min.js"></script>
+    <script type="text/javascript">
+      const getMenu = () => {
+      	$("#menu-list").text("");
+        axios
+          	.post('/api/menu', {
+          		disable_sale: 1,
+          	})
+          .then(res => {
+            const menu = res.data.menu;
+            menu.forEach(e => {
+              const row = `<tr>
+              	  <td>${e.menu_ID}</td>
+              	  <td><input id="menu_name${e.menu_ID}" type="text" class="form-control" value="${e.menu_name}"></td>
+              	  <td><textarea id="menu_desc${e.menu_ID}" class="form-control">${e.menu_description}</textarea></td>
+              	  <td class='text-right'>
+              	  <input id="menu_price${e.menu_ID}" class="form-control" type="text" value="${e.price}" style="text-align: right">
+              	  </td>
+                  <td class='text-center'>
+                  <button id='menu_update${e.menu_ID}' class='btn btn-primary' onclick='menu_update(${e.menu_ID});'>Update</button>
+                  <button id='menu_delete${e.menu_ID}' class='btn btn-danger' onclick='menu_delete(${e.menu_ID});'>Delete</button>
+                  </td>
+              </tr>`;
+              $('#menu-list').append(row);
+            });
+          })
+          .catch(res => {
+            console.log(res);
+          });
+      };
+
+      function menu_update(id) {
+
+	  	  const name = $("#menu_name" + id).val();
+	  	  const desc = $("#menu_desc" + id).val();
+	  	  const price = $("#menu_price" + id).val();
+
+		  if (confirm("Update menu #" + id)) {
+		  	  axios
+		  	  	  .post('/api/admin/menu/update', {
+		  	  	  	  menu_ID: id,
+		  	  	  	  name: name,
+		  	  	  	  description: desc,
+		  	  	  	  price: price
+		  	  	  })
+		  	  	  .then(res => {
+					  console.log(res);
+					  $("#menu_update" + id).addClass("disabled");
+		  	  	  }).catch(res => {
+		  	  	  	  console.log(res);
+		  	  	  });
+		  }
+
+      }
+
+      function menu_delete(id) {
+
+		  if (confirm("Delete menu #" + id)) {
+		  	  axios
+		  	  	  .post('/api/admin/menu/delete', {
+		  	  	  	  menu_ID: id,
+		  	  	  })
+		  	  	  .then(res => {
+					  console.log(res);
+					  $("#menu_delete" + id).addClass("disabled");
+		  	  	  }).catch(res => {
+		  	  	  	  console.log(res);
+		  	  	  });
+		  }
+
+      }
+
+	  $("#menu_form").submit(function (e) {
+		  
+          e.preventDefault();
+
+	  	  const name = $("#menu_name").val();
+	  	  const desc = $("#menu_desc").val();
+	  	  const price = $("#menu_price").val();
+
+		  if (confirm("Create a new menu?")) {
+		  	  axios
+		  	  	  .post('/api/admin/menu/create', {
+		  	  	  	  name: name,
+		  	  	  	  description: desc,
+		  	  	  	  price: price
+		  	  	  })
+		  	  	  .then(res => {
+					  console.log(res);
+		  	  	  	  alert("Done");
+		  	  	  	  location.reload();
+		  	  	  }).catch(res => {
+					  console.log(res.response.data.message);
+		  	  	  	  console.log(res);
+		  	  	  });
+		  }
+	  });
+
+      $(document).ready(function() {
+        getMenu();
+      });
+    </script>
+  </body>
+</html>
