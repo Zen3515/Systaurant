@@ -16,61 +16,94 @@ const account = [
 		birthdate: '1998-02-12', 
 		email:     'phirasitsharp@gmail.com' 
 	}, {
-		fname:     'Phirasit', 
-		lname:     'Charoenchitseriwong', 
-		addr:      '59/7 soi Kolit Phayathai Rd. Ratchatewi Bangkok 10400', 
-		phoneNO:   '0811781888', 
+		fname:     'Troy', 
+		lname:     'Kshlerin', 
+		addr:      '9662 Kunde Mountain North Kaelatown 46180', 
+		phoneNO:   '2036743628', 
 		gender:    0, 
-		birthdate: '1998-02-12', 
-		email:     'phirasitsharp@gmail.com' 
+		birthdate: '1995-03-15', 
+		email:     'chief_arizona@gmail.com' 
 	}, {
-		fname:     'Phirasit', 
-		lname:     'Charoenchitseriwong', 
-		addr:      '59/7 soi Kolit Phayathai Rd. Ratchatewi Bangkok 10400', 
-		phoneNO:   '0811781888', 
+		fname:     'Easton', 
+		lname:     'Ward', 
+		addr:      '63318 Lockman View North Rigoberto 72198', 
+		phoneNO:   '8921768684', 
 		gender:    0, 
-		birthdate: '1998-02-12', 
-		email:     'phirasitsharp@gmail.com' 
+		birthdate: '1995-03-15', 
+		email:     'Uriah.Ullrich21@hotmail.com' 
 	}, {
-		fname:     'Phirasit', 
-		lname:     'Charoenchitseriwong', 
-		addr:      '59/7 soi Kolit Phayathai Rd. Ratchatewi Bangkok 10400', 
-		phoneNO:   '0811781888', 
-		gender:    0, 
-		birthdate: '1998-02-12', 
-		email:     'phirasitsharp@gmail.com' 
+		fname:     'Thea', 
+		lname:     'Botsford', 
+		addr:      '65815 Hills Knoll Port Arch 26580-9775', 
+		phoneNO:   '3529798454', 
+		gender:    1, 
+		birthdate: '1985-07-26', 
+		email:     'Patience.Rolfson@gmail.com' 
 	}, {
-		fname:     'Phirasit', 
-		lname:     'Charoenchitseriwong', 
-		addr:      '59/7 soi Kolit Phayathai Rd. Ratchatewi Bangkok 10400', 
-		phoneNO:   '0811781888', 
-		gender:    0, 
-		birthdate: '1998-02-12', 
-		email:     'phirasitsharp@gmail.com' 
+		fname:     'Cale', 
+		lname:     'Kirlin', 
+		addr:      '89130 O Keefe Shoals Daughertystad 79135', 
+		phoneNO:   '6359719262', 
+		gender:    1, 
+		birthdate: '1989-11-11', 
+		email:     'Brooke1@yahoo.com' 
 	}, {
-		fname:     'Phirasit', 
-		lname:     'Charoenchitseriwong', 
-		addr:      '59/7 soi Kolit Phayathai Rd. Ratchatewi Bangkok 10400', 
-		phoneNO:   '0811781888', 
+		fname:     'Ed', 
+		lname:     'Murazik', 
+		addr:      '7248 Wisozk Light East Danika 84791', 
+		phoneNO:   '4813332980', 
 		gender:    0, 
-		birthdate: '1998-02-12', 
-		email:     'phirasitsharp@gmail.com' 
-	},
+		birthdate: '1991-12-31', 
+		email:     'Augustine_Lynch@hotmail.com' 
+    },{
+		fname:     'Cathrine', 
+		lname:     'Osinski', 
+		addr:      '76142 Abagail Squares West Jules 96256', 
+		phoneNO:   '7261015918', 
+		gender:    1, 
+		birthdate: '1999-09-09', 
+		email:     'Cathrine_Cassin46@yahoo.com' 
+    },
+];
+const employee  = [
+	{
+		account_id: 0, 
+		ssn:     '2334223424101', 
+		salary:   75000, 
+		workday:   63, 
+		employee_type: 2 
+    } ,{
+		account_id: 1, 
+		ssn:     '2334223424212', 
+		salary:   30000, 
+		workday:   63, 
+		employee_type:  1
+    },{
+		account_id: 3, 
+		ssn:     '2334223424323', 
+		salary:   6500, 
+		workday:   63, 
+		employee_type: 0 
+    },{
+		account_id: 5, 
+		ssn:     '2334223424434', 
+		salary:   6000, 
+		workday:   63, 
+		employee_type: 0 
+    }
+];
+const TableSize 		= [2, 3, 4, 5, 6, 7];
+const menus = [
+    { name: "Fried Chicken"        , desc: "Deep fried chicken wing"     , price: 270.00 },
+    { name: "Beef Steak"           , desc: "Grounded beef pepper steak"  , price: 640.00 },
+    { name: "Laab Tuna"            , desc: "Thai spicy tuna salad"       , price: 35.00  },
+    { name: "Cabonara Spaghetti"   , desc: "Spaghetti with cabonara"     , price: 170.00 }
 ];
 
 const numAccount 		= account.length;
 const numMember 		= 3;
-const numEmployee 		= 3;
-const TableSize 		= [2, 3, 4, 5, 6, 7];
+const numEmployee 		= employee.length; //3
 const numTable			= TableSize.length;
-
-const menus = [
-	{ name: "Fried Chicken"        , desc: "Deep fried chicken wing"     , price: 270.00 },
-	{ name: "Beef Steak"           , desc: "Grounded beef pepper steak"  , price: 640.00 },
-	{ name: "Laab Tuna"            , desc: "Thai spicy tuna salad"       , price: 35.00  },
-	{ name: "Cabonara Spaghetti"   , desc: "Spaghetti with cabonara"     , price: 170.00 }
-];
-
 const numMenu 			= menus.length;
 const numThumbnail		= 10;
 const numPromo 			= 5;
@@ -183,54 +216,55 @@ mysql_connect(function(db) {
 
     // Generate EMPLOYEE_WAITER
     const seedEmployeeWaiter = (callback) => {
-        executeCommandSeq(db, Math.floor((numEmployee + 2) / 3), (i) => {
+        executeCommandSeq(db, numEmployee, (i) => {
+            if(employee[i].employee_type == 0){
+                const employee_id       = i;
+                const status            = i % 2;
 
-            const employee_id       = i + 1;
-            const status            = i % 2;
-
-            return (callback) => {
-                db.query("INSERT INTO `EMPLOYEE_WAITER` " +
-                    "(`employee_ID`, `status`) " +
-                    " VALUES " +
-                    `(${employee_id}, \"${status}\")`
-                    , createCallback(callback, true, false));
-            };
+                return (callback) => {
+                    db.query("INSERT INTO `EMPLOYEE_WAITER` " +
+                        "(`employee_ID`, `status`) " +
+                        " VALUES " +
+                        `(${employee_id}, \"${status}\")`
+                        , createCallback(callback, true, false));
+                };
+            }
         }, callback);
     };
 
     // Generate EMPLOYEE_CHEF
     const seedEmployeeChef = (callback) => {
 
-        executeCommandSeq(db, Math.floor( (numEmployee + 1) / 3), (i) => {
-
-            i += Math.floor( (numEmployee + 2) / 3);
-            const employee_id       = i + 1;
-
-            return (callback) => {
-                db.query("INSERT INTO `EMPLOYEE_CHEF` " +
-                    "(`employee_ID`) " +
-                    " VALUES " +
-                    `(${employee_id})`
-                    , createCallback(callback, true, false));
-            };
+        executeCommandSeq(db, numEmployee, (i) => {
+            if(employee[i].employee_type == 1){
+                const employee_id       = i;
+                
+                return (callback) => {
+                    db.query("INSERT INTO `EMPLOYEE_CHEF` " +
+                        "(`employee_ID`) " +
+                        " VALUES " +
+                        `(${employee_id})`
+                        , createCallback(callback, true, false));
+                };
+            }
         }, callback);
     };
 
     // Generate EMPLOYEE_MANAGER
     const seedEmployeeManager = (callback) => {
 
-        executeCommandSeq(db, Math.floor( numEmployee / 3), (i) => {
-
-            i += numEmployee - Math.floor( numEmployee / 3);
-            const employee_id       = i + 1;
-
-            return (callback) => {
-                db.query("INSERT INTO `EMPLOYEE_MANAGER` " +
-                    "(`employee_ID`) " +
-                    " VALUES " +
-                    `(${employee_id})`
-                    , createCallback(callback, true, false));
-            };
+        executeCommandSeq(db, numEmployee, (i) => {
+            if(employee[i].employee_type == 2){
+                const employee_id       = i;
+                
+                return (callback) => {
+                    db.query("INSERT INTO `EMPLOYEE_MANAGER` " +
+                        "(`employee_ID`) " +
+                        " VALUES " +
+                        `(${employee_id})`
+                        , createCallback(callback, true, false));
+                };
+            }
         }, callback);
     };
 
