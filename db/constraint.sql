@@ -19,7 +19,7 @@ END;
 
 CREATE PROCEDURE `check_manager` (IN query_ID INTEGER)
 BEGIN
-    CALL assert((SELECT `employee_type` FROM `EMPLOYEE` WHERE `employee_ID` = query_ID) = 0, "Given ID is not a manager ID");
+    CALL assert((SELECT `employee_type` FROM `EMPLOYEE` WHERE `employee_ID` = query_ID) = 2, "Given ID is not a manager ID");
 END;
 
 $$
@@ -32,7 +32,7 @@ DROP TRIGGER IF EXISTS `insert_employee`;
 DROP TRIGGER IF EXISTS `insert_employee_waiter`;
 DROP TRIGGER IF EXISTS `insert_sale`;
 DROP TRIGGER IF EXISTS `insert_receipt`;
-DROP TRIGGER IF EXISTS `insert_recommendation`;
+DROP TRIGGER IF EXISTS `insert_menu_recommendation`;
 DROP TRIGGER IF EXISTS `insert_promotion`;
 DROP TRIGGER IF EXISTS `insert_order`;
 

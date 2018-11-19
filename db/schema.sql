@@ -156,6 +156,10 @@ CREATE TABLE `SALE` (
 		ON DELETE CASCADE
 		ON UPDATE CASCADE,
 
+	FOREIGN KEY `sale_fk_employee` (`employee_ID`) REFERENCES `EMPLOYEE` (`employee_ID`)
+		ON DELETE CASCADE
+		ON UPDATE CASCADE,
+
 	INDEX `sale_menu_ID_index` (`menu_ID`),
 	INDEX `sale_sale_start_date_index` (`sale_start_date`),
 	INDEX `sale_sale_end_date_index`   (`sale_expire_date`)

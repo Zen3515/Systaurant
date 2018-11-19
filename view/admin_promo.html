@@ -16,32 +16,34 @@
             <a href="/" class="btn btn-link">Home</a>
             <a href="/admin/menu" class="btn btn-link">Menu</a>
             <a href="/admin/sale" class="btn btn-link">Sale</a>
-            <a href="/admin/promo" class="btn btn-link">Promo</a>
+            <a href="/admin/promo" class="btn btn-link">Promotion</a>
           </div>
           <table class="table table-striped table-hover mt-3">
             <thead>
               <tr>
               	<th>#</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th class="text-right">Price (THB)</th>
+              	<th>Start Date</th>
+              	<th>Expire Date</th>
+                <th>Criteria</th>
+                <th class="text-right">Discount</th>
                 <th class="text-center">Option</th>
               </tr>
             </thead>
-            <tbody id="menu-list"></tbody>
-            <tbody>
-            	<form id="menu_form">
+            <tbody id="promo-list"></tbody>
+            <tfoot>
+            	<form id="promo_form">
             	<td></td>
-            	<td><input id="menu_name" class="form-control" placeholder="Menu Name" value="" required></td>
-            	<td><textarea id="menu_desc" class="form-control" placeholder="Description"></textarea></td>
-            	<td class="text-right"><input id="menu_price" placeholder="Price" style="text-align: right;" value="" required></td>
+            	<td><input type="date" id="promo_start_date" class="form-control" value="" required><input type="time" id="promo_start_time" class="form-control" value="00:00" required> </td>
+            	<td><input type="date" id="promo_end_date" class="form-control" value="" required><input type="time" id="promo_end_time" class="form-control" value="23:59" required> </td>
+            	<td><textarea id="promo_criteria" class="form-control"></textarea></td>
+            	<td class="text-right"><input id="promo_discount" placeholder="discount" style="text-align: right;" value="" required></td>
             	<td class="text-center">
             		<button type="submit" class="btn btn-success">
             			+ Create
             		</button>
             	</td>
             	</form>
-            </tbody>
+            </tfoot>
           </table>
         </div>
       </div>
@@ -49,28 +51,35 @@
     <script src="../js/jquery-3.3.1.min.js"></script>
     <script src="../js/axios.min.js"></script>
     <script type="text/javascript">
-      const getMenu = () => {
-      	$("#menu-list").text("");
+	  function setDateTime(date_id, time_id, data) {
+	  	  const d = data.split("T")[0];
+	  	  const t = data.split("T")[1].split(":")[0] + ":" + data.split("T")[1].split(":")[1];
+
+	  	  $("#" + date_id).val(d);
+	  	  $("#" + time_id).val(t);
+	  }
+      const getPromo = () => {
+      	$("#promo-list").text("");
         axios
-          	.post('/api/menu', {
-          		disable_sale: 1,
-          	})
+          .post('/api/admin/promo/read')
           .then(res => {
-            const menu = res.data.menu;
-            menu.forEach(e => {
+            const promo = res.data.promo;
+            promo.forEach(e => {
               const row = `<tr>
-              	  <td>${e.menu_ID}</td>
-              	  <td><input id="menu_name${e.menu_ID}" type="text" class="form-control" value="${e.menu_name}"></td>
-              	  <td><textarea id="menu_desc${e.menu_ID}" class="form-control">${e.menu_description}</textarea></td>
-              	  <td class='text-right'>
-              	  <input id="menu_price${e.menu_ID}" class="form-control" type="text" value="${e.price}" style="text-align: right">
-              	  </td>
+              	  <td>${e.promo_ID}</td>
+              	  <td><input id="promo_start_date${e.promo_ID}" type="date" class="form-control"><input id="promo_start_time${e.promo_ID}" type="time" class="form-control"></td>
+              	  <td><input id="promo_end_date${e.promo_ID}" type="date" class="form-control"><input id="promo_end_time${e.promo_ID}" type="time" class="form-control"></td>
+				  <td><textarea id="promo_criteria${e.promo_ID}" class="form-control">${e.criteria}</textarea></td>
+              	  <td class='text-right'><input id="promo_discount${e.promo_ID}" class="form-control" value="${e.discount_percent}" style="text-align: right;"></td>
                   <td class='text-center'>
-                  <button id='menu_update${e.menu_ID}' class='btn btn-primary' onclick='menu_update(${e.menu_ID});'>Update</button>
-                  <button id='menu_delete${e.menu_ID}' class='btn btn-danger' onclick='menu_delete(${e.menu_ID});'>Delete</button>
+                  <button id='promo_update${e.promo_ID}' class='btn btn-primary' onclick='promo_update(${e.promo_ID});'>Update</button>
+                  <button id='promo_delete${e.promo_ID}' class='btn btn-danger' onclick='promo_delete(${e.promo_ID});'>Delete</button>
                   </td>
               </tr>`;
-              $('#menu-list').append(row);
+              $('#promo-list').append(row);
+
+              setDateTime("promo_start_date" + e.promo_ID, "promo_start_time" + e.promo_ID, e.pro_start_date);
+              setDateTime("promo_end_date" + e.promo_ID, "promo_end_time" + e.promo_ID, e.pro_expire_date);
             });
           })
           .catch(res => {
@@ -78,23 +87,25 @@
           });
       };
 
-      function menu_update(id) {
+      function promo_update(id) {
 
-	  	  const name = $("#menu_name" + id).val();
-	  	  const desc = $("#menu_desc" + id).val();
-	  	  const price = $("#menu_price" + id).val();
+	  	  const start_date = $("#promo_start_date" + id).val() + " " + $("#promo_end_time" + id).val();
+	  	  const end_date = $("#promo_end_date" + id).val() + " " + $("#promo_end_time" + id).val();
+		  const criteria = $("#promo_criteria" + id).val();
+		  const discount = $("#promo_discount" + id).val();
 
-		  if (confirm("Update menu #" + id)) {
+		  if (confirm("Update promo #" + id)) {
 		  	  axios
-		  	  	  .post('/api/admin/menu/update', {
-		  	  	  	  menu_ID: id,
-		  	  	  	  name: name,
-		  	  	  	  description: desc,
-		  	  	  	  price: price
+		  	  	  .post('/api/admin/promo/update', {
+		  	  	  	  promo_ID: id,
+		  	  	  	  pro_start_date: start_date,
+		  	  	  	  pro_expire_date: end_date,
+		  	  	  	  criteria: criteria,
+		  	  	  	  discount_percent: discount,
 		  	  	  })
 		  	  	  .then(res => {
 					  console.log(res);
-					  $("#menu_update" + id).addClass("disabled");
+					  $("#promo_update" + id).addClass("disabled");
 		  	  	  }).catch(res => {
 		  	  	  	  console.log(res);
 		  	  	  });
@@ -102,16 +113,16 @@
 
       }
 
-      function menu_delete(id) {
+      function promo_delete(id) {
 
-		  if (confirm("Delete menu #" + id)) {
+		  if (confirm("Delete promo #" + id)) {
 		  	  axios
-		  	  	  .post('/api/admin/menu/delete', {
-		  	  	  	  menu_ID: id,
+		  	  	  .post('/api/admin/promo/delete', {
+		  	  	  	  promo_ID: id,
 		  	  	  })
 		  	  	  .then(res => {
 					  console.log(res);
-					  $("#menu_delete" + id).addClass("disabled");
+					  $("#promo_delete" + id).addClass("disabled");
 		  	  	  }).catch(res => {
 		  	  	  	  console.log(res);
 		  	  	  });
@@ -119,20 +130,22 @@
 
       }
 
-	  $("#menu_form").submit(function (e) {
+	  $("#promo_form").submit(function (e) {
 		  
           e.preventDefault();
 
-	  	  const name = $("#menu_name").val();
-	  	  const desc = $("#menu_desc").val();
-	  	  const price = $("#menu_price").val();
+	  	  const start_date = $("#promo_start_date").val() + " " + $("#promo_end_time").val();
+	  	  const end_date = $("#promo_end_date").val() + " " + $("#promo_end_time").val();
+		  const criteria = $("#promo_criteria").val();
+		  const discount = $("#promo_discount").val();
 
-		  if (confirm("Create a new menu?")) {
+		  if (confirm("Create a new promotion?")) {
 		  	  axios
-		  	  	  .post('/api/admin/menu/create', {
-		  	  	  	  name: name,
-		  	  	  	  description: desc,
-		  	  	  	  price: price
+		  	  	  .post('/api/admin/promo/create', {
+		  	  	  	  pro_start_date: start_date,
+		  	  	  	  pro_expire_date: end_date,
+		  	  	  	  criteria: criteria,
+		  	  	  	  discount_percent: discount,
 		  	  	  })
 		  	  	  .then(res => {
 					  console.log(res);
@@ -146,7 +159,7 @@
 	  });
 
       $(document).ready(function() {
-        getMenu();
+        getPromo();
       });
     </script>
   </body>
