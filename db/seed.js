@@ -1,5 +1,6 @@
-const sha256 = require("sha256");
+const assert = require("assert");
 const crypto = require("crypto");
+const sha256 = require("sha256");
 
 const mysql_connect = require("./connectDB.js");
 
@@ -10,57 +11,60 @@ const account = [
 	{
 		fname:     'Phirasit', 
 		lname:     'Charoenchitseriwong', 
-		addr:      '59/7 soi Kolit Phayathai Rd. Ratchatewi Bangkok 10400', 
-		phoneNO:   '0811781888', 
+		addr:      '59/7 ************ Ratchatewi Bangkok 10400', 
+		phoneNO:   '0832894321', 
 		gender:    0, 
-		birthdate: '1998-02-12', 
-		email:     'phirasitsharp@gmail.com' 
+		birthdate: '1998-05-16', 
+		email:     'p********@gmail.com' 
 	}, {
 		fname:     'Phirasit', 
 		lname:     'Charoenchitseriwong', 
-		addr:      '59/7 soi Kolit Phayathai Rd. Ratchatewi Bangkok 10400', 
-		phoneNO:   '0811781888', 
+		addr:      '59/7 ************ Ratchatewi Bangkok 10400', 
+		phoneNO:   '0832894321', 
 		gender:    0, 
-		birthdate: '1998-02-12', 
-		email:     'phirasitsharp@gmail.com' 
+		birthdate: '1998-05-16', 
+		email:     'p********@gmail.com' 
 	}, {
 		fname:     'Phirasit', 
 		lname:     'Charoenchitseriwong', 
-		addr:      '59/7 soi Kolit Phayathai Rd. Ratchatewi Bangkok 10400', 
-		phoneNO:   '0811781888', 
+		addr:      '59/7 ************ Ratchatewi Bangkok 10400', 
+		phoneNO:   '0832894321', 
 		gender:    0, 
-		birthdate: '1998-02-12', 
-		email:     'phirasitsharp@gmail.com' 
+		birthdate: '1998-05-16', 
+		email:     'p********@gmail.com' 
 	}, {
 		fname:     'Phirasit', 
 		lname:     'Charoenchitseriwong', 
-		addr:      '59/7 soi Kolit Phayathai Rd. Ratchatewi Bangkok 10400', 
-		phoneNO:   '0811781888', 
+		addr:      '59/7 ************ Ratchatewi Bangkok 10400', 
+		phoneNO:   '0832894321', 
 		gender:    0, 
-		birthdate: '1998-02-12', 
-		email:     'phirasitsharp@gmail.com' 
+		birthdate: '1998-05-16', 
+		email:     'p********@gmail.com' 
 	}, {
 		fname:     'Phirasit', 
 		lname:     'Charoenchitseriwong', 
-		addr:      '59/7 soi Kolit Phayathai Rd. Ratchatewi Bangkok 10400', 
-		phoneNO:   '0811781888', 
+		addr:      '59/7 ************ Ratchatewi Bangkok 10400', 
+		phoneNO:   '0832894321', 
 		gender:    0, 
-		birthdate: '1998-02-12', 
-		email:     'phirasitsharp@gmail.com' 
+		birthdate: '1998-05-16', 
+		email:     'p********@gmail.com' 
 	}, {
 		fname:     'Phirasit', 
 		lname:     'Charoenchitseriwong', 
-		addr:      '59/7 soi Kolit Phayathai Rd. Ratchatewi Bangkok 10400', 
-		phoneNO:   '0811781888', 
+		addr:      '59/7 ************ Ratchatewi Bangkok 10400', 
+		phoneNO:   '0832894321', 
 		gender:    0, 
-		birthdate: '1998-02-12', 
-		email:     'phirasitsharp@gmail.com' 
+		birthdate: '1998-05-16', 
+		email:     'p********@gmail.com' 
 	},
 ];
 
 const numAccount 		= account.length;
 const numMember 		= 3;
 const numEmployee 		= 3;
+
+assert(numAccount >= numMember + numEmployee);
+
 const TableSize 		= [2, 3, 4, 5, 6, 7];
 const numTable			= TableSize.length;
 

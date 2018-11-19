@@ -106,6 +106,9 @@ adminAPI.use(bodyParser.urlencoded({ extended: true }));
 // parse application/json
 adminAPI.use(bodyParser.json());
 
+adminAPI.use(jsonRequire);
+adminAPI.use(jsonResponse);
+
 adminAPI.post('/promo/read'  , promo.read);
 adminAPI.post('/promo/create', promo.create);
 adminAPI.post('/promo/update', promo.update);
