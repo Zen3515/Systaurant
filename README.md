@@ -8,7 +8,7 @@
 | `node run seed`    | seed the data                             |
 | `node start`       | start the server. (default port is 3000). |
 
-For client: `cd client`
-| Command | Description |
-|----------------------------------|-------------------------------------------|
-|`yarn start` or `npm run start` | start the client (port is set to 4000) |
+Set-up config:
+
+1. copy `config.template.js` and paste in same folder
+2. rename the new `config.template.js` to `config.js`
