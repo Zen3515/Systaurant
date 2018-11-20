@@ -101,6 +101,21 @@ const menus = [
     { name: "Laab Tuna"            , desc: "Thai spicy tuna salad"       , price: 35.00  },
     { name: "Cabonara Spaghetti"   , desc: "Spaghetti with cabonara"     , price: 170.00 }
 ];
+const orders = [
+    {receipt_ID: 1, employee_ID: 3, table_ID:1, menu_ID: 1, order_time: '2018-11-19 12:12:12', status: 3},
+    {receipt_ID: 1, employee_ID: 3, table_ID:1, menu_ID: 2, order_time: '2018-11-19 12:22:12', status: 3},
+    {receipt_ID: 1, employee_ID: 4, table_ID:1, menu_ID: 3, order_time: '2018-11-19 12:32:12', status: 3},
+    {receipt_ID: 2, employee_ID: 3, table_ID:3, menu_ID: 1, order_time: '2018-11-20 14:10:00', status: 3},
+    {receipt_ID: null, employee_ID: 3, table_ID:2, menu_ID: 2, order_time: '2018-11-20 14:20:00', status: 2},
+    {receipt_ID: 2, employee_ID: 4, table_ID:3, menu_ID: 3, order_time: '2018-11-20 14:30:00', status: 3},
+    {receipt_ID: null, employee_ID: 4, table_ID:2, menu_ID: 4, order_time: '2018-11-20 14:40:00', status: 1},
+    {receipt_ID: null, employee_ID: 4, table_ID:2, menu_ID: 2, order_time: '2018-11-20 14:40:00', status: 0},
+];
+const receipts =[
+    {table_ID: 1, total_price: 945.00, issue_date: '2018-11-19 12:42:12'},
+    {table_ID: 1, total_price: 305.00, issue_date: '2018-11-20 15:00:00'}
+];
+
 
 const numAccount 		= account.length;
 const numMember 		= member.length;
@@ -110,7 +125,8 @@ const numMenu 			= menus.length;
 const numThumbnail		= 10;
 const numPromo 			= 5;
 const numSale 			= 5;
-const numOrder          = 10;
+const numOrder          = orders.length;
+const numReceipt        = receipts.length; 
 
 const tables = [
     "ACCOUNT", "EMPLOYEE", "EMPLOYEE_WAITER", "EMPLOYEE_CHEF", "EMPLOYEE_MANAGER",
@@ -384,23 +400,58 @@ mysql_connect(function(db) {
         }, callback);
     };
 
+    //Generate receipt
+    const seedReceipt = (callback) => {
+
+        executeCommandSeq(db, numReceipt, (i) => {
+
+            const table_ID       = receipts[i].table_ID;
+            const total_price      = receipts[i].total_price;
+            const issue_date      = receipts[i].issue_date;
+            const payment      = (i%3)%2;
+
+            return (callback) => {
+                db.query("INSERT INTO `RECEIPT` " +
+                    "(`table_ID`, `total_price`,`issue_date`,`payment`)" +
+                    " VALUES " +
+                    `(\"${table_ID}\", \"${total_price}\", \"${issue_date}\",\"${payment}\")`
+                    , createCallback(callback, true, false));
+            };
+        }, callback);
+    };
+
 	// Generate Order
     const seedOrder = (callback) => {
 
         executeCommandSeq(db, numOrder, (i) => {
 
-            const menu_ID       = i % numMenu + 1;
-            const table_ID      = (i * i) % numTable + 1;
-
-            return (callback) => {
-                db.query("INSERT INTO `ORDER` " +
-                    "(`menu_ID`, `table_ID`)" +
-                    " VALUES " +
-                    `(\"${menu_ID}\", \"${table_ID}\")`
-                    , createCallback(callback, true, false));
-            };
+            const menu_ID       = orders[i].menu_ID;
+            const receipt_ID      = orders[i].receipt_ID;
+            const employee_ID      = orders[i].employee_ID;
+            const table_ID      = orders[i].table_ID;
+            const order_time      = orders[i].order_time;
+            const status        =orders[i].status
+            if(receipt_ID==null){
+                return (callback) => {
+                    db.query("INSERT INTO `ORDER` " +
+                        "(`menu_ID`,`employee_ID`,`table_ID`,`order_time`,`status`)" +
+                        " VALUES " +
+                        `(\"${menu_ID}\", \"${employee_ID}\",\"${table_ID}\",\"${order_time}\",\"${status}\")`
+                        , createCallback(callback, true, false));
+                };
+            }
+            else{
+                return (callback) => {
+                    db.query("INSERT INTO `ORDER` " +
+                        "(`menu_ID`, `receipt_ID`,`employee_ID`,`table_ID`,`order_time`,`status`)" +
+                        " VALUES " +
+                        `(\"${menu_ID}\", \"${receipt_ID}\", \"${employee_ID}\",\"${table_ID}\",\"${order_time}\",\"${status}\")`
+                        , createCallback(callback, true, false));
+                };
+            }
         }, callback);
     };
+
 
     const checkMember = (callback) => {
         db.query("SELECT * FROM `ACCOUNT` a, `MEMBER` e WHERE a.`account_ID` = e.`account_ID`", (err, result) => {
@@ -434,6 +485,7 @@ mysql_connect(function(db) {
         seedPromo,
         seedSale,
         seedOrder,
+        seedReceipt,
         // checkMember,
         // checkTable,
         terminate,
