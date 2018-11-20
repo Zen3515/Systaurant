@@ -115,7 +115,13 @@ const receipts =[
     {table_ID: 1, total_price: 945.00, issue_date: '2018-11-19 12:42:12'},
     {table_ID: 1, total_price: 305.00, issue_date: '2018-11-20 15:00:00'}
 ];
-
+const recommendations =[
+    {receipt_ID:1, commentator_name:'Mr. Marion Fritsch', comment:'This system is good! Gj, this is not DB group, yeah!'},
+    {receipt_ID:2, commentator_name:'Ms. Cathrine Osinski', comment:'Tuna salad is good. '}
+];
+const reserves =[
+    {member_ID: 7, table_ID:3, reserve_time:'2018-11-20 14:00:00' , number_of_reserved: 3, create_time:'2018-11-20 09:00:00'}
+];
 
 const numAccount 		= account.length;
 const numMember 		= member.length;
@@ -127,6 +133,8 @@ const numPromo 			= 5;
 const numSale 			= 5;
 const numOrder          = orders.length;
 const numReceipt        = receipts.length; 
+const numRecommendation = recommendations.length;
+const numReserve         = reserves.length;
 
 const tables = [
     "ACCOUNT", "EMPLOYEE", "EMPLOYEE_WAITER", "EMPLOYEE_CHEF", "EMPLOYEE_MANAGER",
@@ -450,8 +458,48 @@ mysql_connect(function(db) {
                 };
             }
         }, callback);
+    };    
+
+    //Generate recommendation
+    const seedRecommendation = (callback) => {
+
+        executeCommandSeq(db, numRecommendation, (i) => {
+
+            const receipt_ID       = recommendations[i].receipt_ID;
+            const commentator_name      = recommendations[i].commentator_name;
+            const comment      = recommendations[i].comment;
+            const rating      = 5-(i%2);
+
+            return (callback) => {
+                db.query("INSERT INTO `RECOMMENDATION` " +
+                    "(`receipt_ID`, `commentator_name`,`comment`,`rating`)" +
+                    " VALUES " +
+                    `(\"${receipt_ID}\", \"${commentator_name}\", \"${comment}\", \"${rating}\")`
+                    , createCallback(callback, true, false));
+            };
+        }, callback);
     };
 
+    //Generate reserve
+    const seedReserve = (callback) => {
+
+        executeCommandSeq(db, numReserve, (i) => {
+
+            const member_ID       = reserves[i].member_ID;
+            const table_ID      = reserves[i].table_ID;
+            const reserve_time      = reserves[i].reserve_time;
+            const number_of_reserved      = reserves[i].number_of_reserved;
+            const create_time      = reserves[i].create_time;
+
+            return (callback) => {
+                db.query("INSERT INTO `RESERVE` " +
+                    "(`member_ID`, `table_ID`,`reserve_time`,`number_of_reserved`,`create_time`)" +
+                    " VALUES " +
+                    `(\"${member_ID}\", \"${table_ID}\", \"${reserve_time}\", \"${number_of_reserved}\", \"${create_time}\")`
+                    , createCallback(callback, true, false));
+            };
+        }, callback);
+    };
 
     const checkMember = (callback) => {
         db.query("SELECT * FROM `ACCOUNT` a, `MEMBER` e WHERE a.`account_ID` = e.`account_ID`", (err, result) => {
@@ -486,6 +534,8 @@ mysql_connect(function(db) {
         seedSale,
         seedOrder,
         seedReceipt,
+        seedRecommendation,
+        seedReserve,
         // checkMember,
         // checkTable,
         terminate,
