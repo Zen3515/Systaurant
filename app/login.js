@@ -55,6 +55,24 @@ const checkTable = (req, res, next) => {
 	}
 };
 
+const checkEmployeeOrTable = (req, res, next) => {
+	if (
+		(req.session.user && req.session.user.type === 'employee')
+		|| req.session.table) {
+		next();
+	} else {
+		res.status(403).send('Unauthorized');
+	}
+};
+
+const checkReceipt = (req, res, next) => {
+	if (req.session !== undefined && req.session.receipt !== undefined) {
+		next();
+	} else {
+		res.status(403).send("Unauthorized");
+	}
+};
+
 //////// UI //////////////
 // TODO
 const ui = (req, res) => {
@@ -232,6 +250,7 @@ const logout = (req, res) => {
  * Request: {}
  * Response: {
  *    table:    // table_ID if the session has one
+ *    receipt:  // receipt_ID if the session has one
  *    employee: // true if the user is an employee
  *    member:   // true if the user is a member
  *    manager:  // true if the user is a manager
@@ -241,17 +260,19 @@ const stat =  (req, res) => {
 
 	if (req.session.user == undefined) {
 		res.send(JSON.stringify({
-			table: req.session.table,
-			employee: false, 
-			member: false,
-			manager: false,
+			table:      req.session.table,
+			receipt:    req.session.receipt,
+			employee:   false, 
+			member:     false,
+			manager:    false,
 		}));
 	} else {
 		res.send(JSON.stringify({
-			table: req.session.table,
-			employee: (req.session.user.type == "employee"),
-			member: (req.session.user.type == "member"),
-			manager: (req.session.user.employee_type == 2),
+			table:      req.session.table,
+			receipt:    req.session.receipt,
+			employee:   (req.session.user.type == "employee"),
+			member:     (req.session.user.type == "member"),
+			manager:    (req.session.user.employee_type == 2),
 
 		}));
 	}
@@ -260,19 +281,21 @@ const stat =  (req, res) => {
 module.exports = {
 
 	// middleware
-	checkAuthen: 		checkAuthen,
-	checkMember: 		checkMember, 
-	checkEmployee: 		checkEmployee, 
-	checkManager: 		checkManager,
-	checkTable: 		checkTable,
+	checkAuthen: 		        checkAuthen,
+	checkMember: 		        checkMember, 
+	checkEmployee:          checkEmployee, 
+	checkManager:           checkManager,
+	checkTable:             checkTable,
+	checkEmployeeOrTable:   checkEmployeeOrTable,
+	checkReceipt:           checkReceipt,
 
 	// login JSON api
-	login: 				login,
-	login_table:        login_table,
-	logout: 			logout,
-	stat:               stat, 
+	login:          login,
+	login_table:    login_table,
+	logout:         logout,
+	stat:           stat, 
 
 	// login ui
-	ui: 				ui,
-	table_ui:			table_ui,
+	ui:             ui,
+	table_ui:       table_ui,
 };

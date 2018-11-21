@@ -1,46 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Systaurant</title>
-    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+	<title>Systaurant</title>
+	<link rel="stylesheet" href="../css/bootstrap.min.css" />
 	<style type="text/css">
 		.disabled {
 			cursor: default;
 		}
 	</style>
-  </head>
-  <body>
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <h1 class="text-center pt-5">Systaurant</h1>
-                <div class="text-center">
-                    <a href="/login" class="btn btn-link" id='login'>Login</a>
-                    <a href="/login/table" class="btn btn-link">Table Login</a>
-                    <a href="/menu" class="btn btn-link">Menu</a>
-                    <a class="btn btn-link" id='order'>Order</a>
-                    <a class="btn btn-link" id='reserve'>Reserve</a>
-                    <a class="btn btn-link" id='cooking'>Cooking List</a>
-                    <a class="btn btn-link" id='waiting'>Waiting List</a>
-                    <a class="btn btn-link" id='admin'>Admin</a>
-                </div>
-            </div>
-        </div>
-      </div>
-    </div>
-    <script src="../js/jquery-3.3.1.min.js"></script>
-    <script src="../js/bootstrap.min.js"></script>
-    <script src="../js/axios.min.js"></script>
-    <script type="text/javascript">
+</head>
+
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<h1 class="text-center pt-5">Systaurant</h1>
+				<div class="text-center">
+					<a href="/login" class="btn btn-link" id='login'>Login</a>
+					<a href="/login/table" class="btn btn-link">Table Login</a>
+					<a href="/menu" class="btn btn-link">Menu</a>
+					<a class="btn btn-link" id='order'>Order</a>
+					<a class="btn btn-link" id='receipt'>Receipt</a>
+					<a class="btn btn-link" id='reserve'>Reserve</a>
+					<a class="btn btn-link" id='cooking'>Cooking List</a>
+					<a class="btn btn-link" id='waiting'>Waiting List</a>
+					<a class="btn btn-link" id='admin'>Admin</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+	<script src="../js/jquery-3.3.1.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+	<script src="../js/axios.min.js"></script>
+	<script type="text/javascript">
 
 		function load() {
 			axios
-		  		.post('/api/status')
-		  		.then(res => {
-		  	  		const stat = res.data;
+				.post('/api/status')
+				.then(res => {
+					const stat = res.data;
 
 					if (stat.employee || stat.member) {
 						$("#login").attr("href", "/logout").text("Logout");
@@ -48,39 +51,46 @@
 						$("#login").attr("href", "/login").text("Login");
 					}
 
-			  		if (stat.table) {
-		  	  	  		$("#order").attr("href", "/order").removeClass('disabled');
-		  	  		} else {
-		  	  	  		$("#order").removeAttr("href").addClass('disabled');
-		  	  		}
+					if (stat.table) {
+						$("#order").attr("href", "/order").removeClass('disabled');
+					} else {
+						$("#order").removeAttr("href").addClass('disabled');
+					}
+						
+					if (stat.receipt) {
+						$("#receipt").attr("href", "/receipt").removeClass('disabled');
+					} else {
+						$("#receipt").removeAttr("href").addClass('disabled');
+					}
+						
 
-
-			  		if (stat.member) {
-		  	  	  		$("#reserve").attr("href", "/reserve").removeClass('disabled');
-		  	  		} else {
-		  	  	  		$("#reserve").removeAttr("href").addClass('disabled');
-		  	  		}
-
-		  	  		if (stat.employee) {
-		  	  	  		$("#cooking").attr("href", "/order/cooklist").removeClass('disabled');
-		  	  	  		$("#waiting").attr("href", "/order/waitlist").removeClass('disabled');
-		  	  	  	} else {
-		  	  	  		$("#cooking").removeAttr("href").addClass('disabled');
-		  	  	  		$("#waiting").removeAttr("href").addClass('disabled');
+					if (stat.member) {
+						$("#reserve").attr("href", "/reserve").removeClass('disabled');
+					} else {
+						$("#reserve").removeAttr("href").addClass('disabled');
 					}
 
-		  	  		if (stat.manager) {
-		  	  	  		$("#admin").attr("href", "/admin").removeClass('disabled');
-		  	  	  	} else {
-		  	  	  		$("#admin").removeAttr("href").addClass('disabled');
+					if (stat.employee) {
+						$("#cooking").attr("href", "/order/cooklist").removeClass('disabled');
+						$("#waiting").attr("href", "/order/waitlist").removeClass('disabled');
+					} else {
+						$("#cooking").removeAttr("href").addClass('disabled');
+						$("#waiting").removeAttr("href").addClass('disabled');
 					}
-		  		}).catch(res => {
-		  			console.log(res);
-		  		});
+
+					if (stat.manager) {
+						$("#admin").attr("href", "/admin").removeClass('disabled');
+					} else {
+						$("#admin").removeAttr("href").addClass('disabled');
+					}
+				}).catch(res => {
+					console.log(res);
+				});
 		}
 
 		$(document).ready(load);
 
 	</script>
-  </body>
+</body>
+
 </html>

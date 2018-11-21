@@ -19,7 +19,10 @@ END;
 
 CREATE PROCEDURE `check_manager` (IN query_ID INTEGER)
 BEGIN
-    CALL assert((SELECT `employee_type` FROM `EMPLOYEE` WHERE `employee_ID` = query_ID) = 2, "Given ID is not a manager ID");
+    CALL assert(
+        (SELECT GET_EMPLOYEE_TYPE_NAME(`employee_type`) FROM `EMPLOYEE` WHERE `employee_ID` = query_ID) = 'MANAGER'
+        , "Given ID is not a manager ID"
+    );
 END;
 
 $$

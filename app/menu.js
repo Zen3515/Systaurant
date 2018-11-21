@@ -45,10 +45,12 @@ const read = (req, res) => {
   	  "SELECT m.`menu_ID`, m.`menu_name`, m.`menu_description`"
   	+ ", ROUND(IFNULL(m.`price` * (100 - s.`discount`) / 100, m.`price`), 2) AS price"
   	+ " FROM `MENU` m"
-    + " LEFT JOIN "
-    + "(SELECT `menu_ID`, MAX(`discount`) AS `discount` FROM `SALE` GROUP BY `menu_ID`) s"
+    + " LEFT JOIN"
+    + " (SELECT `menu_ID`, MAX(`discount`) AS `discount` FROM `SALE` GROUP BY `menu_ID`) s"
     + " ON m.`menu_ID` = s.`menu_ID` "
-    : "SELECT m.`menu_ID`, m.`menu_name`, m.`menu_description`, m.`price`"
+    : 
+    
+    "SELECT m.`menu_ID`, m.`menu_name`, m.`menu_description`, m.`price`"
   	+ " FROM `MENU` m";
 
   mysql_connect(db => {

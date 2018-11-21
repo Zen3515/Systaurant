@@ -30,13 +30,14 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                        	<td colspan="2"></td>
+                            <td></td>
                             <td><strong>Total Price</strong></td>
+                            <td></td>
                             <td class="text-center">
                                 <div id="total-price" style="display:inline;"> - </div>
                         	</td>
                         	<td class="text-center">
-                        		<button class="btn btn-primary"> Cash Out </button>
+                        		<button class="btn btn-primary" onclick="cashOut();"> Cash Out </button>
                         	</td>
                         </tr>
                     </tfoot>
@@ -44,8 +45,8 @@
             </div>
         </div>
     </div>
-    <script src="../js/jquery-3.3.1.min.js"></script>
-    <script src="../js/axios.min.js"></script>
+    <script src="/js/jquery-3.3.1.min.js"></script>
+    <script src="/js/axios.min.js"></script>
     <script type="text/javascript">
       const getOrder = () => {
       	  $("#order-list").text("");
@@ -53,7 +54,6 @@
           .post('/api/order')
           .then(res => {
             const order = res.data.order;
-            let id = 0;
             let total = 0;
             order.forEach(e => {
               total += e.price;
@@ -112,7 +112,27 @@
 		  	 	 	 getOrder();
 		  	 	 });
 		  }
-	  }
+      }
+      
+      function cashOut(id) {
+          if (confirm("Confirm checking out (Cannot go back after this)?")) {
+              axios
+                .post('/api/receipt/create')
+                .then(res => {
+                    const id = res.data.receipt_ID;
+                    const msg = res.data.message;
+                    if (msg == "OK") {
+                        alert("Done");
+                        window.location = '/receipt';
+                    } else {
+                        alert(msg);
+                        console.log(msg);
+                    }
+                }).catch(res => {
+                    console.log(res);
+                })
+          }
+      }
     </script>
 </body>
 </html>
