@@ -5,4 +5,4 @@ const config = {
   database: 'Systaurant'
 };
 
-export default config;
+module.exports = config;
