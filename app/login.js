@@ -126,7 +126,7 @@ const login = (req, res) => {
 	}
 
 	const command = "SELECT a.salt, a.password, p.* FROM `" + type.toUpperCase()  + "` p, `ACCOUNT` a " 
-		+ ` WHERE (p.${type}_ID = ${id} OR a.firstname = ${id})`
+		+ ` WHERE p.${type}_ID = ${id}`
 	    + ` AND p.account_ID = a.account_ID`;
 
 	mysql_connect((db) => {
@@ -239,9 +239,21 @@ const login_table = (req, res) => {
  * Response: {} with redirection to '/'
  */
 const logout = (req, res) => {
-  req.session.destroy(err => {
+    delete req.session.user;
+    req.session.save();
     res.redirect('/');
-  });
+};
+
+/*
+ * logout_table
+ * remove table session
+ * Request: {}
+ * Response: {} with redirection to '/'
+ */
+const logout_table = (req, res) => {
+    delete req.session.table;
+    req.session.save();
+    res.redirect('/');
 };
 
 /*
@@ -281,8 +293,8 @@ const stat =  (req, res) => {
 module.exports = {
 
 	// middleware
-	checkAuthen: 		        checkAuthen,
-	checkMember: 		        checkMember, 
+	checkAuthen:            checkAuthen,
+	checkMember:            checkMember, 
 	checkEmployee:          checkEmployee, 
 	checkManager:           checkManager,
 	checkTable:             checkTable,
@@ -293,6 +305,7 @@ module.exports = {
 	login:          login,
 	login_table:    login_table,
 	logout:         logout,
+	logout_table:   logout_table,
 	stat:           stat, 
 
 	// login ui

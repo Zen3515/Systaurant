@@ -29,20 +29,22 @@ const create = (req, res) => {
 			+ " FROM `ORDER` ord, `MENU` m"
 
 			+ " LEFT JOIN"
-			+ " (SELECT `menu_ID`, MAX(`discount`) AS `discount` FROM `SALE` GROUP BY `menu_ID`) s"
+			+ " (SELECT `menu_ID`, MAX(`discount`) AS `discount` FROM `SALE`"
+		    + "   WHERE `sale_start_date` <= NOW() AND NOW() <= `sale_expire_date`"
+	        + " GROUP BY `menu_ID`) s"
 			+ " ON m.`menu_ID` = s.`menu_ID` "
 
 			+ " WHERE ord.`table_ID` = " + table_ID
 			+ " AND ord.`order_time` <= NOW()"
 			+ " AND ord.`receipt_ID` IS NULL"
-			+ " AND ord.`menu_ID` = m.`menu_ID`";		
+			+ " AND ord.`menu_ID` = m.`menu_ID`";
 
 		db.query(command, (err, result) => {
 			
 			if (err) {
 				res.status(400).send(JSON.stringify({
 					message: err,
-				}));					
+				}));
 				return; 
 			}
 

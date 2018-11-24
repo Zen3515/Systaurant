@@ -20,9 +20,9 @@
 			<div class="col">
 				<h1 class="text-center pt-5">Systaurant</h1>
 				<div class="text-center">
-					<a href="/login" class="btn btn-link" id='login'>Login</a>
-					<a href="/login/table" class="btn btn-link">Table Login</a>
-					<a href="/menu" class="btn btn-link">Menu</a>
+					<a class="btn btn-link" id='login'></a>
+					<a class="btn btn-link" id='seat'></a>
+					<a class="btn btn-link" href='menu'>Menu</a>
 					<a class="btn btn-link" id='order'>Order</a>
 					<a class="btn btn-link" id='receipt'>Receipt</a>
 					<a class="btn btn-link" id='reserve'>Reserve</a>
@@ -44,6 +44,12 @@
 				.post('/api/status')
 				.then(res => {
 					const stat = res.data;
+
+                    if (stat.table) {
+						$("#seat").attr("href", "/logout/table").text("Remove table");
+					} else {
+						$("#seat").attr("href", "/login/table").text("Choose table");
+					}
 
 					if (stat.employee || stat.member) {
 						$("#login").attr("href", "/logout").text("Logout");

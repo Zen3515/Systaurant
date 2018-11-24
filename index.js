@@ -58,6 +58,7 @@ app.get('/admin/promo'    , login.checkManager   , admin.promo_ui);
 app.get('/login'          , login.ui);
 app.get('/login/table'    , login.table_ui);
 app.get('/logout'         , login.logout);
+app.get('/logout/table'   , login.logout_table);
 app.get('/menu'           , menu.ui);
 app.get('/order'          , login.checkTable     , order.ui);
 app.get('/order/cooklist' , login.checkEmployee  , order.cooklist_ui);
