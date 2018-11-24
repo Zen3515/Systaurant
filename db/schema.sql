@@ -14,7 +14,7 @@ CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `Systaurant`;
 
 CREATE TABLE `ACCOUNT` (
-	`account_ID`  INTEGER       NOT NULL  AUTO_INCREMENT,
+	`account_ID`  INT           NOT NULL  AUTO_INCREMENT,
 
 	`password`    CHAR(64)      NOT NULL,
 	`salt`        CHAR(10)      NOT NULL,
@@ -31,8 +31,8 @@ CREATE TABLE `ACCOUNT` (
 );
 
 CREATE TABLE `EMPLOYEE` (
-	`employee_ID`   INTEGER     NOT NULL  AUTO_INCREMENT,
-	`account_ID`    INTEGER     NOT NULL  UNIQUE,
+	`employee_ID`   INT         NOT NULL  AUTO_INCREMENT,
+	`account_ID`    INT         NOT NULL  UNIQUE,
 
 	`SSN`           CHAR(13)    NOT NULL  UNIQUE,
 	`salary`        INTEGER(7)  ,
@@ -48,7 +48,7 @@ CREATE TABLE `EMPLOYEE` (
 );
 
 CREATE TABLE `EMPLOYEE_WAITER` (
-	`employee_ID`   INTEGER   NOT NULL  UNIQUE, 
+	`employee_ID`   INT       NOT NULL  UNIQUE, 
 	`status`        BOOLEAN   NOT NULL  DEFAULT 0,
 
 	PRIMARY KEY `employee_waiter_pk` (`employee_ID`),
@@ -59,7 +59,7 @@ CREATE TABLE `EMPLOYEE_WAITER` (
 );
 
 CREATE TABLE `EMPLOYEE_CHEF` (
-	`employee_ID`   INTEGER   NOT NULL  UNIQUE,
+	`employee_ID`   INT       NOT NULL  UNIQUE,
 
 	PRIMARY KEY `employee_chef_pk` (`employee_ID`),
 
@@ -69,7 +69,7 @@ CREATE TABLE `EMPLOYEE_CHEF` (
 );
 
 CREATE TABLE `EMPLOYEE_MANAGER` (
-	`employee_ID`   INTEGER   NOT NULL  UNIQUE,
+	`employee_ID`   INT       NOT NULL  UNIQUE,
 
 	PRIMARY KEY `employee_manager_pk` (`employee_ID`),
 
@@ -79,8 +79,8 @@ CREATE TABLE `EMPLOYEE_MANAGER` (
 );
 
 CREATE TABLE `MEMBER` (
-	`member_ID`         INTEGER     NOT NULL  AUTO_INCREMENT,
-	`account_ID`        INTEGER     NOT NULL  UNIQUE,
+	`member_ID`         INT         NOT NULL  AUTO_INCREMENT,
+	`account_ID`        INT         NOT NULL  UNIQUE,
 
 	`registered_date`   DATETIME    NOT NULL  DEFAULT CURRENT_TIMESTAMP,
 
@@ -92,7 +92,7 @@ CREATE TABLE `MEMBER` (
 );
 
 CREATE TABLE `TABLE` (
-	`table_ID`          INTEGER     NOT NULL  AUTO_INCREMENT,
+	`table_ID`          INT         NOT NULL  AUTO_INCREMENT,
 	`status`            BOOLEAN     NOT NULL  DEFAULT 0,
 	`number_of_seats`   TINYINT     NOT NULL,
 
@@ -100,9 +100,9 @@ CREATE TABLE `TABLE` (
 );
 
 CREATE TABLE `RESERVE` (
-	`reserve_ID`			INTEGER		NOT NULL  AUTO_INCREMENT,
-	`member_ID`             INTEGER     NOT NULL,
-	`table_ID`              INTEGER     NOT NULL,
+	`reserve_ID`			INT    		NOT NULL  AUTO_INCREMENT,
+	`member_ID`             INT         NOT NULL,
+	`table_ID`              INT         NOT NULL,
 
 	`reserve_time`          DATETIME    NOT NULL,
 	`number_of_reserved`    TINYINT     NOT NULL,
@@ -122,7 +122,7 @@ CREATE TABLE `RESERVE` (
 );
 
 CREATE TABLE `MENU` (
-	`menu_ID`             INTEGER       NOT NULL  AUTO_INCREMENT,
+	`menu_ID`             INT           NOT NULL  AUTO_INCREMENT,
 	`menu_name`           VARCHAR(30)   NOT NULL,
 	`menu_description`    TEXT          ,
 	`price`               FLOAT(7, 2)   NOT NULL,
@@ -131,8 +131,8 @@ CREATE TABLE `MENU` (
 );
 
 CREATE TABLE `MENU_THUMBNAIL` (
-	`thumbnail_ID`    INTEGER         NOT NULL    AUTO_INCREMENT,
-	`menu_ID`         INTEGER         NOT NULL,
+	`thumbnail_ID`    INT             NOT NULL    AUTO_INCREMENT,
+	`menu_ID`         INT             NOT NULL,
 	`menu_thumbnail`  VARCHAR(200)    NOT NULL,
 
 	PRIMARY KEY `menu_thumbnail_pk` (`thumbnail_ID`),
@@ -143,11 +143,11 @@ CREATE TABLE `MENU_THUMBNAIL` (
 );
 
 CREATE TABLE `SALE` (
-	`sale_ID`             INTEGER       NOT NULL  AUTO_INCREMENT,
-	`menu_ID`             INTEGER       NOT NULL,
+	`sale_ID`             INT           NOT NULL  AUTO_INCREMENT,
+	`menu_ID`             INT           NOT NULL,
 	`sale_start_date`     DATETIME      NOT NULL,
 	`sale_expire_date`    DATETIME      NOT NULL,
-	`employee_ID`         INTEGER       NOT NULL,
+	`employee_ID`         INT           NOT NULL,
 	`discount`            FLOAT(4, 2)   NOT NULL,
 
 	PRIMARY KEY `sale_pk` (`sale_ID`),
@@ -166,8 +166,8 @@ CREATE TABLE `SALE` (
 );
 
 CREATE TABLE `RECEIPT` (
-	`receipt_ID`      INTEGER       NOT NULL  AUTO_INCREMENT,
-	`table_ID`        INTEGER		NOT NULL, 
+	`receipt_ID`      INT           NOT NULL  AUTO_INCREMENT,
+	`table_ID`        INT    		NOT NULL, 
 	`total_price`     FLOAT(8, 2)   NOT NULL,
 	`issue_date`      DATETIME      NOT NULL  DEFAULT CURRENT_TIMESTAMP,
 	`payment`         TINYINT       ,
@@ -182,7 +182,7 @@ CREATE TABLE `RECEIPT` (
 );
 
 CREATE TABLE `RECOMMENDATION` (
-	`receipt_ID`          INTEGER       NOT NULL,
+	`receipt_ID`          INT           NOT NULL,
 	`commentator_name`    VARCHAR(20)   NOT NULL,
 
 	`comment`             TEXT          NOT NULL,
@@ -198,8 +198,8 @@ CREATE TABLE `RECOMMENDATION` (
 );
 
 CREATE TABLE `PROMOTION` (
-	`promo_ID`          INTEGER     NOT NULL  AUTO_INCREMENT,
-	`employee_ID`       INTEGER     ,
+	`promo_ID`          INT         NOT NULL  AUTO_INCREMENT,
+	`employee_ID`       INT         ,
 
 	`pro_start_date`    DATETIME    NOT NULL,
 	`pro_expire_date`   DATETIME    ,
@@ -218,8 +218,8 @@ CREATE TABLE `PROMOTION` (
 );
 
 CREATE TABLE `APPLY_PROMOTION` (
-	`promo_ID`      INTEGER     NOT NULL,
-	`receipt_ID`    INTEGER     NOT NULL,
+	`promo_ID`      INT         NOT NULL,
+	`receipt_ID`    INT         NOT NULL,
 
 	PRIMARY KEY `apply_promotion_pk` (`promo_ID`, `receipt_ID`),
 
@@ -232,12 +232,12 @@ CREATE TABLE `APPLY_PROMOTION` (
 );
 
 CREATE TABLE `ORDER` (
-	`order_ID`      INTEGER     NOT NULL  AUTO_INCREMENT,
+	`order_ID`      INT         NOT NULL  AUTO_INCREMENT,
 
-	`receipt_ID`    INTEGER     ,
-	`employee_ID`   INTEGER     ,
-	`menu_ID`       INTEGER     NOT NULL,
-	`table_ID`      INTEGER     NOT NULL,
+	`receipt_ID`    INT         ,
+	`employee_ID`   INT         ,
+	`menu_ID`       INT         NOT NULL,
+	`table_ID`      INT         NOT NULL,
 
 	`order_time`    DATETIME    NOT NULL  DEFAULT CURRENT_TIMESTAMP,
 	`status`        TINYINT     NOT NULL  DEFAULT 0,
@@ -260,3 +260,24 @@ CREATE TABLE `ORDER` (
 	INDEX `order_order_time_index` (`order_time`),
 	INDEX `order_status_index` (`status`)
 );
+
+-- List of Functions
+DELIMITER $$
+
+CREATE FUNCTION GET_EMPLOYEE_TYPE_NAME(e_type TINYINT) RETURNS VARCHAR(10)
+BEGIN
+
+	IF e_type = 0 THEN
+		RETURN 'STAFF';
+	ELSEIF (e_type = 1) THEN
+		RETURN 'CHEF';
+	ELSE
+		RETURN 'MANAGER';
+	END IF;
+
+	RETURN 'ERROR';
+END;
+
+$$
+
+DELIMITER ;

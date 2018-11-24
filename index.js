@@ -6,15 +6,16 @@ const session = require('express-session');
 const port = 3000;
 
 // import all required part
-const admin = require('./app/admin.js');
-const login = require('./app/login.js');
-const main = require('./app/main.js');
-const menu = require('./app/menu.js');
-const order = require('./app/order.js');
-const promo = require('./app/promo.js');
-const reserve = require('./app/reserve.js');
-const sale = require('./app/sale.js');
-const sql = require('./app/sql.js');
+const admin       = require('./app/admin.js');
+const login       = require('./app/login.js');
+const main        = require('./app/main.js');
+const menu        = require('./app/menu.js');
+const order       = require('./app/order.js');
+const promo       = require('./app/promo.js');
+const reserve     = require('./app/reserve.js');
+const receipt     = require('./app/receipt.js');
+const sale        = require('./app/sale.js');
+const sql         = require('./app/sql.js');
 
 const jsonRequire = (req, res, next) => {
   	if (req.body === undefined) {
@@ -61,6 +62,7 @@ app.get('/menu'           , menu.ui);
 app.get('/order'          , login.checkTable     , order.ui);
 app.get('/order/cooklist' , login.checkEmployee  , order.cooklist_ui);
 app.get('/order/waitlist' , login.checkEmployee  , order.waitlist_ui);
+app.get('/receipt'        , login.checkReceipt   , receipt.ui);
 app.get('/reserve'        , login.checkMember    , reserve.ui);
 
 // list of all available APIs
@@ -85,15 +87,19 @@ api.post('/reserve/read'   , login.checkAuthen    , reserve.read);
 api.post('/reserve/create' , login.checkAuthen    , reserve.create);
 api.post('/reserve/cancel' , login.checkAuthen    , reserve.cancel);
 
-api.post('/order'          , login.checkTable     , order.read);
-api.post('/order/cooklist' , login.checkEmployee  , order.cooklist);
-api.post('/order/waitlist' , login.checkEmployee  , order.waitlist);
-api.post('/order/create'   , login.checkTable     , order.create);
-api.post('/order/cancel'   , login.checkTable     , order.cancel);
-api.post('/order/accept'   , login.checkEmployee  , order.accept);
-api.post('/order/decline'  , login.checkEmployee  , order.decline);
-api.post('/order/done'     , login.checkEmployee  , order.done);
-api.post('/order/receive'  , login.checkTable     , order.receive);
+api.post('/receipt/read'   , login.checkReceipt   , receipt.read);
+api.post('/receipt/create' , receipt.create);
+
+api.post('/order'          , login.checkTable             , order.read);
+api.post('/order/receipt'  , login.checkReceipt           , order.readReceipt);
+api.post('/order/cooklist' , login.checkEmployee          , order.cooklist);
+api.post('/order/waitlist' , login.checkEmployee          , order.waitlist);
+api.post('/order/create'   , login.checkTable             , order.create);
+api.post('/order/cancel'   , login.checkTable             , order.cancel);
+api.post('/order/accept'   , login.checkEmployee          , order.accept);
+api.post('/order/decline'  , login.checkEmployee          , order.decline);
+api.post('/order/done'     , login.checkEmployee          , order.done);
+api.post('/order/receive'  , login.checkEmployeeOrTable   , order.receive);
 
 // admin API
 const adminAPI = express();

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Systaurant</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <h1 class="text-center pt-5">Receipt</h1>
+          <div class="text-center">
+            <a href="/" class="btn btn-link">Home</a>
+          </div>
+          <table class="table table-striped table-hover mt-3">
+            <thead>
+              <tr>
+              	<th>#</th>
+                <th>Name</th>
+                <th class="text-center">Price (THB)</th>
+              </tr>
+            </thead>
+            <tbody id="order-list"></tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2" class="text-right"><strong>Table ID</strong></strong></string></td>
+                    <td colspan="1" class="text-left"><div id="table_ID"></div></td>        
+                </tr>
+                <tr>
+                    <td colspan="2" class="text-right"><strong>Total Price</strong></strong></string></td>
+                    <td colspan="1" class="text-left"><div id="total_price"></div></td>        
+                </tr>
+                <tr>
+                    <td colspan="2" class="text-right"><strong>Issue Date</strong></strong></string></td>
+                    <td colspan="1" class="text-left"><div id="issue_date"></div></td>        
+                </tr>
+                <tr>
+                    <td colspan="2" class="text-right"><strong>Payment</strong></strong></string></td>
+                    <td colspan="1" class="text-left"><div id="payment">
+                    </div>
+                    </td>
+                </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script src="/js/jquery-3.3.1.min.js"></script>
+    <script src="/js/axios.min.js"></script>
+    <script type="text/javascript">
+      const getOrder = () => {
+      	$("#order-list").text("");
+        axios
+          .post('/api/order/receipt')
+          .then(res => {
+            const order = res.data.order;
+            order.forEach(e => {
+                console.log(e);
+              const row = `<tr>
+              	  <td>${e.order_ID}</td>
+              	  <td>${e.menu_name}</td>
+              	  <td class='text-center'>${e.price}</td>
+              </tr>`;
+              $('#order-list').append(row);
+            });
+          })
+          .catch(res => {
+            console.log(res);
+          });
+      };
+
+      const getReceipt = () => {
+      	$("#receipt-list").text("");
+        axios
+          .post('/api/receipt/read')
+          .then(res => {
+            const receipt = res.data.receipt;
+            for (const idx in receipt) {
+                $("#" + idx).text(receipt[idx]);
+            }
+
+            if (!receipt["payment"]) {
+                $("#payment").html(`
+                <button type="submit" class="btn btn-success">
+                    Pay
+                </button>`);
+            }
+          })
+          .catch(res => {
+            console.log(res);
+          });
+      };
+
+      $(document).ready(function() {
+        getOrder();
+        getReceipt();
+      });
+    </script>
+  </body>
+</html>

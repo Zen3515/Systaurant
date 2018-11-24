@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Systaurant</title>
-    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
   </head>
   <body>
     <div class="container">
@@ -35,8 +35,8 @@
             	<td></td>
             	<td><input type="date" id="promo_start_date" class="form-control" value="" required><input type="time" id="promo_start_time" class="form-control" value="00:00" required> </td>
             	<td><input type="date" id="promo_end_date" class="form-control" value="" required><input type="time" id="promo_end_time" class="form-control" value="23:59" required> </td>
-            	<td><textarea id="promo_criteria" class="form-control"></textarea></td>
-            	<td class="text-right"><input id="promo_discount" placeholder="discount" style="text-align: right;" value="" required></td>
+            	<td><textarea id="promo_criteria" class="form-control" placeholder="criteria"></textarea></td>
+            	<td class="text-right"><input id="promo_discount" placeholder="discount" class="form-control" style="text-align: right;" value="" required></td>
             	<td class="text-center">
             		<button type="submit" class="btn btn-success">
             			+ Create
@@ -48,8 +48,8 @@
         </div>
       </div>
     </div>
-    <script src="../js/jquery-3.3.1.min.js"></script>
-    <script src="../js/axios.min.js"></script>
+    <script src="/js/jquery-3.3.1.min.js"></script>
+    <script src="/js/axios.min.js"></script>
     <script type="text/javascript">
 	  function setDateTime(date_id, time_id, data) {
 	  	  const d = data.split("T")[0];

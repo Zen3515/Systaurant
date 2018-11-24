@@ -37,20 +37,62 @@ const read = (req, res) => {
 
 	const id = req.session.table;
 
-	const command = `SELECT 
-		ord.order_ID, ord.employee_ID, ord.status, menu.menu_name, menu.price
-		FROM \`ORDER\` ord, 
-			(SELECT m.menu_ID, m.menu_name, m.menu_description,
-				ROUND(IFNULL(m.price * (100 - s.discount) / 100, m.price), 2) AS price
-				FROM MENU m
-				LEFT JOIN (SELECT menu_ID, MAX(discount) AS discount FROM SALE GROUP BY menu_ID) s
-				ON m.menu_ID = s.menu_ID
-			) menu
-		WHERE ord.table_ID = ${id} 
-		AND ord.menu_ID = menu.menu_ID`;
+	const command = "SELECT" 
+		+ " ord.`order_ID`, ord.`employee_ID`, ord.`status`, menu.`menu_name`, menu.`price`"
+		+ " FROM `ORDER` ord," 
+		+ " (SELECT m.`menu_ID`, m.`menu_name`, m.`menu_description`"
+		+	", ROUND(IFNULL(m.`price` * (100 - s.`discount`) / 100, m.`price`), 2) AS price"
+		+	" FROM MENU m"
+		+   " LEFT JOIN (SELECT `menu_ID`, MAX(discount) AS discount FROM SALE GROUP BY menu_ID) s"
+		+	" ON m.`menu_ID` = s.`menu_ID`) menu"
+		+ " WHERE ord.`table_ID` = " + id
+		+ " AND ord.`receipt_ID` IS NULL"
+		+ " AND ord.`menu_ID` = menu.`menu_ID`";
 
 	mysql_connect((db) => {
 		db.query(command, (err, result) => {
+			if (err) {
+				res.status(400).send(JSON.stringify({
+					message: err,
+				}));
+			} else {
+				res.send(JSON.stringify({
+					message: "OK",
+					order: result
+				}));
+			}
+		});
+	});
+}
+
+/*
+ * return a list of orders in the receipt
+ * Request { // none }
+ * Response
+ * {
+ * 		message: 		// status message
+ * 		order:           // list of orders
+ * }
+ */
+const readReceipt = (req, res) => {
+
+	const receipt_ID = req.session.receipt;
+
+	const command = "SELECT" 
+		+ " ord.`order_ID`, ord.`status`, menu.`menu_name`, menu.`price`"
+		+ " FROM `ORDER` ord,"
+		+ " (SELECT m.menu_ID, m.menu_name, m.menu_description"
+		+    ", ROUND(IFNULL(m.price * (100 - s.discount) / 100, m.price), 2) AS price"
+		+    " FROM MENU m"
+		+    " LEFT JOIN (SELECT menu_ID, MAX(discount) AS discount FROM `SALE` GROUP BY menu_ID) s"
+		+    " ON m.menu_ID = s.menu_ID"
+		+ " ) menu"
+		+ " WHERE ord.`receipt_ID` = " + receipt_ID
+		+ " AND ord.`menu_ID` = menu.`menu_ID`";
+
+	mysql_connect((db) => {
+		db.query(command, (err, result) => {
+
 			if (err) {
 				res.status(400).send(JSON.stringify({
 					message: err,
@@ -219,7 +261,6 @@ const receive = (req, res) => {
 	const command = "UPDATE `ORDER`"
 		+ " SET status = 2"
 		+ " WHERE order_ID = " + order_ID
-		+ " AND employee_ID = " + employee_ID
 	    + " AND status = 1";
 
 	issue_command(res, command);
@@ -351,6 +392,7 @@ module.exports = {
 
 	// order JSON api
 	read:         read,
+	readReceipt:  readReceipt,
 	create: 	  create,
 	cancel: 	  cancel,
 	accept: 	  accept,

@@ -8,134 +8,167 @@ const mysql_connect = require("../db/connectDB.js");
 
 //////// API //////
 
-const issue_command = (res, command) => {
-	mysql_connect((db) => {
-		db.query(command, (err, result) => {
-			if (err) {
-				res.status(400).send(JSON.stringify({
-					message: err,
-				}));
-			} else {
-				res.send(JSON.stringify({
-					message: "OK",
-				}));
-			}
-		});
-	});
-};
-
 /*
  * create a receipt
  * Request
- * {
- * 		table_ID: 		// promo name
- * }
+ * {}
  * Response
  * {
+ *      receipt_ID:     // id of the create receipt
  * 		message: 		// status message
  * }
  */
 const create = (req, res) => {
 
-	login.checkEmployee(() => {
+	const table_ID = req.session.table;
 
-		const table_ID = req.body.table_ID;
+	mysql_connect((db) => {
 
-		const date = new Date();
-		const issue_date = date.getTime();
+		const command = "SELECT ord.`order_ID`, m.`menu_name`"
+			+ ", ROUND(IFNULL(m.`price` * (100 - s.`discount`) / 100, m.`price`), 2) AS price"
+			+ " FROM `ORDER` ord, `MENU` m"
 
-		if (table_ID === undefined) {
-			res.status(400).send(JSON.stringify({
-				message: "information is missing [table_ID]",
-			}));
-			return;
-		}
+			+ " LEFT JOIN"
+			+ " (SELECT `menu_ID`, MAX(`discount`) AS `discount` FROM `SALE` GROUP BY `menu_ID`) s"
+			+ " ON m.`menu_ID` = s.`menu_ID` "
 
+			+ " WHERE ord.`table_ID` = " + table_ID
+			+ " AND ord.`order_time` <= NOW()"
+			+ " AND ord.`receipt_ID` IS NULL"
+			+ " AND ord.`menu_ID` = m.`menu_ID`";		
 
-		mysql_connect((db) => {
+		db.query(command, (err, result) => {
+			
+			if (err) {
+				res.status(400).send(JSON.stringify({
+					message: err,
+				}));					
+				return; 
+			}
 
-			const command = "SELECT ord.`order_ID`, m.`price` "
-				+ "FROM `ORDER` ord"
-				+ ", `MENU` m "
-				+ "WHERE "
-				+ "ord.`table_ID` = " + table_ID + " "
-				+ "AND ord.`order_time` < " + issue_date
-				+ "AND ord.`receipt_ID` = NULL"
-				+ "AND ord.`menu_ID` = m.`menu_ID`";
+			// get the price of the bill
+			let price = 0.0;
+			for (const idx in result) {
+				price += result[idx].price;
+			}
 
-			db.query(command, (err, result) => {
+			price = Math.round(100 * price) / 100;
 
+			if (price <= 0.00) {
+				// no receipt here
+				res.status(400).send(JSON.stringify({
+					message: "No order is made",
+				}));
+				return;
+			}
+
+			// generate create and update queries
+			const command1 = "INSERT INTO `RECEIPT`"
+				+ " (`table_ID`, `total_price`)"
+				+ " VALUES (" + table_ID + ", " + price + ")";
+
+			const command2 = "UPDATE `ORDER`"
+				+ " SET `receipt_ID` = LAST_INSERT_ID()"
+				+ " WHERE `table_ID` = " + table_ID
+				+ " AND `order_time` < NOW()"
+				+ " AND `receipt_ID` IS NULL";
+			
+			const command3 = "SELECT LAST_INSERT_ID() AS ID";
+
+			db.query(command1, (err, result) => {
 				if (err) {
-					res.status(500).send(JSON.stringify({
-						message: "Error gathering orders",
-					}));					
-					return; 
+					res.status(400).send(JSON.stringify({
+						message: err,
+					}));
+				} else {
+					db.query(command2, (err, result) => {
+						if (err) {
+							res.status(400).send(JSON.stringify({
+								message: err,
+							}));
+						} else {
+							db.query(command3, (err, result) => {
+								if (err) {
+									res.status(400).send(JSON.stringify({
+										message: err,
+									}));
+								} else if (result.length == 0) {
+									res.status(400).send(JSON.stringify({
+										message: "No new ID",
+										recept_ID: -1,
+									}));
+								} else {
+
+									// add receipt to the ID
+									req.session.receipt = result[0].ID;
+
+									res.send(JSON.stringify({
+										message: "OK",
+										receipt_ID: result[0].ID,
+									}));
+								}
+							});
+						}
+					});	
 				}
-
-				// get the price of the bill
-				let price = 0.0;
-				for (const ord : result) {
-					price += ord.price;
-				}
-				price = Math.round(100 * price) / 100;
-
-				// generate create and update queries
-				const command1 = "INSERT INTO `RECEIPT` "
-					+ "(`table_ID`, `total_price`, `issue_date`)"
-					+ "VALUES (" + table_ID + ", " + price + ", \"" + issue_date +"\")";
-
-				const command2 = "UPDATE `ORDER` "
-					+ "SET `receipt_ID` = LAST_INSERT_ID() "
-					+ "WHERE `table_ID` = " + table_ID + " "
-					+ "AND `order_time` < " + issue_date + " "
-					+ "AND `receipt_ID` = NULL ";
-
-				issue_command(res, command1 + ";" + command2);
 			});
-
 		});
 	});
-
 };
 
 /*
- * remove a promo
+ * read a receipt
  * Request
- * {
- * 		id: 		// promo id
- * }
+ * {}
  * Response
  * {
  * 		message: 	// status message
+ *      receipt:    // information about receipt
  * }
  */
-const remove = (req, res) => {
-	const promo_ID = req.body.id;
+const read = (req, res) => {
 
-	if (promo_ID === undefined) {
-		res.status(400).send(JSON.stringify({
-			message: "no promotion id",
-		}));
-		return;
-	}
+	const receipt_ID = req.session.receipt;
 
-	const command = "DELETE FROM `promotion` WHERE `promo_ID` = " + promo_ID;
+	const command = "SELECT * FROM `RECEIPT`"
+		+ " WHERE `receipt_ID` = " + receipt_ID
+		+ " ORDER BY `issue_date` DESC"
+		+ " LIMIT 1";
 
-	issue_command(res, command);
+	mysql_connect((db) => {
+		db.query(command, (err, result) => {
+
+			if (err) {
+				res.status(400).send(JSON.stringify({
+					message: err,
+				}));
+			} else {
+				if (result.length === 0) {
+					res.status(400).send(JSON.stringify({
+						message: "No receipt found.",
+					}));	
+				} else {
+					res.send(JSON.stringify({
+						message: "OK",
+						receipt: result[0],
+					}));
+				}
+			}
+		});
+	});
 };
 
 //////// UI ///////
 // TODO
-const ui = (req, res) => {
-	res.send("promo page");
-};
+const ui = (req, res) => { res.sendFile("receipt.html", {
+	root: __dirname  + '/../view'
+}); };
 
 module.exports = {
 
 	// promo JSON api
 	create: create,
-	update: update,
-	remove: remove,
+	read:   read,
 
 	// promo ui
 	ui: ui
