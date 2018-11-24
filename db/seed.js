@@ -105,12 +105,12 @@ const menus = [
 ];
 
 const orders = [
-    {receipt_ID: 1,    employee_ID: 3,    table_ID:1, menu_ID: 1, order_time: '2018-11-19 12:12:12', status: 3},
-    {receipt_ID: 1,    employee_ID: 3,    table_ID:1, menu_ID: 2, order_time: '2018-11-19 12:22:12', status: 3},
-    {receipt_ID: 1,    employee_ID: 4,    table_ID:1, menu_ID: 3, order_time: '2018-11-19 12:32:12', status: 3},
-    {receipt_ID: 2,    employee_ID: 3,    table_ID:3, menu_ID: 1, order_time: '2018-11-20 14:10:00', status: 3},
+    {receipt_ID: 1,    employee_ID: 3,    table_ID:1, menu_ID: 1, order_time: '2018-11-19 12:12:12', status: 2},
+    {receipt_ID: 1,    employee_ID: 3,    table_ID:1, menu_ID: 2, order_time: '2018-11-19 12:22:12', status: 2},
+    {receipt_ID: 1,    employee_ID: 4,    table_ID:1, menu_ID: 3, order_time: '2018-11-19 12:32:12', status: 2},
+    {receipt_ID: 2,    employee_ID: 3,    table_ID:3, menu_ID: 1, order_time: '2018-11-20 14:10:00', status: 2},
     {receipt_ID: null, employee_ID: 3,    table_ID:2, menu_ID: 2, order_time: '2018-11-20 14:20:00', status: 2},
-    {receipt_ID: 2,    employee_ID: 4,    table_ID:3, menu_ID: 3, order_time: '2018-11-20 14:30:00', status: 3},
+    {receipt_ID: 2,    employee_ID: 4,    table_ID:3, menu_ID: 3, order_time: '2018-11-20 14:30:00', status: 2},
     {receipt_ID: null, employee_ID: null, table_ID:2, menu_ID: 2, order_time: '2018-11-20 14:40:00', status: 0},
 ];
 const receipts =[
