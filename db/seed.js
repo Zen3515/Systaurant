@@ -17,69 +17,123 @@ const account = [
 		birthdate: '1998-05-16', 
 		email:     'p********@gmail.com' 
 	}, {
-		fname:     'Phirasit', 
-		lname:     'Charoenchitseriwong', 
-		addr:      '59/7 ************ Ratchatewi Bangkok 10400', 
-		phoneNO:   '0832894321', 
+		fname:     'Troy', 
+		lname:     'Kshlerin', 
+		addr:      '9662 Kunde Mountain North Kaelatown 46180', 
+		phoneNO:   '2036743628', 
 		gender:    0, 
-		birthdate: '1998-05-16', 
-		email:     'p********@gmail.com' 
+		birthdate: '1995-03-15', 
+		email:     'chief_arizona@gmail.com' 
 	}, {
-		fname:     'Phirasit', 
-		lname:     'Charoenchitseriwong', 
-		addr:      '59/7 ************ Ratchatewi Bangkok 10400', 
-		phoneNO:   '0832894321', 
+		fname:     'Easton', 
+		lname:     'Ward', 
+		addr:      '63318 Lockman View North Rigoberto 72198', 
+		phoneNO:   '8921768684', 
 		gender:    0, 
-		birthdate: '1998-05-16', 
-		email:     'p********@gmail.com' 
+		birthdate: '1995-03-15', 
+		email:     'Uriah.Ullrich21@hotmail.com' 
 	}, {
-		fname:     'Phirasit', 
-		lname:     'Charoenchitseriwong', 
-		addr:      '59/7 ************ Ratchatewi Bangkok 10400', 
-		phoneNO:   '0832894321', 
-		gender:    0, 
-		birthdate: '1998-05-16', 
-		email:     'p********@gmail.com' 
+		fname:     'Thea', 
+		lname:     'Botsford', 
+		addr:      '65815 Hills Knoll Port Arch 26580-9775', 
+		phoneNO:   '3529798454', 
+		gender:    1, 
+		birthdate: '1985-07-26', 
+		email:     'Patience.Rolfson@gmail.com' 
 	}, {
-		fname:     'Phirasit', 
-		lname:     'Charoenchitseriwong', 
-		addr:      '59/7 ************ Ratchatewi Bangkok 10400', 
-		phoneNO:   '0832894321', 
-		gender:    0, 
-		birthdate: '1998-05-16', 
-		email:     'p********@gmail.com' 
+		fname:     'Cale', 
+		lname:     'Kirlin', 
+		addr:      '89130 O Keefe Shoals Daughertystad 79135', 
+		phoneNO:   '6359719262', 
+		gender:    1, 
+		birthdate: '1989-11-11', 
+		email:     'Brooke1@yahoo.com' 
 	}, {
-		fname:     'Phirasit', 
-		lname:     'Charoenchitseriwong', 
-		addr:      '59/7 ************ Ratchatewi Bangkok 10400', 
-		phoneNO:   '0832894321', 
+		fname:     'Ed', 
+		lname:     'Murazik', 
+		addr:      '7248 Wisozk Light East Danika 84791', 
+		phoneNO:   '4813332980', 
 		gender:    0, 
-		birthdate: '1998-05-16', 
-		email:     'p********@gmail.com' 
-	},
+		birthdate: '1991-12-31', 
+		email:     'Augustine_Lynch@hotmail.com' 
+    },{
+		fname:     'Cathrine', 
+		lname:     'Osinski', 
+		addr:      '76142 Abagail Squares West Jules 96256', 
+		phoneNO:   '7261015918', 
+		gender:    1, 
+		birthdate: '1999-09-09', 
+		email:     'Cathrine_Cassin46@yahoo.com' 
+    },
+];
+const employee  = [
+	{
+		account_id: 1, 
+		ssn:     '2334223424101', 
+		salary:   75000, 
+		workday:   63, 
+		employee_type: 2 
+    } ,{
+		account_id: 2, 
+		ssn:     '2334223424212', 
+		salary:   30000, 
+		workday:   63, 
+		employee_type:  1
+    },{
+		account_id: 4, 
+		ssn:     '2334223424323', 
+		salary:   6500, 
+		workday:   63, 
+		employee_type: 0 
+    },{
+		account_id: 6, 
+		ssn:     '2334223424434', 
+		salary:   6000, 
+		workday:   63, 
+		employee_type: 0 
+    }
+];
+const member = [2,4,7];  //not employees
+const TableSize 		= [2, 3, 4, 5, 6, 7];
+const menus = [
+    { name: "Fried Chicken"        , desc: "Deep fried chicken wing"     , price: 270.00 },
+    { name: "Beef Steak"           , desc: "Grounded beef pepper steak"  , price: 640.00 },
+    { name: "Laab Tuna"            , desc: "Thai spicy tuna salad"       , price: 35.00  },
+    { name: "Cabonara Spaghetti"   , desc: "Spaghetti with cabonara"     , price: 170.00 }
+];
+const orders = [
+    {receipt_ID: 1, employee_ID: 3, table_ID:1, menu_ID: 1, order_time: '2018-11-19 12:12:12', status: 3},
+    {receipt_ID: 1, employee_ID: 3, table_ID:1, menu_ID: 2, order_time: '2018-11-19 12:22:12', status: 3},
+    {receipt_ID: 1, employee_ID: 4, table_ID:1, menu_ID: 3, order_time: '2018-11-19 12:32:12', status: 3},
+    {receipt_ID: 2, employee_ID: 3, table_ID:3, menu_ID: 1, order_time: '2018-11-20 14:10:00', status: 3},
+    {receipt_ID: null, employee_ID: 3, table_ID:2, menu_ID: 2, order_time: '2018-11-20 14:20:00', status: 2},
+    {receipt_ID: 2, employee_ID: 4, table_ID:3, menu_ID: 3, order_time: '2018-11-20 14:30:00', status: 3},
+    {receipt_ID: null, employee_ID: null, table_ID:2, menu_ID: 2, order_time: '2018-11-20 14:40:00', status: 0},
+];
+const receipts =[
+    {table_ID: 1, total_price: 945.00, issue_date: '2018-11-19 12:42:12'},
+    {table_ID: 1, total_price: 305.00, issue_date: '2018-11-20 15:00:00'}
+];
+const recommendations =[
+    {receipt_ID:1, commentator_name:'Mr. Marion Fritsch', comment:'This system is good! Gj, this is not DB group, yeah!'},
+    {receipt_ID:2, commentator_name:'Ms. Cathrine Osinski', comment:'Tuna salad is good. '}
+];
+const reserves =[
+    {member_ID: 7, table_ID:3, reserve_time:'2018-11-20 14:00:00' , number_of_reserved: 3, create_time:'2018-11-20 09:00:00'}
 ];
 
 const numAccount 		= account.length;
-const numMember 		= 3;
-const numEmployee 		= 3;
-
-assert(numAccount >= numMember + numEmployee);
-
-const TableSize 		= [2, 3, 4, 5, 6, 7];
+const numMember 		= member.length;
+const numEmployee 		= employee.length;
 const numTable			= TableSize.length;
-
-const menus = [
-	{ name: "Fried Chicken"        , desc: "Deep fried chicken wing"     , price: 270.00 },
-	{ name: "Beef Steak"           , desc: "Grounded beef pepper steak"  , price: 640.00 },
-	{ name: "Laab Tuna"            , desc: "Thai spicy tuna salad"       , price: 35.00  },
-	{ name: "Cabonara Spaghetti"   , desc: "Spaghetti with cabonara"     , price: 170.00 }
-];
-
 const numMenu 			= menus.length;
 const numThumbnail		= 10;
 const numPromo 			= 5;
 const numSale 			= 5;
-const numOrder          = 10;
+const numOrder          = orders.length;
+const numReceipt        = receipts.length; 
+const numRecommendation = recommendations.length;
+const numReserve         = reserves.length;
 
 const tables = [
     "ACCOUNT", "EMPLOYEE", "EMPLOYEE_WAITER", "EMPLOYEE_CHEF", "EMPLOYEE_MANAGER",
@@ -167,13 +221,11 @@ mysql_connect(function(db) {
 
         executeCommandSeq(db, numEmployee, (i) => {
 
-            const account_id        = i + 1;
-            const ssn               = `2334223424${i+1}${i}${i+1}`;
-            const salary            = 5000 + 1000 * i;
-            const workday           = 63;
-            const employee_type     =
-                (i >= Math.floor((numEmployee + 2) / 3)) +
-                (i >= Math.floor((numEmployee + 2) / 3) + Math.floor((numEmployee + 1) / 3));
+            const account_id        = employee[i].account_id;
+            const ssn               = employee[i].ssn;
+            const salary            = employee[i].salary;
+            const workday           = employee[i].workday;
+            const employee_type     = employee[i].employee_type;
 
             return (callback) => {
                 db.query("INSERT INTO `EMPLOYEE` " +
@@ -187,10 +239,13 @@ mysql_connect(function(db) {
 
     // Generate EMPLOYEE_WAITER
     const seedEmployeeWaiter = (callback) => {
-        executeCommandSeq(db, Math.floor((numEmployee + 2) / 3), (i) => {
-
-            const employee_id       = i + 1;
-            const status            = i % 2;
+        let employees = [];
+        for (let i = 0; i < numEmployee; ++i) {
+            if(employee[i].employee_type==0)  employees.push(i);
+        }
+        executeCommandSeq(db, employees.length, (i) => {
+            const employee_id       = employees[i];
+            const status            = employee_id % 2;
 
             return (callback) => {
                 db.query("INSERT INTO `EMPLOYEE_WAITER` " +
@@ -204,12 +259,13 @@ mysql_connect(function(db) {
 
     // Generate EMPLOYEE_CHEF
     const seedEmployeeChef = (callback) => {
-
-        executeCommandSeq(db, Math.floor( (numEmployee + 1) / 3), (i) => {
-
-            i += Math.floor( (numEmployee + 2) / 3);
-            const employee_id       = i + 1;
-
+        let employees = [];
+        for (let i = 0; i < numEmployee; ++i) {
+            if(employee[i].employee_type==1)  employees.push(i);
+        }
+        executeCommandSeq(db, employees.length, (i) => {
+            const employee_id       = employees[i];
+                
             return (callback) => {
                 db.query("INSERT INTO `EMPLOYEE_CHEF` " +
                     "(`employee_ID`) " +
@@ -222,12 +278,13 @@ mysql_connect(function(db) {
 
     // Generate EMPLOYEE_MANAGER
     const seedEmployeeManager = (callback) => {
-
-        executeCommandSeq(db, Math.floor( numEmployee / 3), (i) => {
-
-            i += numEmployee - Math.floor( numEmployee / 3);
-            const employee_id       = i + 1;
-
+        let employees = [];
+        for (let i = 0; i < numEmployee; ++i) {
+            if(employee[i].employee_type==2)  employees.push(i);
+        }
+        executeCommandSeq(db, employees.length, (i) => {
+            const employee_id       = employees[i];
+                
             return (callback) => {
                 db.query("INSERT INTO `EMPLOYEE_MANAGER` " +
                     "(`employee_ID`) " +
@@ -240,11 +297,9 @@ mysql_connect(function(db) {
 
     // Generate Member
     const seedMember = (callback) => {
-
+        
         executeCommandSeq(db, numMember, (i) => {
-
-            i += numEmployee;
-            const account_id        = i + 1;
+            const account_id        = member[i];
             const registered_date   = `2012-03-${i+1} 0:${i+3}:0`;
 
             return (callback) => {
@@ -352,19 +407,83 @@ mysql_connect(function(db) {
         }, callback);
     };
 
+    //Generate receipt
+    const seedReceipt = (callback) => {
+
+        executeCommandSeq(db, numReceipt, (i) => {
+
+            const table_ID       = receipts[i].table_ID;
+            const total_price      = receipts[i].total_price;
+            const issue_date      = receipts[i].issue_date;
+            const payment      = (i%3)%2;
+
+            return (callback) => {
+                db.query("INSERT INTO `RECEIPT` " +
+                    "(`table_ID`, `total_price`,`issue_date`,`payment`)" +
+                    " VALUES " +
+                    `(\"${table_ID}\", \"${total_price}\", \"${issue_date}\",\"${payment}\")`
+                    , createCallback(callback, true, false));
+            };
+        }, callback);
+    };
+
 	// Generate Order
     const seedOrder = (callback) => {
 
         executeCommandSeq(db, numOrder, (i) => {
 
-            const menu_ID       = i % numMenu + 1;
-            const table_ID      = (i * i) % numTable + 1;
-
+            const menu_ID       = orders[i].menu_ID;
+            const receipt_ID      = orders[i].receipt_ID;
+            const employee_ID      = orders[i].employee_ID;
+            const table_ID      = orders[i].table_ID;
+            const order_time      = orders[i].order_time;
+            const status        =orders[i].status
             return (callback) => {
                 db.query("INSERT INTO `ORDER` " +
-                    "(`menu_ID`, `table_ID`)" +
+                    "(`menu_ID`, `receipt_ID`,`employee_ID`,`table_ID`,`order_time`,`status`)" +
                     " VALUES " +
-                    `(\"${menu_ID}\", \"${table_ID}\")`
+                    `(\"${menu_ID}\", ${receipt_ID}, ${employee_ID},\"${table_ID}\",\"${order_time}\",\"${status}\")`
+                    , createCallback(callback, true, false));
+            };
+        }, callback);
+    };    
+
+    //Generate recommendation
+    const seedRecommendation = (callback) => {
+
+        executeCommandSeq(db, numRecommendation, (i) => {
+
+            const receipt_ID       = recommendations[i].receipt_ID;
+            const commentator_name      = recommendations[i].commentator_name;
+            const comment      = recommendations[i].comment;
+            const rating      = 5-(i%2);
+
+            return (callback) => {
+                db.query("INSERT INTO `RECOMMENDATION` " +
+                    "(`receipt_ID`, `commentator_name`,`comment`,`rating`)" +
+                    " VALUES " +
+                    `(\"${receipt_ID}\", \"${commentator_name}\", \"${comment}\", \"${rating}\")`
+                    , createCallback(callback, true, false));
+            };
+        }, callback);
+    };
+
+    //Generate reserve
+    const seedReserve = (callback) => {
+
+        executeCommandSeq(db, numReserve, (i) => {
+
+            const member_ID       = reserves[i].member_ID;
+            const table_ID      = reserves[i].table_ID;
+            const reserve_time      = reserves[i].reserve_time;
+            const number_of_reserved      = reserves[i].number_of_reserved;
+            const create_time      = reserves[i].create_time;
+
+            return (callback) => {
+                db.query("INSERT INTO `RESERVE` " +
+                    "(`member_ID`, `table_ID`,`reserve_time`,`number_of_reserved`,`create_time`)" +
+                    " VALUES " +
+                    `(\"${member_ID}\", \"${table_ID}\", \"${reserve_time}\", \"${number_of_reserved}\", \"${create_time}\")`
                     , createCallback(callback, true, false));
             };
         }, callback);
@@ -402,6 +521,9 @@ mysql_connect(function(db) {
         seedPromo,
         seedSale,
         seedOrder,
+        seedReceipt,
+        seedRecommendation,
+        seedReserve,
         // checkMember,
         // checkTable,
         terminate,
