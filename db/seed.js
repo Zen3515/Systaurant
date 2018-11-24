@@ -68,25 +68,25 @@ const account = [
 ];
 const employee  = [
 	{
-		account_id: 0, 
+		account_id: 1, 
 		ssn:     '2334223424101', 
 		salary:   75000, 
 		workday:   63, 
 		employee_type: 2 
     } ,{
-		account_id: 1, 
+		account_id: 2, 
 		ssn:     '2334223424212', 
 		salary:   30000, 
 		workday:   63, 
 		employee_type:  1
     },{
-		account_id: 3, 
+		account_id: 4, 
 		ssn:     '2334223424323', 
 		salary:   6500, 
 		workday:   63, 
 		employee_type: 0 
     },{
-		account_id: 5, 
+		account_id: 6, 
 		ssn:     '2334223424434', 
 		salary:   6000, 
 		workday:   63, 
@@ -108,8 +108,7 @@ const orders = [
     {receipt_ID: 2, employee_ID: 3, table_ID:3, menu_ID: 1, order_time: '2018-11-20 14:10:00', status: 3},
     {receipt_ID: null, employee_ID: 3, table_ID:2, menu_ID: 2, order_time: '2018-11-20 14:20:00', status: 2},
     {receipt_ID: 2, employee_ID: 4, table_ID:3, menu_ID: 3, order_time: '2018-11-20 14:30:00', status: 3},
-    {receipt_ID: null, employee_ID: 4, table_ID:2, menu_ID: 4, order_time: '2018-11-20 14:40:00', status: 1},
-    {receipt_ID: null, employee_ID: 4, table_ID:2, menu_ID: 2, order_time: '2018-11-20 14:40:00', status: 0},
+    {receipt_ID: null, employee_ID: null, table_ID:2, menu_ID: 2, order_time: '2018-11-20 14:40:00', status: 0},
 ];
 const receipts =[
     {table_ID: 1, total_price: 945.00, issue_date: '2018-11-19 12:42:12'},
@@ -439,24 +438,13 @@ mysql_connect(function(db) {
             const table_ID      = orders[i].table_ID;
             const order_time      = orders[i].order_time;
             const status        =orders[i].status
-            if(receipt_ID==null){
-                return (callback) => {
-                    db.query("INSERT INTO `ORDER` " +
-                        "(`menu_ID`,`employee_ID`,`table_ID`,`order_time`,`status`)" +
-                        " VALUES " +
-                        `(\"${menu_ID}\", \"${employee_ID}\",\"${table_ID}\",\"${order_time}\",\"${status}\")`
-                        , createCallback(callback, true, false));
-                };
-            }
-            else{
-                return (callback) => {
-                    db.query("INSERT INTO `ORDER` " +
-                        "(`menu_ID`, `receipt_ID`,`employee_ID`,`table_ID`,`order_time`,`status`)" +
-                        " VALUES " +
-                        `(\"${menu_ID}\", \"${receipt_ID}\", \"${employee_ID}\",\"${table_ID}\",\"${order_time}\",\"${status}\")`
-                        , createCallback(callback, true, false));
-                };
-            }
+            return (callback) => {
+                db.query("INSERT INTO `ORDER` " +
+                    "(`menu_ID`, `receipt_ID`,`employee_ID`,`table_ID`,`order_time`,`status`)" +
+                    " VALUES " +
+                    `(\"${menu_ID}\", ${receipt_ID}, ${employee_ID},\"${table_ID}\",\"${order_time}\",\"${status}\")`
+                    , createCallback(callback, true, false));
+            };
         }, callback);
     };    
 
