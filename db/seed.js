@@ -69,45 +69,48 @@ const account = [
 const employee  = [
 	{
 		account_id: 1, 
-		ssn:     '2334223424101', 
+		ssn:      '2334223424101', 
 		salary:   75000, 
-		workday:   63, 
+		workday:  63, 
 		employee_type: 2 
     } ,{
 		account_id: 2, 
-		ssn:     '2334223424212', 
+		ssn:      '2334223424212', 
 		salary:   30000, 
-		workday:   63, 
+		workday:  63, 
 		employee_type:  1
     },{
 		account_id: 4, 
-		ssn:     '2334223424323', 
+		ssn:      '2334223424323', 
 		salary:   6500, 
-		workday:   63, 
+		workday:  63, 
 		employee_type: 0 
     },{
 		account_id: 6, 
-		ssn:     '2334223424434', 
+		ssn:      '2334223424434', 
 		salary:   6000, 
-		workday:   63, 
+		workday:  63, 
 		employee_type: 0 
     }
 ];
-const member = [2,4,7];  //not employees
-const TableSize 		= [2, 3, 4, 5, 6, 7];
+
+const member     = [2,4,7];  //not employees
+const TableSize  = [2, 3, 4, 5, 6, 7];
+
 const menus = [
     { name: "Fried Chicken"        , desc: "Deep fried chicken wing"     , price: 270.00 },
     { name: "Beef Steak"           , desc: "Grounded beef pepper steak"  , price: 640.00 },
     { name: "Laab Tuna"            , desc: "Thai spicy tuna salad"       , price: 35.00  },
     { name: "Cabonara Spaghetti"   , desc: "Spaghetti with cabonara"     , price: 170.00 }
 ];
+
 const orders = [
-    {receipt_ID: 1, employee_ID: 3, table_ID:1, menu_ID: 1, order_time: '2018-11-19 12:12:12', status: 3},
-    {receipt_ID: 1, employee_ID: 3, table_ID:1, menu_ID: 2, order_time: '2018-11-19 12:22:12', status: 3},
-    {receipt_ID: 1, employee_ID: 4, table_ID:1, menu_ID: 3, order_time: '2018-11-19 12:32:12', status: 3},
-    {receipt_ID: 2, employee_ID: 3, table_ID:3, menu_ID: 1, order_time: '2018-11-20 14:10:00', status: 3},
-    {receipt_ID: null, employee_ID: 3, table_ID:2, menu_ID: 2, order_time: '2018-11-20 14:20:00', status: 2},
-    {receipt_ID: 2, employee_ID: 4, table_ID:3, menu_ID: 3, order_time: '2018-11-20 14:30:00', status: 3},
+    {receipt_ID: 1,    employee_ID: 3,    table_ID:1, menu_ID: 1, order_time: '2018-11-19 12:12:12', status: 3},
+    {receipt_ID: 1,    employee_ID: 3,    table_ID:1, menu_ID: 2, order_time: '2018-11-19 12:22:12', status: 3},
+    {receipt_ID: 1,    employee_ID: 4,    table_ID:1, menu_ID: 3, order_time: '2018-11-19 12:32:12', status: 3},
+    {receipt_ID: 2,    employee_ID: 3,    table_ID:3, menu_ID: 1, order_time: '2018-11-20 14:10:00', status: 3},
+    {receipt_ID: null, employee_ID: 3,    table_ID:2, menu_ID: 2, order_time: '2018-11-20 14:20:00', status: 2},
+    {receipt_ID: 2,    employee_ID: 4,    table_ID:3, menu_ID: 3, order_time: '2018-11-20 14:30:00', status: 3},
     {receipt_ID: null, employee_ID: null, table_ID:2, menu_ID: 2, order_time: '2018-11-20 14:40:00', status: 0},
 ];
 const receipts =[
@@ -115,25 +118,25 @@ const receipts =[
     {table_ID: 1, total_price: 305.00, issue_date: '2018-11-20 15:00:00'}
 ];
 const recommendations =[
-    {receipt_ID:1, commentator_name:'Mr. Marion Fritsch', comment:'This system is good! Gj, this is not DB group, yeah!'},
+    {receipt_ID:1, commentator_name:'Mr. Marion Fritsch',   comment:'This system is good! Gj, this is not DB group, yeah!'},
     {receipt_ID:2, commentator_name:'Ms. Cathrine Osinski', comment:'Tuna salad is good. '}
 ];
 const reserves =[
-    {member_ID: 7, table_ID:3, reserve_time:'2018-11-20 14:00:00' , number_of_reserved: 3, create_time:'2018-11-20 09:00:00'}
+    {member_ID: 1, table_ID:3, reserve_time:'2018-11-20 14:00:00', number_of_reserved: 3, create_time:'2018-11-20 09:00:00'}
 ];
 
-const numAccount 		= account.length;
-const numMember 		= member.length;
-const numEmployee 		= employee.length;
-const numTable			= TableSize.length;
-const numMenu 			= menus.length;
-const numThumbnail		= 10;
-const numPromo 			= 5;
-const numSale 			= 5;
+const numAccount        = account.length;
+const numMember         = member.length;
+const numEmployee       = employee.length;
+const numTable          = TableSize.length;
+const numMenu           = menus.length;
+const numThumbnail      = 10;
+const numPromo          = 5;
+const numSale           = 5;
 const numOrder          = orders.length;
 const numReceipt        = receipts.length; 
 const numRecommendation = recommendations.length;
-const numReserve         = reserves.length;
+const numReserve        = reserves.length;
 
 const tables = [
     "ACCOUNT", "EMPLOYEE", "EMPLOYEE_WAITER", "EMPLOYEE_CHEF", "EMPLOYEE_MANAGER",
@@ -241,7 +244,7 @@ mysql_connect(function(db) {
     const seedEmployeeWaiter = (callback) => {
         let employees = [];
         for (let i = 0; i < numEmployee; ++i) {
-            if(employee[i].employee_type==0)  employees.push(i);
+            if(employee[i].employee_type==0)  employees.push(i+1);
         }
         executeCommandSeq(db, employees.length, (i) => {
             const employee_id       = employees[i];
@@ -261,11 +264,11 @@ mysql_connect(function(db) {
     const seedEmployeeChef = (callback) => {
         let employees = [];
         for (let i = 0; i < numEmployee; ++i) {
-            if(employee[i].employee_type==1)  employees.push(i);
+            if(employee[i].employee_type==1)  employees.push(i+1);
         }
         executeCommandSeq(db, employees.length, (i) => {
             const employee_id       = employees[i];
-                
+
             return (callback) => {
                 db.query("INSERT INTO `EMPLOYEE_CHEF` " +
                     "(`employee_ID`) " +
@@ -280,11 +283,11 @@ mysql_connect(function(db) {
     const seedEmployeeManager = (callback) => {
         let employees = [];
         for (let i = 0; i < numEmployee; ++i) {
-            if(employee[i].employee_type==2)  employees.push(i);
+            if(employee[i].employee_type==2)  employees.push(i+1);
         }
         executeCommandSeq(db, employees.length, (i) => {
             const employee_id       = employees[i];
-                
+
             return (callback) => {
                 db.query("INSERT INTO `EMPLOYEE_MANAGER` " +
                     "(`employee_ID`) " +
@@ -433,11 +436,12 @@ mysql_connect(function(db) {
         executeCommandSeq(db, numOrder, (i) => {
 
             const menu_ID       = orders[i].menu_ID;
-            const receipt_ID      = orders[i].receipt_ID;
-            const employee_ID      = orders[i].employee_ID;
+            const receipt_ID    = orders[i].receipt_ID;
+            const employee_ID   = orders[i].employee_ID;
             const table_ID      = orders[i].table_ID;
-            const order_time      = orders[i].order_time;
-            const status        =orders[i].status
+            const order_time    = orders[i].order_time;
+            const status        = orders[i].status
+
             return (callback) => {
                 db.query("INSERT INTO `ORDER` " +
                     "(`menu_ID`, `receipt_ID`,`employee_ID`,`table_ID`,`order_time`,`status`)" +
@@ -453,10 +457,10 @@ mysql_connect(function(db) {
 
         executeCommandSeq(db, numRecommendation, (i) => {
 
-            const receipt_ID       = recommendations[i].receipt_ID;
-            const commentator_name      = recommendations[i].commentator_name;
-            const comment      = recommendations[i].comment;
-            const rating      = 5-(i%2);
+            const receipt_ID        = recommendations[i].receipt_ID;
+            const commentator_name  = recommendations[i].commentator_name;
+            const comment           = recommendations[i].comment;
+            const rating            = 5-(i%2);
 
             return (callback) => {
                 db.query("INSERT INTO `RECOMMENDATION` " +
@@ -473,11 +477,11 @@ mysql_connect(function(db) {
 
         executeCommandSeq(db, numReserve, (i) => {
 
-            const member_ID       = reserves[i].member_ID;
-            const table_ID      = reserves[i].table_ID;
-            const reserve_time      = reserves[i].reserve_time;
-            const number_of_reserved      = reserves[i].number_of_reserved;
-            const create_time      = reserves[i].create_time;
+            const member_ID            = reserves[i].member_ID;
+            const table_ID             = reserves[i].table_ID;
+            const reserve_time         = reserves[i].reserve_time;
+            const number_of_reserved   = reserves[i].number_of_reserved;
+            const create_time          = reserves[i].create_time;
 
             return (callback) => {
                 db.query("INSERT INTO `RESERVE` " +
@@ -520,10 +524,10 @@ mysql_connect(function(db) {
         seedThumbnail,
         seedPromo,
         seedSale,
-        seedOrder,
         seedReceipt,
         seedRecommendation,
         seedReserve,
+        seedOrder,
         // checkMember,
         // checkTable,
         terminate,
