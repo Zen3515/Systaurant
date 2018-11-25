@@ -24,6 +24,7 @@ CREATE TABLE `ACCOUNT` (
 	`address`     VARCHAR(200)  ,
 	`phone_NO`    VARCHAR(10)   ,
 	`gender`      TINYINT       ,
+	`age`         TINYINT       ,
 	`birthdate`   DATE          ,
 	`email`       VARCHAR(320)  NOT NULL,
 
@@ -327,7 +328,7 @@ CREATE PROCEDURE CREATE_RECEIPT(
         AND ord.`receipt_ID` IS NULL
         AND ord.`menu_ID`    = m.`menu_ID`);
 
-    -- create new receipt
+    -- create a new receipt
     INSERT INTO `RECEIPT` (`table_ID`, `total_price`)
     VALUES (table_ID, total_price);
 

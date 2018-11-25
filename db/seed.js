@@ -20,7 +20,7 @@ const account = [
 		fname:     'Troy', 
 		lname:     'Kshlerin', 
 		addr:      '9662 Kunde Mountain North Kaelatown 46180', 
-		phoneNO:   '2036743628', 
+		phoneNO:   '0036743628', 
 		gender:    0, 
 		birthdate: '1995-03-15', 
 		email:     'chief_arizona@gmail.com' 
@@ -28,7 +28,7 @@ const account = [
 		fname:     'Easton', 
 		lname:     'Ward', 
 		addr:      '63318 Lockman View North Rigoberto 72198', 
-		phoneNO:   '8921768684', 
+		phoneNO:   '0921768684', 
 		gender:    0, 
 		birthdate: '1995-03-15', 
 		email:     'Uriah.Ullrich21@hotmail.com' 
@@ -36,7 +36,7 @@ const account = [
 		fname:     'Thea', 
 		lname:     'Botsford', 
 		addr:      '65815 Hills Knoll Port Arch 26580-9775', 
-		phoneNO:   '3529798454', 
+		phoneNO:   '0529798454', 
 		gender:    1, 
 		birthdate: '1985-07-26', 
 		email:     'Patience.Rolfson@gmail.com' 
@@ -44,7 +44,7 @@ const account = [
 		fname:     'Cale', 
 		lname:     'Kirlin', 
 		addr:      '89130 O Keefe Shoals Daughertystad 79135', 
-		phoneNO:   '6359719262', 
+		phoneNO:   '0359719262', 
 		gender:    1, 
 		birthdate: '1989-11-11', 
 		email:     'Brooke1@yahoo.com' 
@@ -52,7 +52,7 @@ const account = [
 		fname:     'Ed', 
 		lname:     'Murazik', 
 		addr:      '7248 Wisozk Light East Danika 84791', 
-		phoneNO:   '4813332980', 
+		phoneNO:   '0813332980', 
 		gender:    0, 
 		birthdate: '1991-12-31', 
 		email:     'Augustine_Lynch@hotmail.com' 
@@ -60,7 +60,7 @@ const account = [
 		fname:     'Cathrine', 
 		lname:     'Osinski', 
 		addr:      '76142 Abagail Squares West Jules 96256', 
-		phoneNO:   '7261015918', 
+		phoneNO:   '0261015918', 
 		gender:    1, 
 		birthdate: '1999-09-09', 
 		email:     'Cathrine_Cassin46@yahoo.com' 
@@ -180,6 +180,7 @@ function executeCommandSeq(db, n, func, callback) {
     command.push(callback);
     createExecuteAsync(command, 2)();
 }
+
 ////// SEEDING PROCESS ////////
 mysql_connect(function(db) {
 
@@ -381,7 +382,7 @@ mysql_connect(function(db) {
 
         executeCommandSeq(db, numPromo, (i) => {
 
-            const employee_ID           = 3;
+            const employee_ID           = 1;
             const pro_start_date        = `2012-${i+1}-${i+7}`;
             const pro_expire_date       = `2012-${12-i}-${i+2}`;
             const criteria              = `You have to pay full before using promo ${i}`;
@@ -405,7 +406,7 @@ mysql_connect(function(db) {
             const menu_ID               = (i * i) % numMenu + 1;
             const sale_start_date       = `2002-${i+3}-${i+10}`;
             const sale_expire_date      = `2032-${11-i}-${30-i}`;
-            const employee_ID           = 3;
+            const employee_ID           = 1;
             const discount              = 20 + i * 5.23;
 
             return (callback) => {

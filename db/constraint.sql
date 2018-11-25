@@ -44,6 +44,10 @@ DELIMITER $$
 CREATE TRIGGER `insert_account`
     BEFORE INSERT ON `ACCOUNT` FOR EACH ROW
 BEGIN
+    IF NEW.birthdate IS NOT NULL THEN
+        SET NEW.age = YEAR(NOW()) - YEAR(NEW.birthdate);
+    END IF;
+
     CALL assert((0 <= NEW.`gender` AND NEW.`gender` <= 1), 'Gender is invalid [0-1]');
     CALL assert((LEFT(NEW.`phone_NO`, 1) = '0'), 'Phone number is invalid [leading with 0]');
 END;
