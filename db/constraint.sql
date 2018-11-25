@@ -94,7 +94,7 @@ $$
 
 CREATE TRIGGER `insert_order` BEFORE INSERT ON `ORDER` FOR EACH ROW
 BEGIN
-    CALL assert((0 <= NEW.`status` AND NEW.`status` <= 3), 'Invalid status [0-3]');
+    CALL assert((0 <= NEW.`status` AND NEW.`status` <= 2), 'Invalid status [0-2]');
 END;
 
 $$

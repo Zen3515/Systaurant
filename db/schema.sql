@@ -118,7 +118,9 @@ CREATE TABLE `RESERVE` (
 		ON UPDATE CASCADE,
 
 	INDEX `member_ID_index` (`member_ID`),
-	INDEX `table_ID_index`  (`table_ID`)
+	INDEX `table_ID_index`  (`table_ID`),
+
+	UNIQUE (`table_ID`,`reserve_time`)
 );
 
 CREATE TABLE `MENU` (
