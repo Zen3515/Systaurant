@@ -63,7 +63,7 @@ $$
 
 CREATE TRIGGER `insert_employee_waiter` BEFORE INSERT ON `EMPLOYEE_WAITER` FOR EACH ROW
 BEGIN
-    CALL assert((0 <= NEW.`status` AND NEW.`status` <= 2), 'Invalid status [0-2]');
+    CALL assert((0 <= NEW.`status` AND NEW.`status` <= 1), 'Invalid status [0-1]');
 END;
 
 $$
