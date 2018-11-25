@@ -51,6 +51,8 @@
 
     <script src="/js/jquery-3.3.1.min.js"></script>
     <script src="/js/axios.min.js"></script>
+    <script src="/js/moment.js"></script>
+    <script src="/js/moment-timezone-with-data.js"></script>
     <script type="text/javascript">
       const getOrder = () => {
       	$("#order-list").text("");
@@ -80,7 +82,12 @@
           .then(res => {
             const receipt = res.data.receipt;
             for (const idx in receipt) {
+              if(idx === 'issue_date') {
+                const issue_date = moment(receipt[idx]).tz('Asia/Bangkok');
+                $("#" + idx).text(issue_date);
+              } else {
                 $("#" + idx).text(receipt[idx]);
+              }
             }
 
             if (!receipt["payment"]) {
