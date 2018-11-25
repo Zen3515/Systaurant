@@ -61,31 +61,31 @@
     <script src="/js/axios.min.js"></script>
 
     <script type="text/javascript">
-      
-      $(document).on('click', '#login_form button', function() {
-	    $('#login_form button').removeClass('clicked');
-	    $(this).addClass('clicked');
-      });
 
-	  $("#login_form").submit(function(e) {
+        $(document).on('click', '#login_form button', function() {
+            $('#login_form button').removeClass('clicked');
+            $(this).addClass('clicked');
+        });
 
-		e.preventDefault();
-        axios
-          .post('/api/login', {
-            type: $('#login_form button.clicked').prop('id'),
-            id: $('#id').val(),
-            password: $('#password').val()
-          })
-          .then(res => {
-            console.log(res.data.message);
-            alert(res.data.message);
-            window.location.href='/';
-          })
-          .catch(res => {
-          	console.log(res);
-            alert('Login failed.');
-          });
-      });
+        $("#login_form").submit(function(e) {
+
+            e.preventDefault();
+            axios
+                .post('/api/login', {
+                    type: $('#login_form button.clicked').prop('id'),
+                    id: $('#id').val(),
+                    password: $('#password').val()
+                })
+                .then(res => {
+                    console.log(res.data.message);
+                    alert(res.data.message);
+                    window.location.href='/';
+                })
+                .catch(res => {
+                    console.log(res);
+                    alert('Login failed.');
+                });
+        });
     </script>
   </body>
 </html>

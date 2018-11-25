@@ -1,6 +1,6 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const session = require('express-session');
+const express     = require('express');
+const bodyParser  = require('body-parser');
+const session     = require('express-session');
 
 // set app port
 const port = 3000;
@@ -18,15 +18,15 @@ const sale        = require('./app/sale.js');
 const sql         = require('./app/sql.js');
 
 const jsonRequire = (req, res, next) => {
-  	if (req.body === undefined) {
-    	res.status(400).send(
-      		JSON.stringify({
-        		message: 'JSON parsing failed'
-      		})
-    	);
-    	return;
-  	}
-  	next();
+    if (req.body === undefined) {
+        res.status(400).send(
+            JSON.stringify({
+                message: 'JSON parsing failed'
+            })
+        );
+        return;
+    }
+    next();
 };
 
 const jsonResponse = (req, res, next) => {

@@ -41,16 +41,9 @@ const issue_command = (res, command) => {
  */
 const read = (req, res) => {
 
-    const command = !req.body.disable_sale
-        ? "SELECT m.`menu_ID`, m.`menu_name`, m.`menu_description`"
-        + ", ROUND(IFNULL(m.`price` * (100 - s.`discount`) / 100, m.`price`), 2) AS price"
-        + " FROM `MENU` m"
-        + " LEFT JOIN"
-        + " (SELECT `menu_ID`, MAX(`discount`) AS `discount` FROM `SALE`"
-        + "   WHERE (`sale_start_date` <= NOW() AND NOW() <= `sale_expire_date`)"
-        + " GROUP BY `menu_ID`) s"
-        + " ON m.`menu_ID` = s.`menu_ID` "
-
+    const disabled = req.body.disable_sale;
+    const command = !disabled
+        ? "CALL MENU_WITH_SALE()"
         : "SELECT m.`menu_ID`, m.`menu_name`, m.`menu_description`, m.`price`"
         + " FROM `MENU` m";
 
@@ -59,6 +52,9 @@ const read = (req, res) => {
             if (err) {
                 res.status(400).send(JSON.stringify({ message: err }));
             } else {
+
+                if (!disabled) result = result[0];
+
                 res.send(
                     JSON.stringify({
                         message: 'OK',
@@ -112,14 +108,14 @@ const create = (req, res) => {
  * update a menu
  * Request
  * {
- * 		menu_ID: 		// menu id
- * 		name: 			// menu name (optional)
- * 		description: 	// menu description (optional)
- * 		price: 			// menu price (optional)
+ *      menu_ID:        // menu id
+ *      name:           // menu name (optional)
+ *      description:    // menu description (optional)
+ *      price:          // menu price (optional)
  * }
  * Response
  * {
- * 		message: 		// status message
+ *      message:        // status message
  * }
  */
 const update = (req, res) => {

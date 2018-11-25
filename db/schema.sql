@@ -100,7 +100,7 @@ CREATE TABLE `TABLE` (
 );
 
 CREATE TABLE `RESERVE` (
-	`reserve_ID`			INT    		NOT NULL  AUTO_INCREMENT,
+	`reserve_ID`            INT         NOT NULL  AUTO_INCREMENT,
 	`member_ID`             INT         NOT NULL,
 	`table_ID`              INT         NOT NULL,
 
@@ -167,7 +167,7 @@ CREATE TABLE `SALE` (
 
 CREATE TABLE `RECEIPT` (
 	`receipt_ID`      INT           NOT NULL  AUTO_INCREMENT,
-	`table_ID`        INT    		NOT NULL, 
+	`table_ID`        INT           NOT NULL, 
 	`total_price`     FLOAT(8, 2)   NOT NULL,
 	`issue_date`      DATETIME      NOT NULL  DEFAULT CURRENT_TIMESTAMP,
 	`payment`         TINYINT       ,
@@ -261,10 +261,12 @@ CREATE TABLE `ORDER` (
 	INDEX `order_status_index` (`status`)
 );
 
--- List of Functions
+-- List of Functions and Procedures
 DELIMITER $$
 
-CREATE FUNCTION GET_EMPLOYEE_TYPE_NAME(e_type TINYINT) RETURNS VARCHAR(10)
+CREATE FUNCTION GET_EMPLOYEE_TYPE_NAME(
+    e_type TINYINT
+) RETURNS VARCHAR(10)
 BEGIN
 
 	IF e_type = 0 THEN
@@ -276,6 +278,65 @@ BEGIN
 	END IF;
 
 	RETURN 'ERROR';
+END;
+
+$$
+
+CREATE PROCEDURE MENU_WITH_SALE()
+BEGIN
+    SELECT m.`menu_ID`, m.`menu_name`, m.`menu_description`,
+        ROUND(
+            IFNULL(
+                m.`price` * (100 - s.`discount`) / 100,
+                m.`price`)
+            , 2) AS price
+    FROM `MENU` m
+    LEFT JOIN
+        (SELECT `menu_ID`, MAX(`discount`) AS `discount`
+        FROM `SALE`
+        WHERE (`sale_start_date` <= NOW() AND NOW() <= `sale_expire_date`)
+        GROUP BY `menu_ID`) s
+    ON m.`menu_ID` = s.`menu_ID`;
+END;
+
+$$
+
+CREATE PROCEDURE CREATE_RECEIPT(
+    IN table_ID INT
+) BEGIN
+
+    DECLARE total_price FLOAT(8, 2);
+
+    -- get receipt total_price
+    SELECT SUM(ROUND(
+        IFNULL(
+            m.`price` * (100 - s.`discount`) / 100,
+            m.`price`)
+        , 2)) INTO total_price
+    FROM `ORDER` ord, `MENU` m
+    LEFT JOIN
+        (SELECT `menu_ID`, MAX(`discount`) AS `discount`
+        FROM `SALE`
+        WHERE (`sale_start_date` <= NOW() AND NOW() <= `sale_expire_date`)
+        GROUP BY `menu_ID`) s
+    ON m.`menu_ID` = s.`menu_ID`
+    WHERE (ord.`table_ID` = table_ID
+        AND ord.`order_time` <= NOW()
+        AND ord.`receipt_ID` IS NULL
+        AND ord.`menu_ID`    = m.`menu_ID`);
+
+    -- create new receipt
+    INSERT INTO `RECEIPT` (`table_ID`, `total_price`)
+    VALUES (table_ID, total_price);
+
+    -- update every orders into this receipt
+    UPDATE `ORDER`
+    SET `receipt_ID` = (SELECT LAST_INSERT_ID())
+    WHERE `table_ID` = table_ID
+        AND   `order_time` < NOW()
+        AND   `receipt_ID` IS NULL;
+
+    SELECT LAST_INSERT_ID();
 END;
 
 $$
