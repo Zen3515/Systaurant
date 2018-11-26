@@ -1,5 +1,6 @@
 function load() {
-    axios
+    $('#navbar').load('/navbar', () => {
+        axios
         .post('/api/status')
         .then(res => {
             const stat = res.data;
@@ -65,6 +66,7 @@ function load() {
         }).catch(res => {
             console.log(res);
         });
+    });
 }
 
 $(document).ready(load);
