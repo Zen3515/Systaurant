@@ -57,7 +57,10 @@ function load() {
             }
 
             if (stat.manager) {
-                $("#admin").attr("href", "/admin").text('Admin');
+                $("#admin").attr("href", "#").text('Admin');
+                $("#admin-menu").attr("href", "/admin/menu").text('Menu');
+                $("#admin-sale").attr("href", "/admin/sale").text('Sale');
+                $("#admin-promotion").attr("href", "/admin/promo").text('Promotion');
             } else {
                 $("#admin").addClass('d-none');
             }

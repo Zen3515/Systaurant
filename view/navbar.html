@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-    <a class="navbar-brand" id="index">Systaurant</a>
+    <a class="navbar-brand" id="index"></a>
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
@@ -25,8 +25,13 @@
             <li class="nav-item">
                 <a class="nav-link" id='waiting'></a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" id='admin'></a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="admin" data-toggle="dropdown"></a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" id="admin-menu"></a>
+                    <a class="dropdown-item" id="admin-sale"></a>
+                    <a class="dropdown-item" id="admin-promotion"></a>
+                </div>
             </li>
         </ul>
         <ul class="navbar-nav ml-auto">
