@@ -8,13 +8,11 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
   </head>
   <body>
+    <div id="navbar"></div>
     <div class="container">
       <div class="row">
         <div class="col">
-          <h1 class="text-center pt-5">Reserve</h1>
-          <div class="text-center">
-            <a href="/" class="btn btn-link">Home</a>
-          </div>
+          <h1 class="text-center pt-5 pb-5">Reserve</h1>
           <form id="reserve-form">
             Number of reserved seats: <output id="seat_output">1</output>
             <input
@@ -57,7 +55,9 @@
       </div>
     </div>
     <script src="/js/jquery-3.3.1.min.js"></script>
-    <script src="/js/axios.min.js"></script>
+	  <script src="/js/bootstrap.min.js"></script>
+	  <script src="/js/axios.min.js"></script>
+	  <script src="/js/navbar.js"></script>
     <script src="/js/moment.js"></script>
     <script src="/js/moment-timezone-with-data.js"></script>
     <script type="text/javascript">
