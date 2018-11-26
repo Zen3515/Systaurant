@@ -52,7 +52,6 @@ app.use(
 app.use(express.static('public'));
 
 app.get('/'               , main.ui);
-app.get('/admin'          , login.checkManager   , admin.ui);
 app.get('/admin/menu'     , login.checkManager   , admin.menu_ui);
 app.get('/admin/sale'     , login.checkManager   , admin.sale_ui);
 app.get('/admin/promo'    , login.checkManager   , admin.promo_ui);
