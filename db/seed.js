@@ -70,6 +70,69 @@ const account = [
     gender: 1,
     birthdate: '1999-09-09',
     email: 'Cathrine_Cassin46@yahoo.com'
+  },
+  {
+    fname: 'Jone',
+    lname: 'Doe',
+    addr: '76142 Abagail Squares West Jules 92341',
+    phoneNO: '0892384321',
+    gender: 0,
+    birthdate: '1998-10-12',
+    email: 'JoneDoe@gmail.com'
+  },
+  {
+    fname: 'Jane',
+    lname: 'Doe',
+    addr: '9662 hello Mountain North Kaelatown 46180',
+    phoneNO: '0234322012',
+    gender: 0,
+    birthdate: '1985-03-15',
+    email: 'JaneDoe@yahoo.com'
+  },
+  {
+    fname: 'Easton',
+    lname: 'Ward',
+    addr: '63318 Lockman View North Rigoberto 72198',
+    phoneNO: '0892176868',
+    gender: 0,
+    birthdate: '1995-03-15',
+    email: 'Uriah.Ullrich21@hotmail.com'
+  },
+  {
+    fname: 'Thea',
+    lname: 'Botsford',
+    addr: '65815 Hills Knoll Port Arch 26580-9775',
+    phoneNO: '0352979845',
+    gender: 1,
+    birthdate: '1985-07-26',
+    email: 'Patience.Rolfson@gmail.com'
+  },
+  {
+    fname: 'Cale',
+    lname: 'Kirlin',
+    addr: '89130 O Keefe Shoals Daughertystad 79135',
+    phoneNO: '0635971926',
+    gender: 1,
+    birthdate: '1989-11-11',
+    email: 'Brooke1@yahoo.com'
+  },
+  {
+    fname: 'Ed',
+    lname: 'Murazik',
+    addr: '7248 Wisozk Light East Danika 84791',
+    phoneNO: '0481333298',
+    gender: 0,
+    birthdate: '1991-12-31',
+    email: 'Augustine_Lynch@hotmail.com'
+  },
+  {
+    fname: 'Cathrine',
+    lname: 'Osinski',
+    addr: '76142 Abagail Squares West Jules 96256',
+    phoneNO: '0726101591',
+    gender: 1,
+    birthdate: '1999-09-09',
+    email: 'Cathrine_Cassin46@yahoo.com'
   }
 ];
 const employee = [
@@ -96,7 +159,21 @@ const employee = [
   },
   {
     account_id: 6,
-    ssn: '2334223424434',
+    ssn: '2323932120434',
+    salary: 6000,
+    workday: 63,
+    employee_type: 0
+  },
+  {
+    account_id: 7,
+    ssn: '2239230120004',
+    salary: 6000,
+    workday: 63,
+    employee_type: 2
+  },
+  {
+    account_id: 8,
+    ssn: '2999982323034',
     salary: 6000,
     workday: 63,
     employee_type: 0
@@ -110,7 +187,11 @@ const menus = [
   { name: 'Fried Chicken', desc: 'Deep fried chicken wing', price: 270.0 },
   { name: 'Beef Steak', desc: 'Grounded beef pepper steak', price: 640.0 },
   { name: 'Laab Tuna', desc: 'Thai spicy tuna salad', price: 35.0 },
-  { name: 'Cabonara Spaghetti', desc: 'Spaghetti with cabonara', price: 170.0 }
+  { name: 'Cabonara Spaghetti', desc: 'Spaghetti with cabonara', price: 170.0 },
+  { name: 'Thai Salad', desc: 'Deep fried chicken wing', price: 30.0 },
+  { name: 'Fish Steak', desc: 'steak', price: 640.0 },
+  { name: 'Water', desc: 'plain tap water', price: 10.0 },
+  { name: 'Expensive Spaghetti', desc: 'Spaghetti with cabonara', price: 1000.0 }
 ];
 
 const orders = [
@@ -190,14 +271,23 @@ const recommendations = [
 
 const reserves =[
     {member_ID: 3, table_ID:3, reserve_time:'2019-01-01 14:00:00' , number_of_reserved: 1, create_time:'2018-11-20 09:00:00'},
-    {member_ID: 3, table_ID:3, reserve_time:'2019-01-01 14:20:00' , number_of_reserved: 1, create_time:'2018-11-20 09:00:00'},
+    {member_ID: 3, table_ID:3, reserve_time:'2019-01-01 19:20:00' , number_of_reserved: 1, create_time:'2018-11-20 09:00:00'},
     {member_ID: 3, table_ID:4, reserve_time:'2019-01-01 14:20:00' , number_of_reserved: 1, create_time:'2018-11-20 09:00:00'},
-    {member_ID: 2, table_ID:1, reserve_time:'2019-01-02 14:00:00' , number_of_reserved: 1, create_time:'2018-11-20 09:00:00'},
+    {member_ID: 2, table_ID:1, reserve_time:'2019-01-02 18:00:00' , number_of_reserved: 1, create_time:'2018-11-20 09:00:00'},
     {member_ID: 2, table_ID:2, reserve_time:'2019-01-02 14:00:00' , number_of_reserved: 1, create_time:'2018-11-20 09:00:00'},
     {member_ID: 2, table_ID:3, reserve_time:'2019-01-02 14:00:00' , number_of_reserved: 1, create_time:'2018-11-20 09:00:00'},
-    {member_ID: 2, table_ID:4, reserve_time:'2019-01-02 14:00:00' , number_of_reserved: 1, create_time:'2018-11-20 09:00:00'},
+    {member_ID: 2, table_ID:4, reserve_time:'2019-01-02 13:00:00' , number_of_reserved: 1, create_time:'2018-11-20 09:00:00'},
     {member_ID: 2, table_ID:5, reserve_time:'2019-01-02 14:00:00' , number_of_reserved: 1, create_time:'2018-11-20 09:00:00'},
     {member_ID: 2, table_ID:6, reserve_time:'2019-01-02 14:00:00' , number_of_reserved: 1, create_time:'2018-11-20 09:00:00'},
+    {member_ID: 3, table_ID:3, reserve_time:'2020-01-01 14:00:00' , number_of_reserved: 1, create_time:'2018-11-20 09:00:00'},
+    {member_ID: 3, table_ID:3, reserve_time:'2020-01-01 11:20:00' , number_of_reserved: 1, create_time:'2018-11-20 09:00:00'},
+    {member_ID: 3, table_ID:4, reserve_time:'2020-06-01 12:20:00' , number_of_reserved: 1, create_time:'2018-11-20 09:00:00'},
+    {member_ID: 2, table_ID:1, reserve_time:'2020-03-02 14:00:00' , number_of_reserved: 1, create_time:'2018-11-20 09:00:00'},
+    {member_ID: 2, table_ID:2, reserve_time:'2020-07-02 14:00:00' , number_of_reserved: 1, create_time:'2018-11-20 09:00:00'},
+    {member_ID: 2, table_ID:3, reserve_time:'2020-01-02 13:00:00' , number_of_reserved: 1, create_time:'2018-11-20 09:00:00'},
+    {member_ID: 2, table_ID:4, reserve_time:'2020-01-02 14:00:00' , number_of_reserved: 1, create_time:'2018-11-20 09:00:00'},
+    {member_ID: 2, table_ID:5, reserve_time:'2020-03-02 12:00:00' , number_of_reserved: 1, create_time:'2018-11-20 09:00:00'},
+    {member_ID: 2, table_ID:6, reserve_time:'2020-01-02 10:00:00' , number_of_reserved: 1, create_time:'2018-11-20 09:00:00'},
 ];
 
 const numAccount = account.length;
