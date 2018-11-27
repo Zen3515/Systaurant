@@ -84,55 +84,55 @@ const account = [
     fname: 'Jane',
     lname: 'Doe',
     addr: '9662 hello Mountain North Kaelatown 46180',
-    phoneNO: '0234322012',
+    phoneNO: '0844322012',
     gender: 0,
     birthdate: '1985-03-15',
     email: 'JaneDoe@yahoo.com'
   },
   {
-    fname: 'Easton',
+    fname: 'Mary',
     lname: 'Ward',
     addr: '63318 Lockman View North Rigoberto 72198',
-    phoneNO: '0892176868',
+    phoneNO: '0982176868',
     gender: 0,
     birthdate: '1995-03-15',
-    email: 'Uriah.Ullrich21@hotmail.com'
+    email: 'mary.marry21@hotmail.com'
   },
   {
-    fname: 'Thea',
-    lname: 'Botsford',
+    fname: 'Bil',
+    lname: 'Willow',
     addr: '65815 Hills Knoll Port Arch 26580-9775',
-    phoneNO: '0352979845',
+    phoneNO: '0902979845',
     gender: 1,
     birthdate: '1985-07-26',
-    email: 'Patience.Rolfson@gmail.com'
+    email: 'Bill.R@gmail.com'
   },
   {
-    fname: 'Cale',
+    fname: 'Catherine',
     lname: 'Kirlin',
     addr: '89130 O Keefe Shoals Daughertystad 79135',
-    phoneNO: '0635971926',
+    phoneNO: '0865971926',
     gender: 1,
     birthdate: '1989-11-11',
-    email: 'Brooke1@yahoo.com'
+    email: 'catBrooke1@yahoo.com'
   },
   {
-    fname: 'Ed',
-    lname: 'Murazik',
+    fname: 'Eren',
+    lname: 'Mirton',
     addr: '7248 Wisozk Light East Danika 84791',
-    phoneNO: '0481333298',
+    phoneNO: '0823233298',
     gender: 0,
     birthdate: '1991-12-31',
-    email: 'Augustine_Lynch@hotmail.com'
+    email: 'brgegrg@hotmail.com'
   },
   {
-    fname: 'Cathrine',
-    lname: 'Osinski',
+    fname: 'Francis',
+    lname: 'Lee',
     addr: '76142 Abagail Squares West Jules 96256',
-    phoneNO: '0726101591',
+    phoneNO: '0936101591',
     gender: 1,
     birthdate: '1999-09-09',
-    email: 'Cathrine_Cassin46@yahoo.com'
+    email: '@yahoo.com'
   }
 ];
 const employee = [
@@ -180,7 +180,7 @@ const employee = [
   }
 ];
 
-const member = [2, 4, 7]; //not employees
+const member = [2, 4, 7, 8,9,10,11,12,13,14]; //not employees
 const TableSize = [2, 3, 4, 5, 6, 7];
 
 const menus = [
